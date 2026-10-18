@@ -1,0 +1,11 @@
+{
+  "name": "pokertrainer",
+  "private": true,
+  "description": "Browser checks for the trainer page. The page itself has no build step.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

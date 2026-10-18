@@ -28,3 +28,17 @@ That's it. An internet connection is only used to load the web fonts; the drills
 ## Strategy guide
 
 [`docs/texas-holdem-strategy.md`](docs/texas-holdem-strategy.md) is the research the drills are built on: position and opening ranges, pot odds and stack-to-pot ratio, board texture, adjusting to low-stakes opponents, and bankroll and tilt. Each claim cites its source.
+
+## Automated checks
+
+Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, and answers 40 questions in every drill.
+
+The test finds tabs, answer buttons and the "next" button from the page itself, so a new drill is covered without touching the test as long as it follows the same pattern as the others: a `role="tab"` button whose `aria-controls` names its panel, answer buttons with a `<kbd>` shortcut that are disabled once answered, and a next button with `<kbd>N</kbd>`.
+
+To run it locally (needs Node 18 or later):
+
+```
+npm install
+npx playwright install chromium
+npm test
+```
