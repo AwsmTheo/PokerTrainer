@@ -218,6 +218,7 @@ h1{margin:4px 0 0;font:800 clamp(30px,4.4vw,44px)/1.02 var(--font-display);lette
 .v-text p{margin:3px 0 0;font-size:13px;color:var(--muted)}
 .new-hand{border:0;border-radius:10px;padding:11px 14px;background:var(--ink);color:var(--bg);font:700 14px/1 var(--font-body);cursor:pointer;display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
 .new-hand kbd{opacity:.6}
+.new-hand:disabled{cursor:default;opacity:.5}
 @media (max-width:440px){.verdict{grid-template-columns:auto minmax(0,1fr)}.new-hand{grid-column:1/-1;justify-content:center}}
 
 .why{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
@@ -390,7 +391,21 @@ tr:last-child td{border-bottom:0}
 .rv-side p b{color:var(--ink)}
 .rv-side .link-btn{margin-left:0}
 .rv-k{display:none}
+.dy{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;flex:1 1 100%;min-width:0;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.dy p{margin:0;font-size:13.5px;color:var(--muted)}
+.dy p b{color:var(--ink)}
+.dy .link-btn{margin-left:0}
+.dy-streak{display:inline-flex;align-items:baseline;gap:5px;font:700 12px/1 var(--font-body);color:var(--brass);white-space:nowrap}
+.dy-streak b{font:800 18px/1 var(--font-display);color:var(--brass);font-variant-numeric:tabular-nums}
+.dy-dots{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+.dy-dots li{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dy-dots li.ok{background:var(--good)}
+.dy-dots li.bad{background:var(--bad)}
+.dy-dots li.now{background:transparent;box-shadow:inset 0 0 0 2px var(--brass)}
+.dy-text{flex:1 1 220px;min-width:0}
 @media (max-width:560px){
+  .dy{padding-bottom:10px}
+  .dy .new-hand{flex:1 1 100%;justify-content:center}
   .rv{padding:10px;gap:10px}
   .rv-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-basis:100%}
   .rv-tile{padding:7px 8px;gap:3px}
@@ -421,6 +436,7 @@ tr:last-child td{border-bottom:0}
       <p class="tag" id="app-tag">You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.</p>
     </div>
     <section class="rv" id="rv" aria-label="Your progress and missed questions">
+      <div class="dy" id="dy" aria-live="polite"></div>
       <div class="rv-grid" id="rv-grid"></div>
       <div class="rv-side" id="rv-side" aria-live="polite"></div>
     </section>
@@ -2582,6 +2598,7 @@ tr:last-child td{border-bottom:0}
   const rvClone = q => JSON.parse(JSON.stringify(q));
 
   function rvRecord(tab, ok, id, snap) {
+    dyRecord(tab, ok, id);
     if (id && id === rv.cur && !rv.counted) { rv.counted = true; rv.done++; if (ok) rv.right++; }
     const m = id && rvFind(id);
     if (m && ok) rvDrop(id);
@@ -2597,9 +2614,10 @@ tr:last-child td{border-bottom:0}
     rvData.items = rvData.items.filter(m => m.tab !== tab);
     rvSave(); renderRv();
   }
-  const rvLabel = id => !id ? '' : id === rv.cur && rv.n ? `Review ${rv.pos} of ${rv.n}` : 'Review';
+  const rvLabel = id => !id ? dyLabel() : id === rv.cur && rv.n ? `Review ${rv.pos} of ${rv.n}` : 'Review';
 
   function rvStart(tab) {
+    if (dy.active) return;
     rv.queue = shuffle(rvData.items.filter(m => !tab || m.tab === tab).map(m => m.id));
     if (!rv.queue.length) return;
     Object.assign(rv, {active:true, ended:false, n:rv.queue.length, pos:0, done:0, right:0});
@@ -2607,6 +2625,7 @@ tr:last-child td{border-bottom:0}
   }
   // Shows the next saved miss, on its own tab. Returns false when no review is running, so the drill deals as usual.
   function rvNext() {
+    if (dy.active) return dyNext();
     if (!rv.active) return false;
     while (rv.queue.length) {
       const id = rv.queue.shift(), m = rvFind(id);
@@ -2638,24 +2657,121 @@ tr:last-child td{border-bottom:0}
         <b class="rv-acc">${R.total ? Math.round(R.correct / R.total * 100) + '%' : '–'}</b>
         <span class="rv-sub">${R.total ? `${R.correct} of ${R.total} right` : 'Not started'}</span>
         ${k ? `<span class="rv-sub rv-k">${k} to review</span>` : ''}
-        ${k ? `<button type="button" class="rv-btn" data-rvtab="${t}"${rv.active ? ' disabled' : ''}>Review ${k} ${k === 1 ? 'miss' : 'misses'}</button>` : '<span class="rv-sub">No misses saved</span>'}
+        ${k ? `<button type="button" class="rv-btn" data-rvtab="${t}"${rv.active || dy.active ? ' disabled' : ''}>Review ${k} ${k === 1 ? 'miss' : 'misses'}</button>` : '<span class="rv-sub">No misses saved</span>'}
       </div>`;
     }).join('');
-    $('#rv').classList.toggle('on', rv.active);
+    $('#rv').classList.toggle('on', rv.active || dy.active);
     const total = rvData.items.length, wrong = rv.done - rv.right;
     $('#rv-side').innerHTML = rv.active
       ? `<p><b>Reviewing your misses</b> · ${rv.pos} of ${rv.n} · ${rv.right} right so far</p><button type="button" class="link-btn" id="rv-stop">Stop review</button>`
       : rv.ended
       ? `<p><b>Review done.</b> You got ${rv.right} of ${rv.done} right.${wrong ? ` The ${wrong === 1 ? 'one' : wrong} you missed ${wrong === 1 ? 'stays' : 'stay'} saved.` : ' Those are cleared from your misses.'}</p><button type="button" class="link-btn" id="rv-close">OK</button>`
       : total
-      ? `<button type="button" class="new-hand" data-rvtab="">Review all misses <kbd>${total}</kbd></button>`
+      ? `<button type="button" class="new-hand" data-rvtab=""${dy.active ? ' disabled' : ''}>Review all misses <kbd>${total}</kbd></button>`
       : '<p>Questions you miss are saved here so you can try them again.</p>';
+    renderDy();
   }
   $('#rv').addEventListener('click', e => {
     const b = e.target.closest('[data-rvtab]');
     if (b && !b.disabled) { rvStart(b.dataset.rvtab || null); return; }
     if (e.target.closest('#rv-stop')) rvStop();
     else if (e.target.closest('#rv-close')) { rv.ended = false; renderRv(); }
+  });
+
+  /* =====================================================================
+     DAILY SET
+     A short mixed set each day: two questions from each quiz tab, then one
+     full hand. It deals fresh questions on each tab in turn through the
+     review hooks (rvRecord counts the answer, rvNext moves on, rvLabel names
+     it), so drills need nothing extra. Finishing a set on consecutive days
+     builds a streak. Kept under its own key.
+     ===================================================================== */
+  const DY_KEY = STORE + ':daily';
+  const DY_PLAN = ['seats', 'seats', 'pot', 'pot', 'board', 'board', 'opp', 'opp'];   // shuffled; the full hand comes last
+  const dyData = loadJSON(DY_KEY);   // {day, plan, res, streak, best, last}: res holds 1 or 0 for each answered item
+  const dy = {active:false, counted:false, handOk:true};
+  const dyDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const dyBefore = day => { const d = new Date(day + 'T12:00:00'); d.setDate(d.getDate() - 1); return dyDay(d); };
+  const dyPos = () => dyData.res.length;
+  const dyDone = () => dyPos() >= dyData.plan.length;
+  const dyStreak = () => dyData.last === dyDay() || dyData.last === dyBefore(dyDay()) ? dyData.streak || 0 : 0;
+  const dySave = () => saveJSON(DY_KEY, dyData);
+
+  function dyToday() {   // today's plan, made on the first visit of the day
+    const ok = dyData.day === dyDay() && Array.isArray(dyData.plan) && dyData.plan.length && dyData.plan.every(t => RV[t]) &&
+               Array.isArray(dyData.res) && dyData.res.length <= dyData.plan.length;
+    if (ok) return;
+    let plan = DY_PLAN;
+    for (let i = 0; i < 50; i++) { plan = shuffle(DY_PLAN); if (plan.every((t, j) => !j || t !== plan[j - 1])) break; }
+    Object.assign(dyData, {day:dyDay(), plan:plan.concat('hand'), res:[]});
+  }
+  function dyStart() {
+    dyToday();
+    if (rv.active || dyDone()) return;
+    dy.active = true;
+    dyDeal();
+  }
+  function dyDeal() {
+    const t = dyData.plan[dyPos()];
+    dy.counted = false; dy.handOk = true;
+    setTab(t);
+    RV[t].fresh();
+    renderRv();
+  }
+  // Called by rvRecord. Counts the first fresh answer on the set's current tab; a full hand counts once, at its last decision, and is right only if every decision was.
+  function dyRecord(tab, ok, id) {
+    if (!dy.active || dy.counted || id || dyDone() || tab !== dyData.plan[dyPos()]) return;
+    dy.handOk = dy.handOk && ok;
+    if (tab === 'hand' && !fhLast()) return;
+    dy.counted = true;
+    dyData.res.push(dy.handOk ? 1 : 0);
+    if (dyDone()) {
+      if (dyData.last !== dyData.day) dyData.streak = dyData.last === dyBefore(dyData.day) ? (dyData.streak || 0) + 1 : 1;
+      dyData.last = dyData.day;
+      dyData.best = Math.max(dyData.best || 0, dyData.streak);
+    }
+    dySave();
+  }
+  // Called by rvNext while a set runs. Returns false once the set is over, so the drill deals as usual.
+  function dyNext() {
+    if (dyDone()) { dy.active = false; renderRv(); return false; }
+    if (!dy.counted) { setTab(dyData.plan[dyPos()]); return true; }   // Next pressed on another tab: go back to the set's question
+    dyDeal();
+    return true;
+  }
+  function dyStop() { dy.active = false; renderRv(); }
+  function dyLabel() {
+    if (!dy.active) return '';
+    const i = dyPos() - (dy.counted ? 1 : 0);
+    return prefs.tab === dyData.plan[i] ? `Daily set ${i + 1} of ${dyData.plan.length}` : '';
+  }
+
+  function renderDy() {
+    if (!dy.active) dyToday();   // a set that runs past midnight finishes as yesterday's
+    const n = dyData.plan.length, pos = dyPos(), right = dyData.res.reduce((a, b) => a + b, 0), streak = dyStreak();
+    const dots = `<ol class="dy-dots" aria-hidden="true">${dyData.plan.map((t, i) =>
+      `<li class="${i < pos ? (dyData.res[i] ? 'ok' : 'bad') : dy.active && i === pos ? 'now' : ''}" title="${RV[t].name}"></li>`).join('')}</ol>`;
+    const days = k => `${k} ${k === 1 ? 'day' : 'days'}`;
+    const streakEl = `<span class="dy-streak" title="Days in a row with a finished daily set"><b>${streak}</b>day streak</span>`;
+    let text, btn = '';
+    if (dyDone()) {
+      text = `<b>Today’s set is done:</b> ${right} of ${n} right. ${streak > 1 ? `That makes ${days(streak)} in a row` : 'Your streak has started'}${dyData.best > streak ? ` (best ${days(dyData.best)})` : ''}. A new set comes tomorrow.`;
+    } else if (dy.active) {
+      const i = pos - (dy.counted ? 1 : 0);   // stays on the answered question until Next
+      text = `<b>Daily set</b> · ${i + 1} of ${n} · ${RV[dyData.plan[i]].name} · ${right} right so far`;
+      btn = '<button type="button" class="link-btn" id="dy-stop">Stop for now</button>';
+    } else {
+      text = pos
+        ? `<b>Daily set</b> · ${pos} of ${n} done, ${right} right. Pick up where you left off.`
+        : `<b>Daily set</b> · ${n} mixed questions: two from each tab, then a full hand.${streak ? ` Finish it to keep your ${streak}-day streak.` : ''}`;
+      btn = `<button type="button" class="new-hand" id="dy-start"${rv.active ? ' disabled' : ''}>${pos ? 'Continue today’s set' : 'Start today’s set'}</button>`;
+    }
+    $('#dy').innerHTML = `${streakEl}${dots}<p class="dy-text">${text}</p>${btn}`;
+  }
+  $('#dy').addEventListener('click', e => {
+    const b = e.target.closest('#dy-start');
+    if (b && !b.disabled) { dyStart(); return; }
+    if (e.target.closest('#dy-stop')) dyStop();
   });
 
   /* =====================================================================

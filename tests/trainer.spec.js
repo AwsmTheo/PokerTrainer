@@ -107,3 +107,24 @@ test.describe('drills', () => {
     });
   }
 });
+
+test('the daily set runs across tabs and starts a streak', async ({ page }) => {
+  const daily = page.locator('#dy');
+  await daily.getByRole('button', { name: /Start today’s set/ }).click();
+  const nKey = page.locator('kbd', { hasText: /^N$/ });
+  // Answer whatever the open tab asks until the set says it is done. A full hand has several decisions.
+  for (let step = 0; step < 60 && !(await daily.textContent() || '').includes('done'); step++) {
+    const panel = page.locator(`#${await page.getByRole('tab', { selected: true }).getAttribute('aria-controls')}`);
+    const next = panel.locator('button:visible:has(kbd)').filter({ has: nKey });
+    if (await next.count()) { await next.click(); continue; }
+    const open = panel.locator('button:visible:has(kbd)').filter({ hasNot: nKey }).and(page.locator(':enabled'));
+    await expect(open.first()).toBeVisible();
+    await open.first().click();
+  }
+  await expect(daily).toContainText('Today’s set is done');
+  await expect(daily.locator('.dy-streak b')).toHaveText('1');
+  await expect(daily.locator('.dy-dots li.ok, .dy-dots li.bad')).toHaveCount(9);
+  await page.reload();
+  await expect(daily).toContainText('Today’s set is done');
+  await noSideScroll(page);
+});

@@ -15,6 +15,8 @@ The pot odds tab also has a **Workbench** where you plug in your own numbers: th
 
 The **progress panel** under the title shows your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
 
+The **daily set** at the top of the panel is a short mixed set each day: two questions from each quiz tab in a shuffled order, then one full hand, moving between tabs for you. You can stop and pick it up later the same day. Finishing a set on consecutive days builds a streak; a full hand counts as right only if every decision in it was. The set and streak are saved under their own key, apart from each tab's record.
+
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
 ### How to open it
@@ -34,7 +36,7 @@ That's it. An internet connection is only used to load the web fonts; the drills
 
 ## Automated checks
 
-Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, and answers 40 questions in every drill.
+Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, answers 40 questions in every drill, and plays a whole daily set.
 
 The test finds tabs, answer buttons and the "next" button from the page itself, so a new drill is covered without touching the test as long as it follows the same pattern as the others: a `role="tab"` button whose `aria-controls` names its panel, answer buttons with a `<kbd>` shortcut that are disabled once answered, and a next button with `<kbd>N</kbd>`.
 
