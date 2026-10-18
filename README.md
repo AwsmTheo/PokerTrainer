@@ -24,9 +24,11 @@ The **Daily** tab is a short mixed set each day: two questions from each quiz ta
 
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
+**Move your progress** at the bottom of the page carries it to another device or browser, or between the website and the iPhone app. **Copy code** gives a text code you can send yourself in Notes or Messages, and **Save file** saves a `.json` file (in the app it opens the share sheet). On the other device, paste the code or pick the file under **Load a save**. Loading replaces that device's progress, saved misses, streak and settings after you confirm.
+
 ### How to open it
 
-**On any device, including your phone:** go to [awsmtheo.github.io/PokerTrainer](https://awsmtheo.github.io/PokerTrainer/). The site is published from `main` with GitHub Pages, so it always has the latest drills. On a phone you can use your browser's "Add to Home Screen" to keep it one tap away. Progress is saved separately on each device and browser.
+**On any device, including your phone:** go to [awsmtheo.github.io/PokerTrainer](https://awsmtheo.github.io/PokerTrainer/). The site is published from `main` with GitHub Pages, so it always has the latest drills. On a phone you can use your browser's "Add to Home Screen" to keep it one tap away. Progress is saved separately on each device and browser; use **Move your progress** to carry it across.
 
 **Offline, from a copy of the repo:**
 
@@ -45,7 +47,7 @@ That's it. An internet connection is only used to load the web fonts; the drills
 
 ## Automated checks
 
-Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, answers 40 questions in every drill, and plays a whole daily set.
+Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, answers 40 questions in every drill, plays a whole daily set, and moves progress to a fresh device with a code and with a file.
 
 The test finds tabs, answer buttons and the "next" button from the page itself, so a new drill is covered without touching the test as long as it follows the same pattern as the others: a `role="tab"` button whose `aria-controls` names its panel, answer buttons with a `<kbd>` shortcut that are disabled once answered, and a next button with `<kbd>N</kbd>`.
 
