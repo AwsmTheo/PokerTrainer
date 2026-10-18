@@ -370,17 +370,52 @@ tr:last-child td{border-bottom:0}
 .fh-log span{color:var(--muted)}
 .fh-log li.todo{opacity:.55}
 .fh-chs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-/* Seven tabs need tighter tabs on phones */
+/* Eight tabs need tighter tabs on phones */
 @media (max-width:960px){.tabs{align-self:stretch;gap:2px}.tab{flex:1 1 auto;align-items:center;justify-content:center;text-align:center;padding:9px 4px}.tab b{font-size:14.5px}.tab span{display:none}}
 @media (max-width:400px){.tab{padding:8px 2px}.tab b{font-size:13px}}
 @media (max-width:350px){.tab b{font-size:12px;letter-spacing:-.01em}}
-@media (max-width:520px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* seven tabs: rows of four and three */
+@media (max-width:600px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* eight tabs: two rows of four */
 @media (max-width:380px){.tab b{font-size:12.5px;letter-spacing:-.01em}}
 /* Bankroll drill */
 .bk-rules{margin:4px 0 0;display:flex;flex-direction:column}
 .bk-rules div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
 .bk-rules dt{color:var(--muted)}
 .bk-rules dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+/* Session log */
+.lg-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;margin:0}
+@media (min-width:700px){.lg-form{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.lg-field{display:flex;flex-direction:column;justify-content:flex-end;gap:6px;min-width:0}   /* inputs line up when a label wraps */
+@media (max-width:699px){.lg-stakes{grid-column:1/-1}}
+.lg-field .ctl-label{line-height:1.2}
+.lg-in{display:block;width:100%;min-width:0;min-height:44px;-webkit-appearance:none;appearance:none;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);padding:10px 12px;font:600 16px/1.2 var(--font-body);font-variant-numeric:tabular-nums}   /* below 16px, iPhones zoom in on focus */
+.lg-in::placeholder{color:var(--muted);font-weight:500;opacity:.8}
+.lg-in[aria-invalid="true"]{border-color:var(--bad)}
+.lg-wide{grid-column:1/-1}
+.lg-preview{margin:0;font-size:14px;color:var(--muted)}
+.lg-preview b{color:var(--ink);font-variant-numeric:tabular-nums}
+.lg-row-btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.lg-row-btns .link-btn{margin-left:0}
+.lg-msg{margin:0;font-size:13.5px;color:var(--bad)}
+.lg-msg.ok{color:var(--good)}
+.lg-msg:empty{display:none}
+.lg-set{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0 6px}
+.lg-up{color:var(--good)}
+.lg-down{color:var(--bad)}
+.lg-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.lg-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 14px;padding:12px 0;border-top:1px solid var(--line)}
+.lg-item.editing{border-left:3px solid var(--brass);padding-left:10px}
+.lg-when{font-weight:700;overflow-wrap:anywhere}
+.lg-when span{font-weight:500;color:var(--muted)}
+.lg-sub{grid-column:1;font-size:13px;color:var(--muted)}
+.lg-res{grid-row:1/span 2;grid-column:2;text-align:right;font:800 18px/1.1 var(--font-display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-res small{display:block;margin-top:3px;font:600 12px/1.2 var(--font-body);color:var(--muted)}
+.lg-acts{grid-column:1/-1;display:flex;gap:8px}
+.lg-acts .link-btn{margin-left:0;padding:5px 11px}
+.lg-empty{margin:0;color:var(--muted);font-size:14px}
+#lg-by div{flex-wrap:wrap;gap:2px 12px}
+#lg-by dd{margin-left:auto}
+.lg-note{margin:12px 0 0;font-size:12.5px;color:var(--muted)}
 
 /* Progress and review of misses */
 .rv{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
@@ -465,6 +500,7 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-opp" aria-controls="view-opp" data-tab="opp"><b>Opponents</b><span>Adjust to the player</span></button>
       <button type="button" role="tab" class="tab" id="tab-hand" aria-controls="view-hand" data-tab="hand"><b>Full hand</b><span>Play it to the river</span></button>
       <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Size your bankroll</span></button>
+      <button type="button" role="tab" class="tab" id="tab-log" aria-controls="view-log" data-tab="log"><b>Sessions</b><span>Log your real games</span></button>
     </nav>
     <div class="brand">
       <h1 id="app-title">Preflop Seat Drill</h1>
@@ -937,6 +973,96 @@ tr:last-child td{border-bottom:0}
       <footer class="sources">
         <p>Questions follow the bankroll part of the guide's chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>. Example games use round buy-ins in the currency you pick. The guide's own amounts are in NOK and are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK.</p>
         <p>Sources: <a href="https://www.vip-grinders.com/bankroll-management/" target="_blank" rel="noopener">VIP-Grinders, bankroll management</a> · <a href="https://www.pokernews.com/strategy/9-key-beginner-mistakes-low-stakes-how-to-fix-22957.htm" target="_blank" rel="noopener">PokerNews, beginner mistakes</a></p>
+      </footer>
+    </section>
+
+    <!-- ===================== Session log ===================== -->
+    <!-- Not a drill: a record of real games, so the browser test skips it as one (data-tool). -->
+    <section class="view" id="view-log" role="tabpanel" aria-labelledby="tab-log" data-tool hidden>
+      <div class="toolbar">
+        <div class="ctl">
+          <span class="ctl-label" id="lbl-cur-log">Currency</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-cur-log">
+            <button type="button" role="radio" data-cur="NOK">NOK</button>
+            <button type="button" role="radio" data-cur="USD">USD</button>
+            <button type="button" role="radio" data-cur="EUR">EUR</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="scorebar" aria-label="Your results">
+        <div class="stat"><b id="lgst-n">0</b><span>Sessions</span></div>
+        <div class="stat"><b id="lgst-res">–</b><span>Result</span></div>
+        <div class="stat"><b id="lgst-hr">–</b><span>Per hour</span></div>
+        <div class="stat"><b id="lgst-h">0</b><span>Hours</span></div>
+      </section>
+
+      <div class="pot-layout">
+        <article class="panel" aria-labelledby="lg-head">
+          <p class="eyebrow" id="lg-head" tabindex="-1">Log a session</p>
+          <form class="lg-form" id="lg-form" novalidate>
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-date">Date</label>
+              <input class="lg-in" type="date" id="lg-date" required>
+            </div>
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-hours">Hours played</label>
+              <input class="lg-in" type="text" id="lg-hours" inputmode="decimal" placeholder="2.5 or 2:30" autocomplete="off">
+            </div>
+            <div class="lg-field lg-stakes">
+              <label class="ctl-label" for="lg-stakes">Stakes</label>
+              <input class="lg-in" type="text" id="lg-stakes" maxlength="40" placeholder="1/2 live" autocomplete="off" list="lg-stakes-list">
+              <datalist id="lg-stakes-list"></datalist>
+            </div>
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-in">Bought in for <span class="lg-unit"></span></label>
+              <input class="lg-in" type="text" id="lg-in" inputmode="decimal" placeholder="Rebuys too" autocomplete="off">
+            </div>
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-out">Cashed out <span class="lg-unit"></span></label>
+              <input class="lg-in" type="text" id="lg-out" inputmode="decimal" placeholder="0 if busted" autocomplete="off">
+            </div>
+            <p class="lg-preview lg-wide" id="lg-preview" aria-live="polite"></p>
+            <div class="lg-row-btns lg-wide">
+              <button type="submit" class="new-hand" id="lg-save">Save session</button>
+              <button type="button" class="link-btn" id="lg-cancel" hidden>Cancel</button>
+              <p class="lg-msg" id="lg-msg" aria-live="polite"></p>
+            </div>
+          </form>
+        </article>
+
+        <aside class="panel opp-guide" aria-label="Your bankroll">
+          <h3>Your bankroll</h3>
+          <p>Enter what you had set aside for poker before your first logged session, and the buy-in of the game you play. Your results are added to it.</p>
+          <div class="lg-set">
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-start">Starting bankroll <span class="lg-unit"></span></label>
+              <input class="lg-in" type="text" id="lg-start" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="lg-field">
+              <label class="ctl-label" for="lg-game">Your game’s buy-in <span class="lg-unit"></span></label>
+              <input class="lg-in" type="text" id="lg-game" inputmode="decimal" autocomplete="off">
+            </div>
+          </div>
+          <dl class="bk-rules" id="lg-bank"></dl>
+          <p class="lg-note" id="lg-bank-note"></p>
+        </aside>
+      </div>
+
+      <section class="reference" aria-label="Your sessions">
+        <div class="ref wide">
+          <h3>Your sessions</h3>
+          <p id="lg-list-note">Newest first. Edit or delete any session.</p>
+          <div id="lg-list"></div>
+        </div>
+        <div class="ref wide" id="lg-by-wrap" hidden>
+          <h3>By stakes</h3>
+          <dl class="bk-rules" id="lg-by"></dl>
+        </div>
+      </section>
+
+      <footer class="sources">
+        <p>Log each session once, when you get up from the table. Your bankroll is counted against the guide’s rules from the chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>: 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and move down below 20. Sessions logged in another currency are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK. The log stays on this device; <b>Move your progress</b> below carries it with the rest.</p>
       </footer>
     </section>
   </main>
@@ -2988,6 +3114,197 @@ tr:last-child td{border-bottom:0}
   });
   armReset($('#bkreset'), () => { bkStats = freshBank(); saveJSON(STORE + ':bank', bkStats); renderBankScore(); renderBankCats(); rvClear('bank'); });
 
+  /* =====================================================================
+     SESSION LOG
+     Not a drill: real games, logged once per session when you get up from
+     the table. Each session keeps the currency it was logged in, and totals
+     are shown in the chosen one. The bankroll is the starting amount plus
+     every result, counted in buy-ins of your game against the Bankroll
+     tab's bands. Kept under its own key.
+     ===================================================================== */
+  const LG_KEY = STORE + ':log';
+  const lgNum = x => typeof x === 'number' && isFinite(x) && x >= 0;
+  const lgData = (() => {
+    const d = loadJSON(LG_KEY), amt = a => a && lgNum(a.n) && CUR[a.cur] ? {n:a.n, cur:a.cur} : null;
+    const sessions = (Array.isArray(d.sessions) ? d.sessions : []).filter(x =>
+      x && typeof x.id === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x.date) && lgNum(x.buyin) && lgNum(x.cashout) && lgNum(x.hours) && x.hours > 0 && CUR[x.cur]
+    ).map(x => ({id:x.id, date:x.date, stakes:typeof x.stakes === 'string' ? x.stakes.slice(0, 40) : '', buyin:x.buyin, cashout:x.cashout, hours:x.hours, cur:x.cur}));
+    const game = amt(d.game);
+    return {sessions, start:amt(d.start), game:game && game.n > 0 ? game : null};
+  })();
+  const lgSave = () => saveJSON(LG_KEY, lgData);
+  const lg = {editing:null, cur:prefs.cur};   // cur: the currency the form is filled in
+  const lgEsc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'})[c]);
+  const lgConv = (n, from, to = prefs.cur) => from === to ? n : n * CUR[from].nok / CUR[to].nok;
+  const lgRound = n => Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 100) / 100;
+  const lgMoney = (n, c = prefs.cur) => money(lgRound(n), c);
+  const lgSigned = (n, c = prefs.cur) => { const r = lgRound(n); return r > 0 ? '+' + money(r, c) : r < 0 ? '−' + money(-r, c) : money(0, c); };
+  const lgRate = (n, c) => Math.abs(n) >= 10 ? (n > 0 ? '+' : '−') + money(Math.round(Math.abs(n)), c) : lgSigned(n, c);   // per hour, in whole units
+  const lgTone = n => lgRound(n) > 0 ? 'lg-up' : lgRound(n) < 0 ? 'lg-down' : '';
+  const lgUnit = c => CUR[c].show('').trim();
+  const lgDate = d => new Date(d + 'T12:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+  const lgSplit = h => { let H = Math.floor(h + 1e-9), m = Math.round((h - H) * 60); if (m === 60) { H++; m = 0; } return [H, m]; };
+  const lgHours = h => { const [H, m] = lgSplit(h); return m ? (H ? `${H} h ${m} min` : `${m} min`) : `${H} h`; };
+  const lgSorted = () => lgData.sessions.map((x, i) => [x, i]).sort((a, b) => b[0].date.localeCompare(a[0].date) || b[1] - a[1]).map(p => p[0]);
+
+  // Amounts as typed on any keyboard: "1 250", "1,250", "1250,50", "12.5" or "300 kr".
+  function lgAmount(t) {
+    if (/-/.test(t)) return NaN;
+    let s = String(t).replace(/[^\d.,]/g, '');
+    if (s.includes('.') && s.includes(',')) s = s.lastIndexOf(',') > s.lastIndexOf('.') ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
+    else if (/^\d{1,3}(,\d{3})+$/.test(s)) s = s.replace(/,/g, '');
+    else s = s.replace(',', '.');
+    return /^(\d+\.?\d*|\.\d+)$/.test(s) ? parseFloat(s) : NaN;
+  }
+  // Hours as 2.5, 2,5 or 2:30.
+  function lgParseHours(t) {
+    const m = /^\s*(\d{1,2}):([0-5]?\d)\s*$/.exec(t);
+    const h = m ? +m[1] + m[2] / 60 : lgAmount(String(t).replace(/h(ours?)?/i, ''));
+    return h > 0 && h <= 48 ? h : NaN;
+  }
+  const lgRead = () => ({date:$('#lg-date').value, stakes:$('#lg-stakes').value.trim().slice(0, 40), hours:lgParseHours($('#lg-hours').value),
+                         buyin:lgAmount($('#lg-in').value), cashout:lgAmount($('#lg-out').value)});
+  function lgSay(text, ok) { const el = $('#lg-msg'); el.textContent = text || ''; el.classList.toggle('ok', !!ok); }
+
+  function lgPreview() {
+    const f = lgRead(), c = lg.cur, r = f.cashout - f.buyin;
+    $('#lg-preview').innerHTML = isNaN(r) ? '' :
+      `Result: <b class="${lgTone(r)}">${lgSigned(r, c)}</b>${f.hours > 0 ? ` · <b>${lgRate(r / f.hours, c)}</b> an hour` : ''}`;
+  }
+  function lgResetForm() {
+    const last = lgSorted()[0];
+    lg.editing = null; lg.cur = prefs.cur;
+    $('#lg-date').value = dyDay();
+    $('#lg-stakes').value = last ? last.stakes : '';
+    ['#lg-hours', '#lg-in', '#lg-out'].forEach(id => { $(id).value = ''; });
+    document.querySelectorAll('#lg-form [aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    $('#lg-head').textContent = 'Log a session';
+    $('#lg-save').textContent = 'Save session';
+    $('#lg-cancel').hidden = true;
+    lgSay('');
+  }
+  function lgEdit(id) {
+    const x = lgData.sessions.find(s => s.id === id);
+    if (!x) return;
+    const [H, m] = lgSplit(x.hours);
+    lg.editing = id; lg.cur = x.cur;
+    $('#lg-date').value = x.date;
+    $('#lg-stakes').value = x.stakes;
+    $('#lg-hours').value = m % 15 ? `${H}:${String(m).padStart(2, '0')}` : String(H + m / 60);
+    $('#lg-in').value = String(x.buyin);
+    $('#lg-out').value = String(x.cashout);
+    document.querySelectorAll('#lg-form [aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    $('#lg-head').textContent = `Edit session · ${lgDate(x.date)}`;
+    $('#lg-save').textContent = 'Save changes';
+    $('#lg-cancel').hidden = false;
+    lgSay('');
+    renderLog();
+    $('#lg-head').scrollIntoView({block:'center', behavior:'smooth'});
+    $('#lg-head').focus({preventScroll:true});   // not an input, so a phone doesn't open its keyboard or date picker
+  }
+  function lgSubmit(e) {
+    e.preventDefault();
+    const f = lgRead(), bad = [];
+    const check = (id, ok, text) => { $(id).setAttribute('aria-invalid', String(!ok)); if (!ok) bad.push([id, text]); };
+    check('#lg-date', /^\d{4}-\d{2}-\d{2}$/.test(f.date), 'Pick the date you played.');
+    check('#lg-hours', !isNaN(f.hours), 'Enter how long you played, like 2.5 or 2:30.');
+    check('#lg-in', !isNaN(f.buyin), 'Enter what you bought in for, rebuys included.');
+    check('#lg-out', !isNaN(f.cashout), 'Enter what you cashed out, or 0 if you lost it.');
+    if (bad.length) { lgSay(bad[0][1]); $(bad[0][0]).focus(); return; }
+    const entry = {date:f.date, stakes:f.stakes, buyin:f.buyin, cashout:f.cashout, hours:Math.round(f.hours * 1000) / 1000, cur:lg.cur};
+    const old = lg.editing && lgData.sessions.find(x => x.id === lg.editing);
+    if (old) Object.assign(old, entry);
+    else lgData.sessions.push(Object.assign({id:Date.now().toString(36) + '-' + rand(46656).toString(36)}, entry));
+    lgSave();
+    lgResetForm();
+    lgSay(`${old ? 'Session updated' : 'Session saved'}: ${lgSigned(entry.cashout - entry.buyin, entry.cur)}.`, true);
+    renderLog();
+  }
+
+  // The starting bankroll and your game's buy-in, shown in the chosen currency.
+  function lgFillSet() {
+    [['#lg-start', lgData.start, 2000], ['#lg-game', lgData.game, 50]].forEach(([id, a, eg]) => {
+      $(id).value = a ? String(lgRound(lgConv(a.n, a.cur))) : '';
+      $(id).placeholder = 'e.g. ' + fromNok(eg).toLocaleString('en-US');
+      $(id).removeAttribute('aria-invalid');
+    });
+  }
+  function renderLogBank(res) {
+    const st = lgData.start, g = lgData.game, rows = [['Results so far', lgData.sessions.length ? `<span class="${lgTone(res)}">${lgSigned(res)}</span>` : '–']];
+    let note = 'Add your starting bankroll and your game’s buy-in to count your bankroll in buy-ins.';
+    if (st) rows.push(['Bankroll now', lgMoney(lgConv(st.n, st.cur) + res)]);
+    if (st && g) {
+      const B = lgConv(st.n, st.cur) + res, Y = lgConv(g.n, g.cur), n = Math.max(0, Math.floor(B / Y * 10) / 10), band = bkBand(n);
+      rows.push([`In ${lgMoney(Y)} buy-ins`, `${num(n)} buy-ins`], ['The guide says', band.label], ['30 buy-ins (standard)', lgMoney(30 * Y)]);
+      note = `${band.why}${n < 40 ? ' Newer players at micro stakes are advised to keep at least 40.' : ''} Move up only with both the money and a win rate proven over 30,000–50,000 hands.`;
+    }
+    $('#lg-bank').innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+    $('#lg-bank-note').textContent = note + ' Judge each session by your decisions, not the result, and your results over months, not days.';
+  }
+  function renderLogList() {
+    const L = lgSorted();
+    $('#lg-list-note').hidden = !L.length;
+    $('#lg-list').innerHTML = !L.length ? '<p class="lg-empty">No sessions yet. Log your first one when you get up from the table.</p>' :
+      `<ul class="lg-list">${L.map(x => { const r = x.cashout - x.buyin; return `
+        <li class="lg-item${x.id === lg.editing ? ' editing' : ''}">
+          <div class="lg-when">${lgDate(x.date)}${x.stakes ? ` <span>· ${lgEsc(x.stakes)}</span>` : ''}</div>
+          <div class="lg-sub">${lgHours(x.hours)} · in ${lgMoney(x.buyin, x.cur)} · out ${lgMoney(x.cashout, x.cur)}</div>
+          <div class="lg-res ${lgTone(r)}">${lgSigned(r, x.cur)}<small>${lgRate(r / x.hours, x.cur)} an hour</small></div>
+          <div class="lg-acts"><button type="button" class="link-btn" data-lgedit="${lgEsc(x.id)}">Edit</button><button type="button" class="link-btn" data-lgdel="${lgEsc(x.id)}">Delete</button></div>
+        </li>`; }).join('')}</ul>`;
+    const by = new Map();
+    L.forEach(x => {
+      const k = x.stakes.toLowerCase(), s = by.get(k) || {name:x.stakes, n:0, h:0, r:0};
+      s.n++; s.h += x.hours; s.r += lgConv(x.cashout - x.buyin, x.cur); by.set(k, s);
+    });
+    $('#lg-by-wrap').hidden = by.size < 2;
+    $('#lg-by').innerHTML = [...by.values()].map(s =>
+      `<div><dt>${s.name ? lgEsc(s.name) : 'No stakes given'} · ${s.n} ${s.n === 1 ? 'session' : 'sessions'}, ${lgHours(s.h)}</dt><dd class="${lgTone(s.r)}">${lgSigned(s.r)} · ${lgRate(s.r / s.h)} an hour</dd></div>`).join('');
+    $('#lg-stakes-list').innerHTML = [...by.values()].filter(s => s.name).map(s => `<option value="${lgEsc(s.name)}"></option>`).join('');
+  }
+  function renderLog() {
+    const S = lgData.sessions;
+    document.querySelectorAll('#lg-form .lg-unit').forEach(el => { el.textContent = `(${lgUnit(lg.cur)})`; });
+    document.querySelectorAll('#view-log .lg-set .lg-unit').forEach(el => { el.textContent = `(${lgUnit(prefs.cur)})`; });
+    const res = S.reduce((t, x) => t + lgConv(x.cashout - x.buyin, x.cur), 0), hrs = S.reduce((t, x) => t + x.hours, 0);
+    $('#lgst-n').textContent = S.length;
+    $('#lgst-res').textContent = S.length ? lgSigned(res) : '–';
+    $('#lgst-res').className = S.length ? lgTone(res) : '';
+    $('#lgst-hr').textContent = hrs ? lgRate(res / hrs) : '–';
+    $('#lgst-hr').className = hrs ? lgTone(res / hrs) : '';
+    $('#lgst-h').textContent = (Math.round(hrs * 10) / 10).toLocaleString('en-US');
+    lgPreview();
+    renderLogBank(res);
+    renderLogList();
+  }
+
+  $('#lg-form').addEventListener('submit', lgSubmit);
+  $('#lg-form').addEventListener('input', e => { e.target.removeAttribute('aria-invalid'); lgSay(''); lgPreview(); });
+  $('#lg-cancel').addEventListener('click', () => { lgResetForm(); renderLog(); });
+  $('#lg-list').addEventListener('click', e => {
+    const ed = e.target.closest('[data-lgedit]');
+    if (ed) { lgEdit(ed.dataset.lgedit); return; }
+    const del = e.target.closest('[data-lgdel]');
+    if (!del) return;
+    if (!del.classList.contains('armed')) {   // two taps, since the app has no confirm() dialog
+      del.classList.add('armed'); del.textContent = 'Tap again to delete';
+      setTimeout(() => { del.classList.remove('armed'); del.textContent = 'Delete'; }, 3000);
+      return;
+    }
+    const id = del.dataset.lgdel;
+    lgData.sessions = lgData.sessions.filter(x => x.id !== id);
+    lgSave();
+    if (lg.editing === id) lgResetForm();
+    renderLog();
+  });
+  [['#lg-start', 'start'], ['#lg-game', 'game']].forEach(([id, k]) => $(id).addEventListener('input', () => {
+    const t = $(id).value.trim(), n = lgAmount(t), ok = !t || (!isNaN(n) && (k === 'start' || n > 0));
+    $(id).setAttribute('aria-invalid', String(!ok));
+    if (!ok) return;
+    lgData[k] = t ? {n, cur:prefs.cur} : null;
+    lgSave(); renderLog();
+  }));
+
   /* ---------- Currency ---------- */
   function renderCur() {
     document.querySelectorAll('[data-cur]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.cur === prefs.cur)));
@@ -3001,6 +3318,8 @@ tr:last-child td{border-bottom:0}
       // A fresh question in the old currency is swapped for one in the new; answered and saved ones keep theirs.
       if (!bk.answered && !bk.q.rv && bk.q.cur && bk.q.cur !== prefs.cur) newBank(); else renderBank();
     }
+    if (!lg.editing) lg.cur = prefs.cur;   // a session being edited keeps its own currency
+    lgFillSet(); renderLog();
   });
 
   /* =====================================================================
@@ -4015,7 +4334,8 @@ tr:last-child td{border-bottom:0}
     const n = SV_RECS.reduce((sum, k) => sum + (data[k] && data[k].total > 0 ? Math.floor(data[k].total) : 0), 0);
     const d = data.daily || {}, today = dyDay();
     const streak = d.last === today || d.last === dyBefore(today) ? Math.floor(d.streak) || 0 : 0;
-    return `${n} ${n === 1 ? 'answer' : 'answers'}${streak ? `, a ${streak}-day streak` : ''}`;
+    const logged = data.log && Array.isArray(data.log.sessions) ? data.log.sessions.length : 0;
+    return `${n} ${n === 1 ? 'answer' : 'answers'}${streak ? `, a ${streak}-day streak` : ''}${logged ? `, ${logged} logged ${logged === 1 ? 'session' : 'sessions'}` : ''}`;
   }
   const svNative = () => !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform());
   function svSay(el, text, bad) { el.innerHTML = text ? `<p${bad ? ' class="sv-bad"' : ''}>${text}</p>` : ''; }
@@ -4071,7 +4391,7 @@ tr:last-child td{border-bottom:0}
     const from = isNaN(when) ? '' : ` from ${when.toLocaleString(undefined, {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}`;
     ask.innerHTML = `<div class="sv-ask">
       <p><b>Save${from}:</b> ${svSummary(svPending.data)}.</p>
-      <p>Loading it replaces the progress on this device (${svSummary(svCollect().data)}), saved misses and settings included.</p>
+      <p>Loading it replaces the progress on this device (${svSummary(svCollect().data)}), saved misses, session log and settings included.</p>
       <div class="sv-row"><button type="button" class="sv-btn go" id="sv-yes">Replace my progress</button><button type="button" class="sv-btn" id="sv-no">Cancel</button></div>
     </div>`;
   }
@@ -4124,7 +4444,9 @@ tr:last-child td{border-bottom:0}
     hand:{hash:'full-hand', title:'Full Hand Drill',
           tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'},
     bank:{hash:'bankroll', title:'Bankroll Drill',
-          tag:'Size your bankroll in buy-ins, work out what a game needs, and decide when to move up or down. Pick NOK, USD or EUR.'}
+          tag:'Size your bankroll in buy-ins, work out what a game needs, and decide when to move up or down. Pick NOK, USD or EUR.'},
+    log:{hash:'session-log', title:'Session Log',
+         tag:'Log each real session when you get up from the table: the stakes, what you bought in for, what you cashed out and how long you played. See your results, what you win an hour and your bankroll in buy-ins.'}
   };
   function setTab(id) {
     if (!TABS[id]) id = 'seats';
@@ -4142,6 +4464,7 @@ tr:last-child td{border-bottom:0}
     $('#view-opp').hidden = id !== 'opp';
     $('#view-hand').hidden = id !== 'hand';
     $('#view-bank').hidden = id !== 'bank';
+    $('#view-log').hidden = id !== 'log';
     const T = TABS[id];
     $('#app-title').textContent = T.title;
     $('#app-tag').textContent = T.tag;
@@ -4170,7 +4493,7 @@ tr:last-child td{border-bottom:0}
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     const k = e.key.toLowerCase();
     const tab = prefs.tab === 'daily' ? dy.active && dy.tab : prefs.tab;   // on the Daily tab, the drill it is showing
-    if (!tab) return;
+    if (!tab || tab === 'log') return;
     if (tab === 'board') {
       if (!bt.answered && /^[1-5]$/.test(k)) btAnswer(+k - 1);
       else if (bt.answered && k === 'n') { e.preventDefault(); rvNext() || btNew(); }
@@ -4208,6 +4531,9 @@ tr:last-child td{border-bottom:0}
   renderCur();
   newHand();
   renderRv();
+  lgResetForm();
+  lgFillSet();
+  renderLog();
   const fromHash = (location.hash || '').slice(1);
   setTab(Object.keys(TABS).find(k => TABS[k].hash === fromHash) || prefs.tab);
 })();
