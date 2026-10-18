@@ -10,12 +10,11 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 - **Pot odds: price every call.** A quiz on the equity a call needs, how often a bluff must work, and the minimum defence frequency (MDF) for a given pot and bet. Each answer shows the working.
 - **Board: read the flop.** Random flops to classify by texture (dry, wet, low and connected, monotone, paired), decide whose range they favour, choose a continuation-bet plan in or out of position and multiway, and sort a hand into a strength bucket. Each answer explains the read and the default plan, with reference tables for c-bets and hand buckets.
 - **Full hand: play it to the river.** One scripted hand at a time, from the preflop decision to the river, with a decision on each street. There are 38 hands, including 3-bet pots, multiway pots and turn decisions. Every decision is tagged with the chapter its rule comes from (seats, pot odds, board or opponents), a wrong answer plays on along the right line, and your accuracy is tracked per chapter. Suits are relabelled at random each time.
-- **Bankroll: size your bankroll.** Size a bankroll in buy-ins (20 aggressive, 30 standard, 50 conservative, 100–200 for tournaments), work out what a game needs and which buy-ins a budget supports, and decide whether to move up, stay or move down. A side panel lists the bankroll rules in your currency.
-- **Sessions: log your real games.** Not a drill: when you get up from the table, log the date, stakes, what you bought in for (rebuys included), what you cashed out and how long you played. The tab shows your total result, what you win an hour, a breakdown by stakes once you play more than one, and, with your starting bankroll and your game's buy-in filled in, your bankroll in buy-ins and what the Bankroll tab's rules say about it. Any session can be edited or deleted.
+- **Sessions: log your real games.** Not a drill: when you get up from the table, log the date, stakes, what you bought in for (rebuys included), what you cashed out and how long you played. The tab shows your total result, what you win an hour, a breakdown by stakes once you play more than one, and, with your starting bankroll and your game's buy-in filled in, your bankroll in buy-ins and what the guide's bankroll rules say about it (20 buy-ins aggressive, 30 standard, 50 conservative, move down below 20). Any session can be edited or deleted.
 
 The pot odds tab includes **short stacks**: set mining at 25bb, which hands gain when stacks are short or deep, and the tournament push/fold bands.
 
-Money shows in **NOK, USD or EUR**, switched on the Pot odds, Bankroll or Sessions tab (NOK by default). Drill amounts are example sizes, so only the sign changes; the guide's own NOK amounts are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK. Logged sessions are real money, so each keeps the currency it was logged in, and totals in another currency are converted at the same rough rate.
+Money shows in **NOK, USD or EUR**, switched on the Pot odds or Sessions tab (NOK by default). Drill amounts are example sizes, so only the sign changes; the guide's own NOK amounts are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK. Logged sessions are real money, so each keeps the currency it was logged in, and totals in another currency are converted at the same rough rate.
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
@@ -36,7 +35,7 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
 
-That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#daily`, `#seats`, `#pot-odds`, `#board-texture`, `#opponents`, `#full-hand`, `#bankroll` or `#session-log` at the end of the URL.
+That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#daily`, `#seats`, `#pot-odds`, `#board-texture`, `#opponents`, `#full-hand` or `#session-log` at the end of the URL.
 
 ### iPhone app
 

@@ -379,9 +379,9 @@ tr:last-child td{border-bottom:0}
 @media (max-width:960px){.tabs{align-self:stretch;gap:2px}.tab{flex:1 1 auto;align-items:center;justify-content:center;text-align:center;padding:9px 4px}.tab b{font-size:14.5px}.tab span{display:none}}
 @media (max-width:400px){.tab{padding:8px 2px}.tab b{font-size:13px}}
 @media (max-width:350px){.tab b{font-size:12px;letter-spacing:-.01em}}
-@media (max-width:600px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* eight tabs: two rows of four */
+@media (max-width:600px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* seven tabs: rows of four and three */
 @media (max-width:380px){.tab b{font-size:12.5px;letter-spacing:-.01em}}
-/* Bankroll drill */
+/* Rules list (Sessions side panel) */
 .bk-rules{margin:4px 0 0;display:flex;flex-direction:column}
 .bk-rules div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
 .bk-rules dt{color:var(--muted)}
@@ -433,7 +433,7 @@ tr:last-child td{border-bottom:0}
 .rv.on summary{border-color:var(--brass)}
 .rv-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:min(980px, calc(100vw - 32px));display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}
 .rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;flex:1 1 100%;min-width:0}
-@media (min-width:900px){.rv-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}   /* one row for the six drills */
+@media (min-width:900px){.rv-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}   /* one row for the five drills */
 .rv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:9px 11px;border-radius:10px;background:var(--surface-2);border-left:3px solid var(--line);min-width:0}
 .rv-tile.has{border-left-color:var(--brass)}
 .rv-name{font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -511,7 +511,6 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-board" aria-controls="view-board" data-tab="board"><b>Board</b><span>Read the flop</span></button>
       <button type="button" role="tab" class="tab" id="tab-opp" aria-controls="view-opp" data-tab="opp"><b>Opponents</b><span>Adjust to the player</span></button>
       <button type="button" role="tab" class="tab" id="tab-hand" aria-controls="view-hand" data-tab="hand"><b>Full hand</b><span>Play it to the river</span></button>
-      <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Size your bankroll</span></button>
       <button type="button" role="tab" class="tab" id="tab-log" aria-controls="view-log" data-tab="log"><b>Sessions</b><span>Log your real games</span></button>
     </nav>
     <div class="brand">
@@ -929,65 +928,6 @@ tr:last-child td{border-bottom:0}
       <footer class="sources">
         <p>Every decision follows a rule from the guide, and each one is tagged with the chapter it comes from. The 38 hands are scripted so the right answer is clear, and suits are relabelled at random each time. They include 3-bet and 4-bet pots, pots with three or four players, and a turn decision in most hands. The big blind hand that ends in a river fold is built on Upswing's hand-reading example (its equity figures and bet sizes); its turn card, and the other hands, are this drill's own. Where a hand needs a figure the guide doesn't give, such as a tight player's 4-bet range, the hand says so.</p>
         <p>Sources: <a href="https://upswingpoker.com/preflop-open-strategy-rfi-explained/" target="_blank" rel="noopener">Upswing, raise first in</a> · <a href="https://upswingpoker.com/hand-reading-poker/" target="_blank" rel="noopener">Upswing, hand reading</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/bet-size-strategy-tips-rules/" target="_blank" rel="noopener">Upswing, bet sizing</a> · <a href="https://upswingpoker.com/continuation-bet-c-bet-strategy-position/" target="_blank" rel="noopener">Upswing, c-bets by position</a> · <a href="https://upswingpoker.com/3-cash-game-exploits-regs-backed-by-data/" target="_blank" rel="noopener">Upswing, exploits backed by data</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a> · <a href="https://blog.gtowizard.com/10-tips-multiway-pots-in-poker/" target="_blank" rel="noopener">GTO Wizard, multiway pots</a> · <a href="https://blog.gtowizard.com/picking-the-right-semi-bluffs/" target="_blank" rel="noopener">GTO Wizard, semi-bluffs</a> · <a href="https://www.pokerlistings.com/blog/how-to-identify-and-exploit-different-poker-player-types" target="_blank" rel="noopener">PokerListings, player types</a> · <a href="https://pokercoaching.com/blog/3-bet-poker-strategy/" target="_blank" rel="noopener">PokerCoaching, 3-bets</a> · <a href="https://upswingpoker.com/vs-3-bet-pre-flop-position-strategy-revealed/" target="_blank" rel="noopener">Upswing, facing a 3-bet</a> · <a href="https://upswingpoker.com/thin-value-bet-poker-strategy/" target="_blank" rel="noopener">Upswing, thin value</a> · <a href="https://redchippoker.com/what-to-open-raise-preflop/" target="_blank" rel="noopener">Red Chip, open raises</a> · <a href="https://www.pokerskill.com/charts/odds/" target="_blank" rel="noopener">Poker Skill, odds</a> · <a href="https://blog.gtowizard.com/the_3_biggest_leaks_killing_your_winrate/" target="_blank" rel="noopener">GTO Wizard, three biggest leaks</a></p>
-      </footer>
-    </section>
-
-    <!-- ===================== Bankroll drill ===================== -->
-    <section class="view" id="view-bank" role="tabpanel" aria-labelledby="tab-bank" hidden>
-      <div class="toolbar">
-        <div class="ctl">
-          <span class="ctl-label">Practise</span>
-          <div class="cats" id="bkcats"></div>
-        </div>
-        <div class="ctl">
-          <span class="ctl-label" id="lbl-cur-bank">Currency</span>
-          <div class="seg" role="radiogroup" aria-labelledby="lbl-cur-bank">
-            <button type="button" role="radio" data-cur="NOK">NOK</button>
-            <button type="button" role="radio" data-cur="USD">USD</button>
-            <button type="button" role="radio" data-cur="EUR">EUR</button>
-          </div>
-        </div>
-      </div>
-
-      <section class="scorebar" aria-label="Your bankroll drill record">
-        <div class="stat"><b id="bkst-correct">0/0</b><span>Correct</span></div>
-        <div class="stat"><b id="bkst-acc">–</b><span>Accuracy</span></div>
-        <div class="stat"><b id="bkst-streak">0</b><span>Streak</span></div>
-        <div class="stat"><b id="bkst-best">0</b><span>Best</span></div>
-        <button type="button" class="link-btn" id="bkreset">Reset record</button>
-      </section>
-
-      <div class="pot-layout">
-        <article class="panel" aria-label="Question">
-          <p class="eyebrow" id="bk-eyebrow"></p>
-          <div id="bk-scene"></div>
-          <h2 class="q-prompt" id="bk-prompt"></h2>
-          <div class="options" id="bk-options"></div>
-          <div class="result" id="bk-result" hidden aria-live="polite"></div>
-        </article>
-
-        <aside class="panel opp-guide" aria-label="Bankroll rules">
-          <h3>Your bankroll</h3>
-          <p>Money set aside only for poker, counted in buy-ins of the game you play.</p>
-          <dl class="bk-rules" id="bk-rules"></dl>
-        </aside>
-      </div>
-
-      <section class="reference" aria-label="Reference">
-        <div class="ref wide">
-          <h3>Rules to remember</h3>
-          <ul class="rules">
-            <li>Keep 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and 100–200 for tournaments. Newer players at micro stakes should keep at least 40.</li>
-            <li>Move down once you fall below 20 buy-ins.</li>
-            <li>Move up only when you have both the money and a proven win rate over 30,000–50,000 hands.</li>
-            <li>For a student, the practical bankroll is a separate budget you can afford to lose entirely.</li>
-          </ul>
-        </div>
-      </section>
-
-      <footer class="sources">
-        <p>Questions follow the bankroll part of the guide's chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>. Example games use round buy-ins in the currency you pick. The guide's own amounts are in NOK and are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK.</p>
-        <p>Sources: <a href="https://www.vip-grinders.com/bankroll-management/" target="_blank" rel="noopener">VIP-Grinders, bankroll management</a> · <a href="https://www.pokernews.com/strategy/9-key-beginner-mistakes-low-stakes-how-to-fix-22957.htm" target="_blank" rel="noopener">PokerNews, beginner mistakes</a></p>
       </footer>
     </section>
 
@@ -2919,11 +2859,13 @@ tr:last-child td{border-bottom:0}
   armReset($('#oreset'), () => { oppStatsRec = freshOpp(); saveJSON(STORE + ':opp', oppStatsRec); renderOppScore(); renderOppCats(); rvClear('opp'); });
 
   /* =====================================================================
-     BANKROLL DRILL
+     SESSION LOG
+     Not a drill: real games, logged once per session when you get up from
+     the table. Each session keeps the currency it was logged in, and totals
+     are shown in the chosen one. The bankroll is the starting amount plus
+     every result, counted in buy-ins of your game against the guide's
+     bands. Kept under its own key.
      ===================================================================== */
-
-  // Round buy-ins for example games in each currency. Each step is at least double the one before.
-  const BK_STAKES = {NOK:[20, 50, 100, 200, 500, 1000], USD:[2, 5, 10, 25, 50, 100], EUR:[2, 5, 10, 20, 50, 100]};
   // The guide's 2026 cash-game guidance, in buy-ins.
   const BK_BANDS = [
     {min:0,  label:'Under 20 buy-ins: move down', why:'Below 20 buy-ins the guide says to move down to a smaller game.'},
@@ -2932,211 +2874,6 @@ tr:last-child td{border-bottom:0}
     {min:50, label:'50 or more: conservative', why:'50 buy-ins or more is the conservative bankroll.'}
   ];
   const bkBand = n => BK_BANDS.filter(b => n >= b.min).pop();
-  const bkHands = n => n.toLocaleString('en-US');
-
-  const BK_RULE = 'Keep 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and 100–200 for tournaments.';
-  const BK_MOVE = 'Move down below 20 buy-ins. Move up only with both the money and a proven win rate over 30,000–50,000 hands.';
-
-  function qBkRate() {
-    const c = prefs.cur, Y = pick(BK_STAKES[c]), n = pick([8, 12, 15, 18, 22, 25, 27, 32, 35, 40, 45, 55, 60, 80]), B = Y * n, band = bkBand(n);
-    return {cur:c, scene:{facts:[{k:'Bankroll', v:money(B, c)}, {k:'Buy-in', v:money(Y, c)}]},
-      prompt:`Your poker bankroll is ${money(B, c)} and you play cash games with a ${money(Y, c)} buy-in. How does the guide rate that bankroll?`,
-      options:fixedOpts(BK_BANDS.map(b => [b.label, b === band])),
-      work:`${money(B, c)} ÷ ${money(Y, c)} = <b>${n} buy-ins</b>. ${band.why}${n < 40 ? ' Newer players at micro stakes are advised to keep at least 40.' : ''}`,
-      rule:BK_RULE};
-  }
-  function qBkNeed() {
-    const c = prefs.cur, Y = pick(BK_STAKES[c]);
-    const L = pick([{n:20, a:'an aggressive'}, {n:30, a:'a standard'}, {n:50, a:'a conservative'}, {n:100, t:true}]);
-    const wrongs = shuffle([10, 20, 30, 50, 100].filter(k => k !== L.n && !(L.t && k > 100))).map(k => money(Y * k, c));
-    return {cur:c, scene:{facts:[{k:L.t ? 'Tournament buy-in' : 'Cash-game buy-in', v:money(Y, c)}]},
-      prompt:L.t
-        ? `What is the smallest bankroll the guide suggests for ${money(Y, c)} tournaments?`
-        : `How big a bankroll do you need to play ${money(Y, c)} buy-in cash games with ${L.a} bankroll?`,
-      options:opts(money(Y * L.n, c), wrongs),
-      work:L.t
-        ? `Tournaments swing far more than cash games, so the guide asks for 100–200 buy-ins: at least 100 × ${money(Y, c)} = <b>${money(Y * 100, c)}</b>.`
-        : `${cap(L.a.replace(/^an? /, ''))} is ${L.n} buy-ins: ${L.n} × ${money(Y, c)} = <b>${money(Y * L.n, c)}</b>.`,
-      rule:BK_RULE};
-  }
-  function qBkMax() {
-    const c = prefs.cur, st = BK_STAKES[c], i = 1 + rand(st.length - 2), Y = st[i];
-    const B = nice(30 * Y * pick([1, 1.2, 1.5]));
-    const wrongs = [st[i + 1], st[i - 1], st[i + 2]].filter(x => x).map(x => money(x, c));
-    return {cur:c, scene:{facts:[{k:'Bankroll', v:money(B, c)}, {k:'Rule', v:'30 buy-ins'}]},
-      prompt:`Your bankroll is ${money(B, c)}. With a standard bankroll of 30 buy-ins, what is the biggest cash-game buy-in you should play?`,
-      options:opts(money(Y, c), wrongs),
-      work:`${money(B, c)} ÷ 30 = ${money(nice(B / 30), c)}, so <b>${money(Y, c)}</b> games fit. ${money(st[i + 1], c)} games would need 30 × ${money(st[i + 1], c)} = ${money(30 * st[i + 1], c)}.`,
-      rule:BK_RULE};
-  }
-  function qBkBudget() {
-    const c = prefs.cur, B = fromNok(pick([1000, 2000, 3000, 5000]), c);
-    const range = (a, b) => `About ${money(nice(B / a), c)}–${money(nice(B / b), c)}`;
-    return {cur:c, scene:{facts:[{k:'Poker budget', v:money(B, c)}]},
-      prompt:`You set aside ${money(B, c)} for poker, money you can afford to lose entirely. At the guide’s 30–50 buy-ins, which buy-ins does it support?`,
-      options:opts(range(50, 30), [range(20, 10), range(100, 50), range(10, 5)]),
-      work:`Divide the budget by 50 and by 30: ${money(B, c)} ÷ 50 = ${money(nice(B / 50), c)} and ${money(B, c)} ÷ 30 = ${money(nice(B / 30), c)}. The guide’s own example is 2,000 NOK for 40–65 NOK buy-ins.`,
-      rule:'For a student, the practical bankroll is a separate budget you can afford to lose entirely.'};
-  }
-  function qBkMove() {
-    const c = prefs.cur, st = BK_STAKES[c], i = 1 + rand(st.length - 2), Y = st[i], up = st[i + 1], down = st[i - 1];
-    const kind = pick(['down', 'up', 'hands', 'money', 'loser']);
-    const B = {down:Y * pick([10, 14, 16, 18]), up:up * pick([30, 35, 40]), hands:up * pick([30, 35, 40]), money:Y * pick([25, 30, 40]), loser:up * pick([30, 35, 40])}[kind];
-    const H = {down:pick([5000, 20000, 60000]), up:pick([50000, 60000, 80000]), hands:pick([4000, 8000, 12000, 18000]), money:pick([50000, 60000, 80000]), loser:pick([50000, 60000, 80000])}[kind];
-    const result = kind === 'loser' ? 'about break-even' : 'a steady win rate';
-    const nY = Math.round(B / Y * 10) / 10, nUp = Math.round(B / up * 10) / 10;
-    const ans = kind === 'down' ? 'down' : kind === 'up' ? 'up' : 'stay';
-    const work = {
-      down:`${money(B, c)} is only ${num(nY)} buy-ins of ${money(Y, c)}. Below 20 buy-ins the guide says to <b>move down</b>, whatever your results.`,
-      up:`You have both: ${money(B, c)} is ${num(nUp)} buy-ins of the ${money(up, c)} game, and ${bkHands(H)} hands is enough to trust a win rate. <b>Move up.</b>`,
-      hands:`The money is there (${num(nUp)} buy-ins of ${money(up, c)}), but ${bkHands(H)} hands proves nothing yet. The guide wants a win rate over 30,000–50,000 hands, so <b>stay</b>.`,
-      money:`${bkHands(H)} winning hands is a proven win rate, but ${money(B, c)} is only ${num(nUp)} buy-ins of the ${money(up, c)} game. You need the money too, so <b>stay</b>.`,
-      loser:`The money is there, but after ${bkHands(H)} hands you are only break-even, so there is no proven win rate. <b>Stay</b> and keep improving.`}[kind];
-    return {cur:c, scene:{facts:[{k:'Your game', v:money(Y, c) + ' buy-in'}, {k:'Bankroll', v:money(B, c)}, {k:'Hands played', v:bkHands(H)}]},
-      prompt:`You play ${money(Y, c)} buy-in cash games with a ${money(B, c)} bankroll. Over ${bkHands(H)} hands at this game you have ${result}. What should you do?`,
-      options:fixedOpts([[`Move down to ${money(down, c)} games`, ans === 'down'], [`Stay at ${money(Y, c)} games`, ans === 'stay'], [`Move up to ${money(up, c)} games`, ans === 'up']]),
-      work, rule:BK_MOVE};
-  }
-
-  const BK_CONCEPTS = [
-    {cat:'rate', prompt:'Why keep a bankroll at all?',
-     options:['So normal losing streaks don’t force you out of the game or onto tilt.', 'So you can move up faster.', 'Because a bigger bankroll wins more pots.', 'So you can afford to call more.'],
-     work:'Even a winning player has long losing streaks. Money set aside only for poker lets you ride them out at the right stake.',
-     rule:'A bankroll keeps normal losing streaks from forcing you out of the game or onto tilt.'},
-    {cat:'rate', prompt:'An older live-game guide from 2016 suggests 10–20 buy-ins. How does that compare with 2026 advice?',
-     options:['It is looser: current advice is 20, 30 or 50 buy-ins.', 'It matches current advice.', 'It is stricter than current advice.', 'Live games need no bankroll.'],
-     work:'Current guidance is 20 buy-ins (aggressive), 30 (standard) or 50 (conservative), and at least 40 for newer players at micro stakes.',
-     rule:BK_RULE},
-    {cat:'move', prompt:'Your results look great after 5,000 hands. Is that a proven win rate?',
-     options:['No: the guide wants 30,000–50,000 hands before you trust it.', 'Yes: 5,000 hands is plenty.', 'Yes, if you won most sessions.', 'Only if you won a big pot.'],
-     work:'Short samples swing wildly. The guide asks for a win rate over 30,000–50,000 hands before moving up.',
-     rule:BK_MOVE},
-  ];
-
-  const BKCATS = [
-    {id:'mixed', name:'Mixed'},
-    {id:'rate', name:'Bankroll sums', gen:[qBkRate, qBkNeed, qBkMax, qBkBudget]},
-    {id:'move', name:'Move up or down', gen:[qBkMove]}
-  ];
-  const bkCat = id => BKCATS.find(c => c.id === id);
-  const bkprefs = Object.assign({cat:'mixed'}, loadJSON(STORE + ':bank-prefs'));
-  if (!bkCat(bkprefs.cat)) bkprefs.cat = 'mixed';
-
-  const freshBank = () => ({total:0, correct:0, streak:0, best:0, cats:{}});
-  let bkStats = Object.assign(freshBank(), loadJSON(STORE + ':bank'));
-  const bk = {q:null, answered:false, choice:null, qNo:1, lastPrompt:''};
-
-  function makeBank() {
-    const id = bkprefs.cat === 'mixed' ? pick(BKCATS.slice(1)).id : bkprefs.cat;
-    const concepts = BK_CONCEPTS.filter(c => c.cat === id && c.prompt !== bk.lastPrompt);
-    let q;
-    if (concepts.length && rand(100) < 25) {
-      const c = pick(concepts);
-      q = {prompt:c.prompt, options:opts(c.options[0], c.options.slice(1)), work:c.work, rule:c.rule};
-    } else {
-      for (let t = 0; t < 5; t++) { q = pick(bkCat(id).gen)(); if (q.prompt !== bk.lastPrompt) break; }
-    }
-    q.cat = id;
-    bk.lastPrompt = q.prompt;
-    return q;
-  }
-  function newBank() { showBank(makeBank()); }
-  function showBank(q) {
-    if (!bkCat(q.cat)) throw new Error('bad category');
-    bk.q = q;
-    bk.answered = false;
-    bk.choice = null;
-    bk.qNo = bkStats.total + 1;
-    renderBank();
-  }
-  function answerBank(i) {
-    if (bk.answered || !bk.q.options[i]) return;
-    bk.answered = true;
-    bk.choice = i;
-    const ok = bk.q.options[i].correct, R = bkStats;
-    R.total++;
-    if (ok) { R.correct++; R.streak++; R.best = Math.max(R.best, R.streak); }
-    else R.streak = 0;
-    const c = R.cats[bk.q.cat] || (R.cats[bk.q.cat] = {n:0, c:0});
-    c.n++; if (ok) c.c++;
-    saveJSON(STORE + ':bank', R);
-    rvRecord('bank', ok, bk.q.rv, () => bk.q);
-    renderBank();
-    const nb = $('#bkNext'); if (nb) nb.focus({preventScroll:true});
-  }
-
-  function renderBankCats() {
-    $('#bkcats').innerHTML = BKCATS.map(c => {
-      const s = c.id === 'mixed' ? {n:bkStats.total, c:bkStats.correct} : (bkStats.cats[c.id] || {n:0, c:0});
-      return `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${c.id === bkprefs.cat}">${c.name}${s.n ? `<small>${s.c}/${s.n}</small>` : ''}</button>`;
-    }).join('');
-  }
-  function renderBankScore() {
-    const R = bkStats;
-    $('#bkst-correct').textContent = `${R.correct}/${R.total}`;
-    $('#bkst-acc').textContent = R.total ? Math.round(R.correct / R.total * 100) + '%' : '–';
-    $('#bkst-streak').textContent = R.streak;
-    $('#bkst-best').textContent = R.best;
-  }
-  // The side panel and the plan table, in the chosen currency.
-  function renderBankGuide() {
-    const c = prefs.cur, Y = BK_STAKES[c][2], B = fromNok(2000, c);
-    $('#bk-rules').innerHTML = [
-      ['Cash games', '20 · 30 · 50 buy-ins'],
-      ['Tournaments', '100–200 buy-ins'],
-      ['Move down', 'below 20 buy-ins'],
-      ['Move up', 'money + 30,000–50,000 hands'],
-      [`Standard for ${money(Y, c)} games`, money(Y * 30, c)],
-      [`A ${money(B, c)} budget`, `${money(nice(B / 50), c)}–${money(nice(B / 30), c)} buy-ins`]
-    ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-  }
-  function renderBank() {
-    renderBankCats();
-    renderBankScore();
-    renderBankGuide();
-    const q = bk.q;
-    $('#bk-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + bk.qNo} · ${bkCat(q.cat).name}`;
-    $('#bk-scene').innerHTML = q.scene ? sceneHTML(q.scene) : '';
-    $('#bk-scene').hidden = !q.scene;
-    $('#bk-prompt').textContent = q.prompt;
-    $('#bk-options').innerHTML = q.options.map((o, i) => {
-      let cls = 'opt';
-      if (bk.answered && o.correct) cls += ' right';
-      else if (bk.answered && i === bk.choice) cls += ' wrong';
-      return `<button type="button" class="${cls}" data-opt="${i}"${bk.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${o.label}</span></button>`;
-    }).join('');
-    const el = $('#bk-result');
-    if (!bk.answered) { el.hidden = true; el.innerHTML = ''; return; }
-    const ok = q.options[bk.choice].correct;
-    const right = q.options.find(o => o.correct).label;
-    el.hidden = false;
-    el.innerHTML = `
-      <div class="verdict ${ok ? 'ok' : 'bad'}">
-        <span class="mark" aria-hidden="true">${ok ? '✓' : '✕'}</span>
-        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${ok ? 'Streak: ' + bkStats.streak : 'Answer: ' + right}</p></div>
-        <button type="button" class="new-hand" id="bkNext">Next question <kbd>N</kbd></button>
-      </div>
-      <p class="work">${q.work}</p>
-      <p class="rule"><strong>Rule from the chapter</strong>${q.rule}</p>`;
-  }
-
-  $('#bk-options').addEventListener('click', e => { const b = e.target.closest('[data-opt]'); if (b) answerBank(+b.dataset.opt); });
-  $('#bk-result').addEventListener('click', e => { if (e.target.closest('#bkNext')) rvNext() || newBank(); });
-  $('#bkcats').addEventListener('click', e => {
-    const b = e.target.closest('[data-cat]');
-    if (!b || b.dataset.cat === bkprefs.cat) return;
-    bkprefs.cat = b.dataset.cat; saveJSON(STORE + ':bank-prefs', bkprefs); newBank();
-  });
-  armReset($('#bkreset'), () => { bkStats = freshBank(); saveJSON(STORE + ':bank', bkStats); renderBankScore(); renderBankCats(); rvClear('bank'); });
-
-  /* =====================================================================
-     SESSION LOG
-     Not a drill: real games, logged once per session when you get up from
-     the table. Each session keeps the currency it was logged in, and totals
-     are shown in the chosen one. The bankroll is the starting amount plus
-     every result, counted in buy-ins of your game against the Bankroll
-     tab's bands. Kept under its own key.
-     ===================================================================== */
   const LG_KEY = STORE + ':log';
   const lgNum = x => typeof x === 'number' && isFinite(x) && x >= 0;
   const lgData = (() => {
@@ -3329,10 +3066,6 @@ tr:last-child td{border-bottom:0}
     if (!b || b.dataset.cur === prefs.cur || !CUR[b.dataset.cur]) return;
     prefs.cur = b.dataset.cur; savePrefs(); renderCur();
     if (pot.q) renderPot();
-    if (bk.q) {
-      // A fresh question in the old currency is swapped for one in the new; answered and saved ones keep theirs.
-      if (!bk.answered && !bk.q.rv && bk.q.cur && bk.q.cur !== prefs.cur) newBank(); else renderBank();
-    }
     if (!lg.editing) lg.cur = prefs.cur;   // a session being edited keeps its own currency
     lgFillSet(); renderLog();
   });
@@ -3351,8 +3084,7 @@ tr:last-child td{border-bottom:0}
     pot:  {name:'Pot odds', rec:() => potStats, fresh:newQuestion, show:(q, id) => { q.rv = id; showQuestion(q); }},
     board:{name:'Board', rec:() => btStats, fresh:btNew, show:(q, id) => { q.rv = id; btShow(q); }},
     opp:  {name:'Opponents', rec:() => oppStatsRec, fresh:newOpp, show:(q, id) => { q.rv = id; showOpp(q); }},
-    hand: {name:'Full hand', rec:() => fhStats, fresh:fhNew, show:(q, id) => fhShow(q, id)},
-    bank: {name:'Bankroll', rec:() => bkStats, fresh:newBank, show:(q, id) => { q.rv = id; showBank(q); }}
+    hand: {name:'Full hand', rec:() => fhStats, fresh:fhNew, show:(q, id) => fhShow(q, id)}
   };
   const rvData = loadJSON(RV_KEY);
   rvData.items = (Array.isArray(rvData.items) ? rvData.items : []).filter(m => m && m.id && m.q && RV[m.tab]);
@@ -4352,7 +4084,7 @@ tr:last-child td{border-bottom:0}
       return ok ? save : null;
     } catch (e) { return null; }
   }
-  const SV_RECS = ['stats', 'pot', 'board', 'opp', 'hand', 'bank'];
+  const SV_RECS = ['stats', 'pot', 'board', 'opp', 'hand'];
   function svSummary(data) {
     const n = SV_RECS.reduce((sum, k) => sum + (data[k] && data[k].total > 0 ? Math.floor(data[k].total) : 0), 0);
     const d = data.daily || {}, today = dyDay();
@@ -4466,8 +4198,6 @@ tr:last-child td{border-bottom:0}
          tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'},
     hand:{hash:'full-hand', title:'Full Hand Drill',
           tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'},
-    bank:{hash:'bankroll', title:'Bankroll Drill',
-          tag:'Size your bankroll in buy-ins, work out what a game needs, and decide when to move up or down. Pick NOK, USD or EUR.'},
     log:{hash:'session-log', title:'Session Log',
          tag:'Log each real session when you get up from the table: the stakes, what you bought in for, what you cashed out and how long you played. See your results, what you win an hour and your bankroll in buy-ins.'}
   };
@@ -4486,7 +4216,6 @@ tr:last-child td{border-bottom:0}
     $('#view-board').hidden = id !== 'board';
     $('#view-opp').hidden = id !== 'opp';
     $('#view-hand').hidden = id !== 'hand';
-    $('#view-bank').hidden = id !== 'bank';
     $('#view-log').hidden = id !== 'log';
     const T = TABS[id];
     $('#app-title').textContent = T.title;
@@ -4496,7 +4225,6 @@ tr:last-child td{border-bottom:0}
     if (id === 'board' && !bt.q) btNew();
     if (id === 'opp' && !opp.q) newOpp();
     if (id === 'hand' && !fh.hand) fhNew();
-    if (id === 'bank' && !bk.q) newBank();
     if (id === 'daily') dyEnter();
   }
   const tabBtns = [...document.querySelectorAll('[data-tab]')];
@@ -4525,11 +4253,6 @@ tr:last-child td{border-bottom:0}
     if (tab === 'hand') {
       if (!fh.answered && /^[1-4]$/.test(k)) fhAnswer(+k - 1);
       else if (fh.answered && k === 'n') { e.preventDefault(); fhNext(); }   // fhNext calls rvNext() at the end of a hand
-      return;
-    }
-    if (tab === 'bank') {
-      if (!bk.answered && /^[1-4]$/.test(k)) answerBank(+k - 1);
-      else if (bk.answered && k === 'n') { e.preventDefault(); rvNext() || newBank(); }
       return;
     }
     if (tab === 'opp') {

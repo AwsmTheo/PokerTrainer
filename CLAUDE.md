@@ -31,7 +31,7 @@ The file has three blocks in this order:
 
 1. **`<style>`**: tokens on `:root` (dark mode in `@media (prefers-color-scheme: dark)`), shared layout, then one section per drill in tab order, then the phone tab bar, Session log, Progress and review (which also holds the Daily `.dy` styles), Move your progress.
 2. **HTML** inside `<div class="app">`: `<header class="top">` with the tab bar (`nav.tabs`), title (`#app-title`, `#app-tag`) and the Review misses dropdown (`details#rv`); then `<main>` with one `<section class="view" id="view-…" role="tabpanel">` per tab; then `details#sv` (Move your progress) at the bottom.
-3. **One `<script>`**, a single IIFE. Order: shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset`; then SEAT DRILL, POT ODDS DRILL (with Workbench), BOARD TEXTURE DRILL, OPPONENT DRILL, BANKROLL DRILL, SESSION LOG (with the Currency switch at its end), PROGRESS AND REVIEW, DAILY SET, FULL HAND DRILL, MOVE YOUR PROGRESS, and last TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler, and the init calls).
+3. **One `<script>`**, a single IIFE. Order: shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset`; then SEAT DRILL, POT ODDS DRILL (with Workbench), BOARD TEXTURE DRILL, OPPONENT DRILL, SESSION LOG (with the bankroll bands `BK_BANDS` at its start and the Currency switch at its end), PROGRESS AND REVIEW, DAILY SET, FULL HAND DRILL, MOVE YOUR PROGRESS, and last TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler, and the init calls).
 
 ## The tabs
 
@@ -45,7 +45,6 @@ All storage keys are `preflop-seat-drill:v1:<suffix>` (`STORE + ':suffix'` in co
 | Board | `#board-texture` | `#view-board` | `bt-` (`bst-`) | `bt`, `btStats` | `:board` | `btMake`, `btShow`, `btAnswer` |
 | Opponents | `#opponents` | `#view-opp` | `o-` (`ost-`) | `opp`, `oppStatsRec` | `:opp`, `:opp-prefs` | `makeOpp`, `showOpp`, `answerOpp` |
 | Full hand | `#full-hand` | `#view-hand` | `fh-` (`fst-`) | `fh`, `fhStats`, `FH_HANDS` (38 scripted hands) | `:hand` | `fhNew`, `fhShow`, `fhAnswer`, `fhNext`, `fhLast` |
-| Bankroll | `#bankroll` | `#view-bank` | `bk-` (`bkst-`) | `bk`, `bkStats` | `:bank`, `:bank-prefs` | `makeBank`, `showBank`, `answerBank`, `renderBank` |
 | Sessions | `#session-log` | `#view-log` (`data-tool`) | `lg-` (`lgst-`) | `lg`, `lgData` | `:log` | `renderLog`, `lgResetForm`, `lgFillSet` |
 
 Each quiz drill follows the same shape: `makeX()` builds a question, `showX(q)` renders a given one (so review can replay a saved question), `answerX(i)` scores it, and a `{q, answered, choice, qNo}` state object. Sessions is not a drill: it has no questions, so it isn't in review, Daily or the drill test.
@@ -53,10 +52,10 @@ Each quiz drill follows the same shape: `makeX()` builds a question, `showX(q)` 
 ## Shared pieces
 
 - **Tab switcher** (TABS AND KEYS): `TABS[id]` gives each tab its hash, title and tagline. `setTab(id)` calls `dyLeave()`, sets `aria-selected`, toggles each `#view-…` with its own `hidden` line, updates the title and hash, deals a first question lazily, and calls `dyEnter()` for Daily. The keyboard handler has one branch per drill; on Daily it routes to whichever drill `dy.tab` is showing.
-- **Review hooks** (PROGRESS AND REVIEW): misses are saved under `:review` (30 per tab). `RV` has one entry per drill: `{name, rec, fresh, show}`. Every drill calls `rvRecord(tab, ok, id, snap)` after scoring, `rvNext() || newX()` on Next, `rvLabel(id)` in its eyebrow and `rvClear(tab)` on reset. `renderRv()` draws the dropdown's tiles (6 per row from 900px).
+- **Review hooks** (PROGRESS AND REVIEW): misses are saved under `:review` (30 per tab). `RV` has one entry per drill: `{name, rec, fresh, show}`. Every drill calls `rvRecord(tab, ok, id, snap)` after scoring, `rvNext() || newX()` on Next, `rvLabel(id)` in its eyebrow and `rvClear(tab)` on reset. `renderRv()` draws the dropdown's tiles (5 per row from 900px).
 - **Daily plan** (DAILY SET): `DY_PLAN` (2 each of seats, pot, board, opp, shuffled) plus one full hand last; then uncounted extras from `DY_EXTRA`. It plays by moving the drill's own `#view-…` into `#dy-host` (`dyMount`/`dyUnmount`, a comment node marks its home), so drill code must find its elements by id, never by position. It gets answers through the review hooks (`rvRecord` calls `dyRecord`, `rvNext` calls `dyNext`, `rvLabel` calls `dyLabel`); drills need nothing Daily-specific except an entry in `dyAnswered`.
 - **Save export/import** (MOVE YOUR PROGRESS): `svCollect()` takes every localStorage key under `STORE + ':'`, so a new key is exported automatically. Codes are `PT1z.` (gzip + base64url) or `PT1.`; `svApply` replaces all keys and reloads.
-- **Currency switch** (end of SESSION LOG): `[data-cur]` radio buttons on the Pot odds, Bankroll and Sessions tabs set `prefs.cur` (NOK default, USD, EUR). Drill text writes amounts as `$40` and `cash()` swaps the symbol; guide NOK amounts go through `fromNok` (1 USD = 10 NOK, 1 EUR = 11.5 NOK). Logged sessions keep their own currency.
+- **Currency switch** (end of SESSION LOG): `[data-cur]` radio buttons on the Pot odds and Sessions tabs set `prefs.cur` (NOK default, USD, EUR). Drill text writes amounts as `$40` and `cash()` swaps the symbol; guide NOK amounts go through `fromNok` (1 USD = 10 NOK, 1 EUR = 11.5 NOK). Logged sessions keep their own currency.
 - **Resets** are two clicks via `armReset` (the app has no `confirm()` dialog). Don't use `confirm`/`alert`.
 
 ## Conventions
@@ -65,9 +64,9 @@ Each quiz drill follows the same shape: `makeX()` builds a question, `showX(q)` 
 - **Keep each drill self-contained**: its own CSS section, HTML section, JS section, id prefix and storage key.
 - **The test and the app read the page's conventions**, so keep them: a tab is a `role="tab"` button whose `aria-controls` names its `role="tabpanel"`; answer buttons carry a `<kbd>` shortcut and are disabled once answered; the next button carries `<kbd>N</kbd>`; the score bar has an element whose id ends in `st-correct` showing `right/total`. `app/native.js` buzzes on any button with a `<kbd>` and reads `…st-correct` to pick the buzz. To hide a key hint, hide the `<kbd>` with CSS; never remove it. On touch devices (no hover, coarse pointer) key hints are hidden this way (PR #20: `kbd:not(.count)`), so new buttons get it for free; a `<kbd>` used as a number badge that must stay visible needs `class="count"`.
 - **Contrast**: new text, borders and colour tokens must meet WCAG AA in both light and dark mode (set both in `:root` and the dark-mode block).
-- **Adding a drill** touches: a tab button in `nav.tabs`, its CSS/HTML/JS sections, `TABS`, a `hidden` line and a lazy deal in `setTab`, a keyboard branch, an `RV` entry plus the four hooks, `dyAnswered` (and `DY_PLAN`/`DY_EXTRA` if it joins Daily), the `.rv-grid` column count, the phone tab bar (below 600px it is a 4-column grid fitting 8 tabs), and the hash list in README.md. Check it at 320px wide.
+- **Adding a drill** touches: a tab button in `nav.tabs`, its CSS/HTML/JS sections, `TABS`, a `hidden` line and a lazy deal in `setTab`, a keyboard branch, an `RV` entry plus the four hooks, `dyAnswered` (and `DY_PLAN`/`DY_EXTRA` if it joins Daily), the `.rv-grid` column count, the phone tab bar (below 600px it is a 4-column grid; 7 tabs today, room for 8), and the hash list in README.md. Check it at 320px wide.
 - **Layout limits**: CI fails on any horizontal scroll at 360px wide or any console error. iOS zooms inputs under 16px font, so inputs use 16px on phones.
-- **Theo's preferences**: a clean screen. New controls start collapsed; no chapter line above drill titles; the review panel stays in its dropdown. Don't re-add the tilt or study plan topics.
+- **Theo's preferences**: a clean screen. New controls start collapsed; no chapter line above drill titles; the review panel stays in its dropdown. Don't re-add a Bankroll tab or the tilt and study plan topics (Theo removed them; old `:bank` and `:bank-prefs` keys may still sit in storage, harmlessly).
 - **Git**: branch from `main`, target `main`, merge `main` in when it moves (no rebase or force-push on shared branches). Never stack a PR on another PR's branch. Theo merges PRs himself.
 - **README.md** describes every tab for users; update it when a tab's behaviour changes.
 
@@ -77,7 +76,7 @@ Browser test (Playwright, desktop and a 360px phone). In a Claude cloud containe
 
 ```
 npm install --no-audit --no-fund
-npx playwright test                    # all 28 tests, about 3 minutes
+npx playwright test                    # all 26 tests, about 3 minutes
 npx playwright test -g "view-pot"      # one drill
 npx playwright test --project=phone    # phone width only
 ```
