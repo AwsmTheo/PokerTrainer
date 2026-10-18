@@ -29,9 +29,9 @@ That lists every CSS section (`/* Pot odds drill */`), every HTML section (`<!--
 
 The file has three blocks in this order:
 
-1. **`<style>`**: tokens on `:root` (dark mode in `@media (prefers-color-scheme: dark)`), shared layout, then one section per drill in tab order, then the phone tab bar, Session log, Progress and review (which also holds the Daily `.dy` styles), Move your progress.
-2. **HTML** inside `<div class="app">`: `<header class="top">` with the tab bar (`nav.tabs`), title (`#app-title`, `#app-tag`) and the Review misses dropdown (`details#rv`); then `<main>` with one `<section class="view" id="view-…" role="tabpanel">` per tab; then `details#sv` (Move your progress) at the bottom.
-3. **One `<script>`**, a single IIFE. Order: shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset`; then SEAT DRILL, POT ODDS DRILL (with Workbench), BOARD TEXTURE DRILL, OPPONENT DRILL, SESSION LOG (with the bankroll bands `BK_BANDS` at its start and the Currency switch at its end), PROGRESS AND REVIEW, DAILY SET, FULL HAND DRILL, MOVE YOUR PROGRESS, and last TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler, and the init calls).
+1. **`<style>`**: tokens on `:root` (dark mode in `@media (prefers-color-scheme: dark)`), shared layout, then one section per drill in tab order, then the phone tab bar, Session log, Progress and review (which also holds the Daily `.dy` styles), Friends, Move your progress.
+2. **HTML** inside `<div class="app">`: `<header class="top">` with the tab bar (`nav.tabs`), title (`#app-title`, `#app-tag`) and the Review misses dropdown (`details#rv`); then `<main>` with one `<section class="view" id="view-…" role="tabpanel">` per tab; then `details#fr` (Friends) and `details#sv` (Move your progress) at the bottom.
+3. **One `<script>`**, a single IIFE. Order: shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset`; then SEAT DRILL, POT ODDS DRILL (with Workbench), BOARD TEXTURE DRILL, OPPONENT DRILL, SESSION LOG (with the bankroll bands `BK_BANDS` at its start and the Currency switch at its end), PROGRESS AND REVIEW, DAILY SET, FULL HAND DRILL, MOVE YOUR PROGRESS, FRIENDS, and last TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler, and the init calls).
 
 ## The tabs
 
@@ -55,6 +55,7 @@ Each quiz drill follows the same shape: `makeX()` builds a question, `showX(q)` 
 - **Review hooks** (PROGRESS AND REVIEW): misses are saved under `:review` (30 per tab). `RV` has one entry per drill: `{name, rec, fresh, show}`. Every drill calls `rvRecord(tab, ok, id, snap)` after scoring, `rvNext() || newX()` on Next, `rvLabel(id)` in its eyebrow and `rvClear(tab)` on reset. `renderRv()` draws the dropdown's tiles (5 per row from 900px).
 - **Daily plan** (DAILY SET): `DY_PLAN` (2 each of seats, pot, board, opp, shuffled) plus one full hand last; then uncounted extras from `DY_EXTRA`. It plays by moving the drill's own `#view-…` into `#dy-host` (`dyMount`/`dyUnmount`, a comment node marks its home), so drill code must find its elements by id, never by position. It gets answers through the review hooks (`rvRecord` calls `dyRecord`, `rvNext` calls `dyNext`, `rvLabel` calls `dyLabel`); drills need nothing Daily-specific except an entry in `dyAnswered`.
 - **Save export/import** (MOVE YOUR PROGRESS): `svCollect()` takes every localStorage key under `STORE + ':'`, so a new key is exported automatically. Codes are `PT1z.` (gzip + base64url) or `PT1.`; `svApply` replaces all keys and reloads.
+- **Friends** (FRIENDS, `fr-` prefix, `:friends` key holding `{id, name, list}`): no server. `frCode()` packs `frMine()` (name, `dyStreak()`, best, last daily day, `[correct, total]` per `RV` tab) as `PF1.` + base64url JSON; the copied text is a link ending `#friend=<code>`, which `frFromHash()` reads at start-up before `setTab`. `frClean` validates every friend entry, and names are escaped on render (they come from other people). A friend's streak shows 0 once their `last` is older than yesterday.
 - **Currency switch** (end of SESSION LOG): `[data-cur]` radio buttons on the Pot odds and Sessions tabs set `prefs.cur` (NOK default, USD, EUR). Drill text writes amounts as `$40` and `cash()` swaps the symbol; guide NOK amounts go through `fromNok` (1 USD = 10 NOK, 1 EUR = 11.5 NOK). Logged sessions keep their own currency.
 - **Resets** are two clicks via `armReset` (the app has no `confirm()` dialog). Don't use `confirm`/`alert`.
 
@@ -76,7 +77,7 @@ Browser test (Playwright, desktop and a 360px phone). In a Claude cloud containe
 
 ```
 npm install --no-audit --no-fund
-npx playwright test                    # all 26 tests, about 3 minutes
+npx playwright test                    # all 28 tests, about 3 minutes
 npx playwright test -g "view-pot"      # one drill
 npx playwright test --project=phone    # phone width only
 ```

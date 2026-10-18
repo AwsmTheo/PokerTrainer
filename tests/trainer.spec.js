@@ -189,6 +189,54 @@ test('progress moves to another device with a file', async ({ page }) => {
   await expect(page.locator('.rv-tile', { hasText: 'Seats' })).toContainText(record);
 });
 
+test('friends share their stats with a code or a link', async ({ page }) => {
+  await answerOneSeat(page);
+  const panel = page.locator('#fr');
+  await panel.locator('summary').click();
+  const mine = (await panel.locator('.fr-card.me .fr-drills').textContent() || '').trim();
+  expect(mine).toMatch(/^1 answer · Seats (0|100)%$/);
+  await page.locator('#fr-copy').click();
+  await expect(page.locator('#fr-out')).toContainText('Add your name first');
+  await page.locator('#fr-me').fill('Ada');
+  await page.locator('#fr-copy').click();
+  const text = await page.locator('#fr-code').inputValue();
+  const code = (/PF1\.[A-Za-z0-9_-]+/.exec(text) || [''])[0];
+  expect(text).toContain('#friend=PF1.');
+  await page.locator('#fr-in').fill(text);
+  await page.locator('#fr-add').click();
+  await expect(page.locator('#fr-msg')).toContainText('your own code');
+
+  // A friend on another device opens the link.
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(`${PAGE_URL}#friend=${code}`);
+  await page.reload();
+  const card = page.locator('.fr-card:not(.me)');
+  await expect(page.locator('#fr-msg')).toContainText('Added Ada');
+  await expect(card).toContainText('Ada');
+  await expect(card).toContainText('Shared today');
+  await expect(card.locator('.fr-drills')).toHaveText(mine);
+  expect(page.url()).not.toContain('friend=');
+  await noSideScroll(page);
+  await card.getByRole('button', { name: 'Remove' }).click();
+  await card.getByRole('button', { name: 'Click again to remove' }).click();
+  await expect(card).toHaveCount(0);
+
+  // Or pastes the code with some chat text around it; a second paste updates rather than adds.
+  await page.locator('#fr-in').fill('nonsense');
+  await page.locator('#fr-add').click();
+  await expect(page.locator('#fr-msg')).toContainText('isn’t a friend code');
+  await page.locator('#fr-in').fill(`hey, ${text} see you`);
+  await page.locator('#fr-add').click();
+  await expect(page.locator('#fr-msg')).toContainText('Added Ada');
+  await page.locator('#fr-in').fill(text);
+  await page.locator('#fr-add').click();
+  await expect(page.locator('#fr-msg')).toContainText('Updated Ada');
+  await expect(card).toHaveCount(1);
+  await page.reload();
+  await page.locator('#fr summary').click();
+  await expect(card).toContainText('Ada');
+});
+
 test('the session log adds, edits and deletes sessions and counts the bankroll', async ({ page }) => {
   await page.locator('[role=tab][aria-controls="view-log"]').click();
   const panel = page.locator('#view-log');
