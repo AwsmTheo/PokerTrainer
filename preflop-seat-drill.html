@@ -347,9 +347,32 @@ tr:last-child td{border-bottom:0}
 .opp-type h4 small{margin-left:auto;font:600 11.5px/1 var(--font-mono);color:var(--muted);white-space:nowrap}
 .opp-type p{margin:0;font-size:12.5px;line-height:1.45;color:var(--muted)}
 .opp-type p b{color:var(--ink);font-weight:600}
-/* Four chapter tabs need tighter tabs on phones */
-@media (max-width:480px){.tabs{gap:2px;overflow-x:auto}.tab{padding:8px 8px}.tab b{font-size:14.5px}.tab span{font-size:10.5px}}
-@media (max-width:359px){.tab span{display:none}}
+/* Full hand drill */
+.fh-steps{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.fh-steps li{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);font:600 12px/1.2 var(--font-body);color:var(--muted)}
+.fh-steps li.now{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.fh-steps li.ok{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.fh-steps li.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.fh-scene .cardrow .pc.back{background:repeating-linear-gradient(45deg, var(--card-back) 0 4px, color-mix(in srgb, var(--card-back) 80%, #000) 4px 8px);box-shadow:0 0 0 2px var(--card) inset, 0 3px 8px rgba(0,0,0,.35);opacity:.55}
+.fh-say{margin:0;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.fh-then{margin:0;padding:11px 13px;border-radius:10px;border:1px dashed var(--line);font-size:13.5px}
+.fh-then strong{display:block;margin-bottom:4px;font:700 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fh-ch{display:inline-flex;align-items:center;gap:6px;font:700 10.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fh-go{align-self:flex-start;border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.fh-go:hover{border-color:var(--ink);color:var(--ink)}
+.fh-log{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column}
+.fh-log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;padding:10px 0;border-top:1px solid var(--line);font-size:13px}
+.fh-log .m{grid-row:span 2;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:800 12px/1 var(--font-display);background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.fh-log li.ok .m{background:var(--good);border-color:var(--good);color:var(--surface)}
+.fh-log li.bad .m{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.fh-log b{font:700 13px/1.3 var(--font-body)}
+.fh-log span{color:var(--muted)}
+.fh-log li.todo{opacity:.55}
+.fh-chs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+/* Five chapter tabs need tighter tabs on phones */
+@media (max-width:600px){.tabs{align-self:stretch;gap:2px}.tab{flex:1 1 auto;align-items:center;justify-content:center;text-align:center;padding:9px 4px}.tab b{font-size:14.5px}.tab span{display:none}}
+@media (max-width:400px){.tab{padding:8px 2px}.tab b{font-size:13px}}
+@media (max-width:350px){.tab b{font-size:12px;letter-spacing:-.01em}}
 
 @media (prefers-reduced-motion: reduce){
   .seat.acting,.card,.result{animation:none}
@@ -364,6 +387,7 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-pot" aria-controls="view-pot" data-tab="pot"><b>Pot odds</b><span>Price every call</span></button>
       <button type="button" role="tab" class="tab" id="tab-board" aria-controls="view-board" data-tab="board"><b>Board</b><span>Read the flop</span></button>
       <button type="button" role="tab" class="tab" id="tab-opp" aria-controls="view-opp" data-tab="opp"><b>Opponents</b><span>Adjust to the player</span></button>
+      <button type="button" role="tab" class="tab" id="tab-hand" aria-controls="view-hand" data-tab="hand"><b>Full hand</b><span>Play it to the river</span></button>
     </nav>
     <div class="brand">
       <p class="eyebrow" id="app-eyebrow">Chapter · Your seat decides how many hands you can play</p>
@@ -705,6 +729,59 @@ tr:last-child td{border-bottom:0}
       <footer class="sources">
         <p>Questions follow the guide's chapter <i>Low-stakes opponents call too much and bluff too little</i>, with hand-reading and betting rules from <i>The board decides what your hand is really worth</i>. The guide gives hands played as about 15–20% for a TAG, 30%+ for a LAG and 50%+ for a calling station; the exact percentages on each opponent, and all of the nit's and the raise figures, are illustrative bands this drill adds.</p>
         <p>Sources: <a href="https://www.pokerlistings.com/blog/how-to-identify-and-exploit-different-poker-player-types" target="_blank" rel="noopener">PokerListings, player types</a> · <a href="https://upswingpoker.com/3-cash-game-exploits-regs-backed-by-data/" target="_blank" rel="noopener">Upswing, exploits backed by data</a> · <a href="https://upswingpoker.com/thin-value-bet-poker-strategy/" target="_blank" rel="noopener">Upswing, thin value</a> · <a href="https://upswingpoker.com/vs-flop-check-raise/" target="_blank" rel="noopener">Upswing, facing a check-raise</a> · <a href="https://blog.gtowizard.com/the_3_biggest_leaks_killing_your_winrate/" target="_blank" rel="noopener">GTO Wizard, three biggest leaks</a> · <a href="https://www.blackrain79.com/2020/12/raise-the-river.html" target="_blank" rel="noopener">BlackRain79, river raises</a> · <a href="https://www.blackrain79.com/2024/05/preflop-poker.html" target="_blank" rel="noopener">BlackRain79, preflop</a> · <a href="https://www.cardplayer.com/online-poker/how-to-play-gto-poker" target="_blank" rel="noopener">Card Player, GTO</a> · <a href="https://pokercoaching.com/blog/how-to-put-your-opponent-on-a-range-step-by-step/" target="_blank" rel="noopener">PokerCoaching, ranges</a></p>
+      </footer>
+    </section>
+
+    <!-- ===================== Full hand drill ===================== -->
+    <section class="view" id="view-hand" role="tabpanel" aria-labelledby="tab-hand" hidden>
+      <section class="scorebar" aria-label="Your full hand record">
+        <div class="stat"><b id="fst-hands">0</b><span>Hands</span></div>
+        <div class="stat"><b id="fst-correct">0/0</b><span>Decisions</span></div>
+        <div class="stat"><b id="fst-acc">–</b><span>Accuracy</span></div>
+        <div class="stat"><b id="fst-perfect">0</b><span>Perfect hands</span></div>
+        <button type="button" class="link-btn" id="fh-reset">Reset record</button>
+      </section>
+
+      <div class="pot-layout">
+        <article class="panel" aria-label="Decision">
+          <p class="eyebrow" id="fh-eyebrow"></p>
+          <div class="sc-meta" id="fh-meta"></div>
+          <ol class="fh-steps" id="fh-steps" aria-label="Decisions in this hand"></ol>
+          <div id="fh-scene"></div>
+          <p class="fh-say" id="fh-say"></p>
+          <h2 class="q-prompt" id="fh-prompt"></h2>
+          <div class="options" id="fh-options"></div>
+          <div class="result" id="fh-result" hidden aria-live="polite"></div>
+        </article>
+
+        <aside class="panel bench fh-side" aria-label="This hand and your record">
+          <h3>This hand</h3>
+          <p>Each decision draws on one chapter. A wrong answer still plays on along the right line, so you see the whole hand.</p>
+          <ol class="fh-log" id="fh-log"></ol>
+          <div class="calc">
+            <h4>Your decisions by chapter</h4>
+            <div class="fh-chs" id="fh-chs"></div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="reference" aria-label="Reference">
+        <div class="ref wide">
+          <h3>The routine, street by street</h3>
+          <p>The guide's worked hand ties the four chapters together. Run the same checks on every hand.</p>
+          <ol class="rules">
+            <li><b>Preflop:</b> your seat and the action decide the range. Raise first in from the chart, never limp, and price calls against raises with the effective stack.</li>
+            <li><b>Flop:</b> name the texture and whose range it favours, then sort your hand into a bucket. Check the stack-to-pot ratio before you plan to commit.</li>
+            <li><b>Facing a bet:</b> divide the call by the pot after you call, and count only the outs that actually win.</li>
+            <li><b>Every street:</b> label the opponent and adjust. Value bet calling stations, steal from nits, let loose-aggressive players bluff, and believe big river bets from passive players.</li>
+            <li><b>Before any bet:</b> name which worse hands call or which better hands fold. If neither group is meaningful, check.</li>
+          </ol>
+        </div>
+      </section>
+
+      <footer class="sources">
+        <p>Every decision follows a rule from the guide, and each one is tagged with the chapter it comes from. The hands are scripted so the right answer is clear; suits are relabelled at random each time. The big blind hand that ends in a river fold is built on Upswing's hand-reading example (its equity figures and bet sizes); its turn card, and the other seven hands, are this drill's own.</p>
+        <p>Sources: <a href="https://upswingpoker.com/preflop-open-strategy-rfi-explained/" target="_blank" rel="noopener">Upswing, raise first in</a> · <a href="https://upswingpoker.com/hand-reading-poker/" target="_blank" rel="noopener">Upswing, hand reading</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/bet-size-strategy-tips-rules/" target="_blank" rel="noopener">Upswing, bet sizing</a> · <a href="https://upswingpoker.com/continuation-bet-c-bet-strategy-position/" target="_blank" rel="noopener">Upswing, c-bets by position</a> · <a href="https://upswingpoker.com/3-cash-game-exploits-regs-backed-by-data/" target="_blank" rel="noopener">Upswing, exploits backed by data</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a> · <a href="https://blog.gtowizard.com/10-tips-multiway-pots-in-poker/" target="_blank" rel="noopener">GTO Wizard, multiway pots</a> · <a href="https://blog.gtowizard.com/picking-the-right-semi-bluffs/" target="_blank" rel="noopener">GTO Wizard, semi-bluffs</a> · <a href="https://www.pokerlistings.com/blog/how-to-identify-and-exploit-different-poker-player-types" target="_blank" rel="noopener">PokerListings, player types</a></p>
       </footer>
     </section>
   </main>
@@ -2437,6 +2514,284 @@ tr:last-child td{border-bottom:0}
   armReset($('#oreset'), () => { oppStatsRec = freshOpp(); saveJSON(STORE + ':opp', oppStatsRec); renderOppScore(); renderOppCats(); });
 
   /* =====================================================================
+     FULL HAND DRILL
+     ===================================================================== */
+
+  // Scripted hands played street by street. Each decision is tagged with the chapter its rule comes from.
+  // Pots, calls and stacks are in big blinds; 6-max, 100bb deep. Suits are relabelled at random, so no text names a suit.
+  const FH_CH = {
+    seats:{name:'Seats', gc:'var(--g-late)'}, pot:{name:'Pot odds', gc:'var(--call)'},
+    board:{name:'Board', gc:'var(--good)'}, opp:{name:'Opponents', gc:'var(--g-early)'}
+  };
+  const FH_STREET = {pre:'Preflop', flop:'Flop', turn:'Turn', river:'River'};
+  const FH_SHOWN = {pre:0, flop:3, turn:4, river:5};
+  const FH_SEAT = {UTG:'under the gun', HJ:'hijack', CO:'cutoff', BTN:'button', SB:'small blind', BB:'big blind'};
+  const RAISE_FIRST = ['Raise to 2.5bb', true];
+  const FH_HANDS = [
+    {id:'tptk', name:'Top pair on a dry board', seat:'BTN', hero:['As','Js'], opp:'Big blind, a calling station', board:['Jd','7c','2h','4s','2s'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, stack:100, say:'Everyone folds to you on the button.',
+       o:[RAISE_FIRST, ['Limp: just call 1bb'], ['Fold']],
+       why:'Ace-jack suited is inside the button’s opening range of about 41% of hands. When everyone folds to you, raise rather than limp: raising builds a pot with a playable hand, cuts the field and gives you the betting lead. Online, open to 2–2.5bb.',
+       rule:'Raise when you are first in. Never open-limp.',
+       next:'You open to 2.5bb. The small blind folds and the big blind calls.'},
+      {st:'flop', ch:'board', pot:5.5, stack:97.5, say:'The big blind checks to you. You have top pair with the top kicker.',
+       o:[['Bet small, about 2bb (a third of the pot)', true], ['Check back to keep the pot small'], ['Bet big, about 5bb (90% pot)'], ['Go all-in for 97.5bb']],
+       why:'A dry, jack-high flop with three suits keeps your raising range’s advantage, and top pair, top kicker is a strong made hand worth two to three streets. Dry, static boards call for a small bet of about 25–33% pot. With an SPR near 18, one pair is not a hand to go all-in with yet.',
+       rule:'C-bet 25–35% pot on dry, static boards and 55–80% on wet, dynamic ones.',
+       next:'You bet 2bb and the big blind calls.'},
+      {st:'turn', ch:'board', pot:9.5, stack:95.5, say:'The turn is a low card that changes little. The big blind checks again.',
+       o:[['Bet again, about 6.5bb (two-thirds pot)', true], ['Check back for pot control'], ['Bet a small 2bb again']],
+       why:'A safe turn leaves top pair, top kicker well ahead of the hands that called the flop: weaker jacks, sevens and straight draws. Upswing’s rule for a second barrel is two-thirds pot or more, which charges those hands and grows a pot your strong hand expects to win.',
+       rule:'Bet the turn again at 66% pot or more.',
+       next:'You bet 6.5bb and the big blind calls.'},
+      {st:'river', ch:'opp', pot:22.5, stack:89, say:'The river pairs the deuce. The big blind checks to you once more.',
+       o:[['Bet about 15bb (two-thirds pot) for value', true], ['Check back and show down'], ['Bet a tiny 4bb so they call']],
+       why:'A calling station plays half their hands and rarely folds. Weaker jacks, sevens and smaller pairs will call, so value bet big. Checking wins nothing extra, and a tiny bet leaves behind money a station would have paid.',
+       rule:'Calling stations: value bet big and often, and never bluff.',
+       next:'You bet 15bb. The big blind calls with a weaker jack, and your ace kicker takes the pot.'}]},
+
+    {id:'read', name:'Read the river', seat:'BB', hero:['Kh','8h'], opp:'Cutoff, a regular', board:['Ks','5d','4s','9c','2s'], steps:[
+      {st:'pre', ch:'seats', pot:4, call:1.5, stack:99, say:'The cutoff opens to 2.5bb and everyone else folds to you in the big blind.',
+       o:[['Call 1.5bb', true], ['Fold: king-eight is too weak'], ['Re-raise to 11bb']],
+       why:'You call 1.5bb to win a final pot of 5.5bb, so you need only about 27% equity. That price is why the big blind defends wide, and suited hands like king-eight suited are on the list. It is too weak to re-raise for value, which starts around queens and ace-king.',
+       rule:'Defend the big blind widely: against a 2.5bb open you need only about 27%.',
+       next:'You call, and two of you see the flop.'},
+      {st:'flop', ch:'board', pot:7.5, call:2, stack:97.5, say:'You flop top pair with a weak kicker. You check, and the cutoff bets 2bb into 5.5bb.',
+       o:[['Call', true], ['Fold'], ['Check-raise to 8bb']],
+       why:'Top pair with a weak kicker is a medium hand: one to two streets of value. Out of position a medium hand usually wants to check and call, and the price is small: 2bb to win 9.5bb, about 21%. Check-raises should come mainly from strong hands and big draws.',
+       rule:'Out of position, medium hands check and call. Check-raise strong hands and big draws.',
+       next:'You call. The pot is 9.5bb.'},
+      {st:'turn', ch:'pot', pot:16.5, call:7, stack:95.5, say:'You check, and the cutoff bets 7bb into 9.5bb. Against the hands that bet here, you have about 38.9% equity.',
+       o:[['Call: you need 29.8%', true], ['Fold: you need 42.4%'], ['Fold: you need 73.7%']],
+       why:'You call 7bb to win a final pot of 23.5bb: 7 ÷ 23.5 = 29.8%. Your 38.9% beats that, so the call makes money on average. Dividing by the pot before your call gives 42.4%, and comparing the call with the pot before the bet gives 73.7%. Both are the classic mistakes.',
+       rule:'The equity you need is your call divided by the pot after you call.',
+       next:'You call. The pot is 23.5bb.'},
+      {st:'river', ch:'board', pot:40.5, call:17, stack:88.5, say:'The river completes the flush draw and makes ace-three a straight. You check, and the cutoff bets 17bb into 23.5bb.',
+       o:[['Fold', true], ['Call: you still have top pair'], ['Raise all-in']],
+       why:'Narrow the cutoff’s range. One- and two-pair hands would check this river, so the hands that bet are sets, straights, flushes and missed draws. Against that range top pair has 26.8% equity, short of the 17 ÷ 57.5 = 29.6% the call needs. Upswing’s answer is a fold.',
+       rule:'Ranges get smaller as the hand goes on: each bet removes the hands that would have checked.',
+       next:'You fold, and keep the 17bb.'}]},
+
+    {id:'setmine', name:'Set mining', seat:'BTN', hero:['4c','4d'], opp:'Under the gun, a tight-aggressive regular', board:['Kd','Qs','8h'], steps:[
+      {st:'pre', ch:'pot', pot:4, call:2.5, stack:100, say:'A tight-aggressive regular opens to 2.5bb under the gun, and everyone folds to you on the button. Both of you have 100bb.',
+       o:[['Call to try to flop a set', true], ['Re-raise to 7.5bb'], ['Fold: small pairs never play']],
+       why:'You flop a set only about once in eight tries (7.5 to 1 against), so the call relies on winning a big pot when you hit. The test is at least 15 times the raise behind: 15 × 2.5bb = 37.5bb, and the effective stack is 100bb, so the call passes. Re-raising adds little: against an under-the-gun open the button 3-bets only about 4% of hands.',
+       rule:'Set mine only with at least 15 times the raise in the effective stack, and about 25 times out of position.',
+       next:'You call, and both blinds fold.'},
+      {st:'flop', ch:'board', pot:10.5, call:4, stack:97.5, say:'You miss. The raiser bets 4bb into 6.5bb.',
+       o:[['Fold', true], ['Call: you might still be ahead'], ['Raise as a bluff']],
+       why:'Fours below two overcards are weak showdown value at best, and a tight opener’s range is full of kings, queens and big pairs. You set mined and missed, so let it go. Even when the price looks right, reverse implied odds hurt: you can rarely win at showdown when they keep betting. Bluff-raising a TAG is the kind of marginal spot to avoid.',
+       rule:'An underpair is weak showdown value: check, or fold to pressure.',
+       next:'You fold. The 2.5bb call was the price of the eight-to-one shot.'}]},
+
+    {id:'draw', name:'The nut flush draw', seat:'CO', hero:['Ah','5h'], opp:'Big blind, a regular', board:['Kh','8h','2c','3s','9d'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, stack:100, say:'Everyone folds to you in the cutoff.',
+       o:[RAISE_FIRST, ['Limp: just call 1bb'], ['Fold: ace-five is too weak']],
+       why:'Ace-five suited is in the cutoff’s opening range of about 25%: every suited ace opens from here. Raise first in.',
+       rule:'Raise when you are first in. Never open-limp.',
+       next:'You open to 2.5bb, and only the big blind calls.'},
+      {st:'flop', ch:'board', pot:5.5, stack:97.5, say:'The big blind checks. You have the nut flush draw.',
+       o:[['Bet about 2bb as a semi-bluff', true], ['Check back for a free card'], ['Go all-in for 97.5bb']],
+       why:'A strong draw is a semi-bluff: it wins when they fold now and when it hits later. Solvers bet ace- and king-high flush draws 70–80% of the time in position. This king-high flop keeps the raiser’s advantage, so a small bet does the job.',
+       rule:'Strong draws: semi-bluff or call. Good bluffs have little showdown value and some chance to improve.',
+       next:'You bet 2bb and the big blind calls.'},
+      {st:'turn', ch:'pot', pot:17.5, call:8, stack:95.5, say:'The turn gives you a wheel gutshot as well. The big blind leads out for 8bb into 9.5bb.',
+       o:[['Call: implied odds cover the gap', true], ['Fold: 26% is less than the 31% you need'], ['Call: 12 outs hit 48% of the time']],
+       why:'Nine cards make your flush and three more make the wheel: 12 outs, 26.1% with one card to come. The price is 8 ÷ 25.5 = 31.4%, so today’s price alone says fold. The call is still right: you are drawing to the nuts with about 95bb behind, and you need to win only about 5bb more on the river when you hit. The 48% figure is the Rule of 4, which applies only when you see two cards for one price.',
+       rule:'Implied odds pay only when stacks are deep and you will hold the best hand when you hit.',
+       next:'You call. The pot is 25.5bb.'},
+      {st:'river', ch:'board', pot:25.5, stack:87.5, say:'The river misses you. The big blind checks.',
+       o:[['Check and give up', true], ['Bet about 17bb (two-thirds pot) as a bluff'], ['Go all-in as a bluff']],
+       why:'Good river bluffs block the hands that call and leave alone the hands that fold. A missed flush draw does the opposite: it holds cards from the opponent’s own missed flush draws, which would have folded. Your ace-high may even win at showdown against their missed draws. Check.',
+       rule:'River bluffs should block calls, not folds. Missed straight draws usually bluff better than missed flush draws.',
+       next:'You check. The big blind shows a king and takes the pot.'}]},
+
+    {id:'nit', name:'Steal from a nit', seat:'BTN', hero:['Kc','9d'], opp:'Big blind, a nit', board:['Qd','7c','3s'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, stack:100, say:'Everyone folds to you on the button. The big blind is a nit who has folded for an hour.',
+       o:[RAISE_FIRST, ['Fold: king-nine offsuit is too weak'], ['Limp: just call 1bb']],
+       why:'King-nine offsuit is inside the button’s range of about 41%. The button acts last on every street, and a nit in the big blind folds too often, so this steal pays.',
+       rule:'Steal from nits: widen your button opens.',
+       next:'You open to 2.5bb, and for once the nit calls.'},
+      {st:'flop', ch:'opp', pot:5.5, stack:97.5, say:'The nit checks to you. You have king-high.',
+       o:[['C-bet small, about 2bb', true], ['Check back and give up'], ['Bet big, about 5bb']],
+       why:'A dry, queen-high flop favours your range, and a nit folds to most continuation bets unless they hit hard. A small bet risks 2bb to win 5.5bb, so it needs to work only about 27% of the time.',
+       rule:'Against nits, c-bet and raise to force folds.',
+       next:'You bet 2bb.'},
+      {st:'flop', lbl:'Check-raise', ch:'opp', pot:15.5, call:6, stack:95.5, say:'The nit check-raises to 8bb.',
+       o:[['Fold', true], ['Call and see a turn'], ['Re-raise as a bluff']],
+       why:'A nit rarely raises or bluffs, so a check-raise from them means a strong hand: a set, two pair or a big queen. Against a raise from a nitty, passive player the only exploit is to over-fold heavily, because king-high has close to no equity against that range.',
+       rule:'Believe a nit’s strength.',
+       next:'You fold. This steal cost 4.5bb, but most of the time a nit folds before it gets here.'}]},
+
+    {id:'lag', name:'Overpair at a low SPR', seat:'HJ', hero:['Qs','Qh'], opp:'Button, a loose-aggressive player', board:['Jc','7d','3h'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, stack:100, say:'Everyone folds to you in the hijack.',
+       o:[RAISE_FIRST, ['Limp to trap'], ['Go all-in for 100bb']],
+       why:'Queens open from every seat. Raise: limping a strong hand to trap gives the table a cheap flop, and a shove wins only the blinds.',
+       rule:'Raise when you are first in. Never open-limp.',
+       next:'You open to 2.5bb. The button, a loose-aggressive player, re-raises to 7.5bb, and the blinds fold.'},
+      {st:'pre', lbl:'Facing a 3-bet', ch:'opp', pot:11.5, call:5, stack:97.5, say:'The button has re-raised you to 7.5bb.',
+       o:[['4-bet to about 18bb', true], ['Call and see a flop'], ['Fold']],
+       why:'When your open is re-raised, AA–JJ mostly 4-bet. A loose-aggressive player re-raises with a wide range, so your queens are far ahead, and the adjustment is to re-raise your strong hands. A 4-bet is about 2.3–2.5 times the 3-bet: about 18bb.',
+       rule:'Against loose-aggressive players, re-raise your strong hands before the flop.',
+       next:'You 4-bet to 18bb and the button calls.'},
+      {st:'flop', ch:'pot', pot:37.5, stack:82, say:'You act first, with an overpair to the board.',
+       o:[['Bet about 12bb, and go all-in if raised', true], ['Check, and fold if they bet'], ['Check and call once, then fold']],
+       why:'The stack-to-pot ratio is 82 ÷ 37.5, about 2.2. Below about 3, top pair with a good kicker or better is happy to go all-in, and an overpair is better than that. Bet about a third of the pot, the 25–40% size for 3-bet pots, and you are committed if they raise.',
+       rule:'Below an SPR of about 3, one strong pair is worth your stack.',
+       next:'You bet 12bb and the button moves all-in. You call: at this SPR that was the plan, whatever they show.'}]},
+
+    {id:'multi', name:'Three-way pot', seat:'CO', hero:['Kd','Qd'], opp:'Button and big blind', board:['9c','7s','5h'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, stack:100, say:'Everyone folds to you in the cutoff.',
+       o:[RAISE_FIRST, ['Limp: just call 1bb'], ['Fold']],
+       why:'King-queen suited is an easy open from the cutoff, which raises about 25% of hands.',
+       rule:'Raise when you are first in. Never open-limp.',
+       next:'You open to 2.5bb. The button calls, and so does the big blind.'},
+      {st:'flop', ch:'board', pot:8, stack:97.5, say:'The big blind checks to you, and the button is still to act. You missed: two overcards.',
+       o:[['Check', true], ['C-bet small, about 3bb'], ['C-bet big, about 6bb']],
+       why:'With three players there are no automatic c-bets. A bluff has to get past both opponents, and this low, connected flop hits the callers’ ranges far harder than yours. Bet strong value and strong draws; check the rest.',
+       rule:'Three or more players: no automatic c-bets.',
+       next:'You check. The button bets 6bb and the big blind folds.'},
+      {st:'flop', lbl:'Facing a bet', ch:'pot', pot:14, call:6, stack:97.5, say:'The button bets 6bb into 8bb, and the big blind folds.',
+       o:[['Fold', true], ['Call: you have six outs'], ['Raise as a bluff']],
+       why:'You call 6bb to win 20bb, so you need 30%. Two overcards are six outs, about 13% on the turn, and often only part of them are live: a king or queen can still lose to two pair or a straight. Fold.',
+       rule:'Count only the outs that actually win, and compare the one-card odds with the price.',
+       next:'You fold, losing only your 2.5bb open.'}]},
+
+    {id:'sb', name:'Small blind, raise or fold', seat:'SB', hero:['Ah','9c'], opp:'Big blind, a regular', board:['Ac','7d','2s','Th','7c'], steps:[
+      {st:'pre', ch:'seats', pot:1.5, call:0.5, stack:99.5, say:'Everyone folds to you in the small blind.',
+       o:[['Raise to 3bb', true], ['Complete: just call 0.5bb'], ['Fold']],
+       why:'Ace-nine offsuit is well inside the small blind’s range of about 48%. Upswing’s simple plan for this seat: open about 40–50% of hands to about 3bb and play raise-or-fold, because you will act first on every street after the flop.',
+       rule:'Play the small blind raise-or-fold.',
+       next:'You raise to 3bb and the big blind calls.'},
+      {st:'flop', ch:'board', pot:6, stack:97, say:'You act first, out of position, with top pair and a nine kicker.',
+       o:[['Bet small, about 2bb', true], ['Check: always check out of position'], ['Bet big, about 5bb']],
+       why:'Out of position the raiser should usually check much more. Ace-seven-deuce is one of the exceptions, with 4-4-2, K-K-3 and A-K-J: a dry, ace-high flop that strongly favours the raiser, where a small, wide c-bet still works.',
+       rule:'Out of position, check much more; bet small only on strongly raiser-friendly boards.',
+       next:'You bet 2bb and the big blind calls.'},
+      {st:'turn', ch:'board', pot:10, stack:95, say:'The turn is a ten. You act first again.',
+       o:[['Check, planning to call a normal bet', true], ['Bet two-thirds pot for value'], ['Check and fold to any bet']],
+       why:'Top pair with a nine kicker is a medium hand, worth one to two streets, and the ten adds ace-ten to the hands that now beat you. Out of position a medium hand usually wants to check and call.',
+       rule:'Strong hands grow the pot, medium hands check, and weak hands bluff or give up.',
+       next:'You check, the big blind bets 5bb, and you call.'},
+      {st:'river', ch:'opp', pot:40, call:20, stack:90, say:'The river pairs the seven. You check, and the big blind bets 20bb, the size of the pot.',
+       o:[['Fold', true], ['Call: you need only 33%'], ['Raise all-in']],
+       why:'A pot-size bet needs a third of it to be bluffs before a bluff-catcher pays, and Upswing’s database found the player pool bluffing only about 22% at that size. Your top pair beats few of the hands that bet this big. Unless you beat a good part of their value range, fold.',
+       rule:'Big river bets at low stakes are mostly value.',
+       next:'You fold, and keep the 20bb.'}]}
+  ];
+
+  const freshHand = () => ({hands:0, perfect:0, total:0, correct:0, ch:{}});
+  let fhStats = Object.assign(freshHand(), loadJSON(STORE + ':hand'));
+  const fh = {hand:null, step:0, answered:false, choice:null, log:[], deck:[], handNo:1};
+
+  function fhNew() {
+    if (!fh.deck.length) fh.deck = shuffle(FH_HANDS.filter(h => !fh.hand || h.id !== fh.hand.id || FH_HANDS.length < 2));
+    const H = fh.deck.pop(), m = suitMapper();
+    fh.hand = Object.assign({}, H, {
+      hero:H.hero.map(m), board:H.board.map(m),
+      steps:H.steps.map(s => Object.assign({}, s, {opts:shuffle(s.o.map(([label, correct]) => ({label, correct:!!correct})))}))
+    });
+    fh.step = 0; fh.answered = false; fh.choice = null; fh.log = [];
+    fh.handNo = fhStats.hands + 1;
+    fhRender();
+  }
+  const fhLast = () => fh.step === fh.hand.steps.length - 1;
+  function fhAnswer(i) {
+    const S = fh.hand.steps[fh.step];
+    if (fh.answered || !S.opts[i]) return;
+    fh.answered = true; fh.choice = i;
+    const ok = S.opts[i].correct;
+    fh.log.push({i, ok});
+    fhStats.total++; if (ok) fhStats.correct++;
+    const c = fhStats.ch[S.ch] || (fhStats.ch[S.ch] = {n:0, c:0});
+    c.n++; if (ok) c.c++;
+    if (fhLast()) { fhStats.hands++; if (fh.log.every(l => l.ok)) fhStats.perfect++; }
+    saveJSON(STORE + ':hand', fhStats);
+    fhRender();
+    const nb = $('#fh-next'); if (nb) nb.focus({preventScroll:true});
+  }
+  function fhNext() {
+    if (!fh.answered) return;
+    if (fhLast()) { fhNew(); return; }
+    fh.step++; fh.answered = false; fh.choice = null;
+    fhRender();
+  }
+
+  const fhLbl = S => S.lbl || FH_STREET[S.st];
+  const fhChTag = k => `<span class="fh-ch" style="--gc:${FH_CH[k].gc}"><span class="dot" aria-hidden="true"></span>${FH_CH[k].name}</span>`;
+  function fhSceneHTML(H, S) {
+    const shown = FH_SHOWN[S.st];
+    const board = H.board.slice(0, shown).map(pcHTML).join('') +
+      Array.from({length:5 - shown}, () => '<div class="pc back" aria-hidden="true"></div>').join('');
+    const facts = [{k:'Pot', v:fmtBB(S.pot) + 'bb'}];
+    if (S.call) facts.push({k:'To call', v:fmtBB(S.call) + 'bb'});
+    facts.push({k:'Behind', v:fmtBB(S.stack) + 'bb'});
+    if (S.st === 'flop' && !S.call && !S.lbl) facts.push({k:'SPR', v:num(S.stack / S.pot)});
+    return `<div class="scene fh-scene"><div class="scene-cards">
+      <div class="cardgroup"><span class="lbl">Board · ${FH_STREET[S.st]}</span><div class="cardrow" role="img" aria-label="${shown ? H.board.slice(0, shown).map(c => showRank(c.r) + ' of ' + c.name).join(', ') : 'No cards yet'}">${board}</div></div>
+      <div class="cardgroup"><span class="lbl">Your hand</span><div class="cardrow">${H.hero.map(pcHTML).join('')}</div></div>
+    </div><dl class="facts">${facts.map(f => `<div><dt>${f.k}</dt><dd>${f.v}</dd></div>`).join('')}</dl></div>`;
+  }
+  function fhRenderScore() {
+    const R = fhStats;
+    $('#fst-hands').textContent = R.hands;
+    $('#fst-correct').textContent = `${R.correct}/${R.total}`;
+    $('#fst-acc').textContent = R.total ? Math.round(R.correct / R.total * 100) + '%' : '–';
+    $('#fst-perfect').textContent = R.perfect;
+    $('#fh-chs').innerHTML = Object.keys(FH_CH).map(k => {
+      const s = R.ch[k] || {n:0, c:0};
+      return `<div class="rec"><span class="rec-pos" style="--gc:${FH_CH[k].gc}"><span class="dot" aria-hidden="true"></span>${FH_CH[k].name}</span><span class="rec-n">${s.n ? s.c + '/' + s.n : '–'}</span><span class="bar"><span style="width:${s.n ? Math.round(s.c / s.n * 100) : 0}%"></span></span></div>`;
+    }).join('');
+  }
+  function fhRender() {
+    fhRenderScore();
+    const H = fh.hand, S = H.steps[fh.step];
+    $('#fh-eyebrow').textContent = `Hand ${fh.handNo} · ${H.name}`;
+    $('#fh-meta').innerHTML = `<span class="pill">You: ${cap(FH_SEAT[H.seat])}</span><span class="pill">Against: ${H.opp}</span><span class="pill">6-max · 100bb</span>`;
+    $('#fh-steps').innerHTML = H.steps.map((s, i) => {
+      const l = fh.log[i], cls = l ? (l.ok ? 'ok' : 'bad') : i === fh.step ? 'now' : '';
+      return `<li class="${cls}"${i === fh.step ? ' aria-current="step"' : ''}>${l ? (l.ok ? '✓ ' : '✕ ') : ''}${fhLbl(s)}</li>`;
+    }).join('');
+    $('#fh-scene').innerHTML = fhSceneHTML(H, S);
+    $('#fh-say').textContent = S.say;
+    $('#fh-prompt').textContent = 'What do you do?';
+    $('#fh-options').innerHTML = S.opts.map((o, i) => {
+      let cls = 'opt';
+      if (fh.answered && o.correct) cls += ' right';
+      else if (fh.answered && i === fh.choice) cls += ' wrong';
+      return `<button type="button" class="${cls}" data-fhopt="${i}"${fh.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${o.label}</span></button>`;
+    }).join('');
+    $('#fh-log').innerHTML = H.steps.map((s, i) => {
+      const l = fh.log[i];
+      if (!l) return `<li class="todo"><span class="m" aria-hidden="true">${i + 1}</span><b>${fhLbl(s)}</b><span>${i === fh.step ? 'Your decision now' : 'Still to come'}</span></li>`;
+      const right = s.opts.find(o => o.correct).label;
+      return `<li class="${l.ok ? 'ok' : 'bad'}"><span class="m" aria-hidden="true">${l.ok ? '✓' : '✕'}</span><b>${fhLbl(s)} · ${FH_CH[s.ch].name}</b><span>${l.ok ? right : `You: ${s.opts[l.i].label}. Better: ${right}`}</span></li>`;
+    }).join('');
+    const el = $('#fh-result');
+    if (!fh.answered) { el.hidden = true; el.innerHTML = ''; return; }
+    const ok = S.opts[fh.choice].correct, right = S.opts.find(o => o.correct).label, last = fhLast();
+    const got = fh.log.filter(l => l.ok).length;
+    el.hidden = false;
+    el.innerHTML = `
+      <div class="verdict ${ok ? 'ok' : 'bad'}">
+        <span class="mark" aria-hidden="true">${ok ? '✓' : '✕'}</span>
+        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${last ? `Hand over: ${got} of ${H.steps.length} decisions right.` : ok ? fhChTag(S.ch) : 'Better: ' + right}</p></div>
+        <button type="button" class="new-hand" id="fh-next">${last ? 'New hand' : 'Next decision'} <kbd>N</kbd></button>
+      </div>
+      <p class="work">${S.why}</p>
+      <p class="rule"><strong>Rule from the ${FH_CH[S.ch].name} chapter</strong>${S.rule}</p>
+      <p class="fh-then"><strong>${last ? 'How the hand ends' : ok ? 'What happens next' : `The hand goes on as if you had played: ${right}`}</strong>${S.next}</p>
+      ${ok ? '' : `<button type="button" class="fh-go" data-fhgo="${S.ch}">Practise this in the ${FH_CH[S.ch].name} tab</button>`}`;
+  }
+
+  $('#fh-options').addEventListener('click', e => { const b = e.target.closest('[data-fhopt]'); if (b) fhAnswer(+b.dataset.fhopt); });
+  $('#fh-result').addEventListener('click', e => {
+    if (e.target.closest('#fh-next')) fhNext();
+    const g = e.target.closest('[data-fhgo]'); if (g) setTab(g.dataset.fhgo);
+  });
+  armReset($('#fh-reset'), () => { fhStats = freshHand(); saveJSON(STORE + ':hand', fhStats); fhRenderScore(); });
+
+  /* =====================================================================
      TABS AND KEYS
      ===================================================================== */
   const TABS = {
@@ -2447,7 +2802,9 @@ tr:last-child td{border-bottom:0}
     board:{hash:'board-texture', eyebrow:'Chapter · The board decides what your hand is really worth', title:'Board Texture Drill',
            tag:'Random flops to read: name the texture, decide whose range it favours, pick a continuation-bet plan and sort your hand into a bucket.'},
     opp:{hash:'opponents', eyebrow:'Chapter · Low-stakes opponents call too much and bluff too little', title:'Opponent Adjustment Drill',
-         tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'}
+         tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'},
+    hand:{hash:'full-hand', eyebrow:'All four chapters · One hand from the deal to the river', title:'Full Hand Drill',
+          tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'}
   };
   function setTab(id) {
     if (!TABS[id]) id = 'seats';
@@ -2461,6 +2818,7 @@ tr:last-child td{border-bottom:0}
     $('#view-pot').hidden = id !== 'pot';
     $('#view-board').hidden = id !== 'board';
     $('#view-opp').hidden = id !== 'opp';
+    $('#view-hand').hidden = id !== 'hand';
     const T = TABS[id];
     $('#app-eyebrow').textContent = T.eyebrow;
     $('#app-title').textContent = T.title;
@@ -2469,6 +2827,7 @@ tr:last-child td{border-bottom:0}
     if (id === 'pot' && !pot.q) newQuestion();
     if (id === 'board' && !bt.q) btNew();
     if (id === 'opp' && !opp.q) newOpp();
+    if (id === 'hand' && !fh.hand) fhNew();
   }
   const tabBtns = [...document.querySelectorAll('[data-tab]')];
   tabBtns.forEach((b, i) => {
@@ -2489,6 +2848,11 @@ tr:last-child td{border-bottom:0}
     if (prefs.tab === 'board') {
       if (!bt.answered && /^[1-5]$/.test(k)) btAnswer(+k - 1);
       else if (bt.answered && k === 'n') { e.preventDefault(); btNew(); }
+      return;
+    }
+    if (prefs.tab === 'hand') {
+      if (!fh.answered && /^[1-4]$/.test(k)) fhAnswer(+k - 1);
+      else if (fh.answered && k === 'n') { e.preventDefault(); fhNext(); }
       return;
     }
     if (prefs.tab === 'opp') {
