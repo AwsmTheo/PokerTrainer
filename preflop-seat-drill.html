@@ -392,7 +392,7 @@ tr:last-child td{border-bottom:0}
 .rv-k{display:none}
 @media (max-width:560px){
   .rv{padding:10px;gap:10px}
-  .rv-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;flex-basis:100%}
+  .rv-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-basis:100%}
   .rv-tile{padding:7px 8px;gap:3px}
   .rv-name{font-size:10px;letter-spacing:.05em}
   .rv-acc{font-size:18px}
@@ -400,7 +400,6 @@ tr:last-child td{border-bottom:0}
   .rv-tile .rv-k{display:block;color:var(--brass);font-weight:600}
   .rv-side .new-hand{flex:1;justify-content:center}
 }
-@media (max-width:360px){.rv-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-reduced-motion: reduce){
   .seat.acting,.card,.result{animation:none}
   .act,.opt{transition:none}
@@ -2570,7 +2569,8 @@ tr:last-child td{border-bottom:0}
            show:(q, id) => { if (!FORMATS[q.fmt]) throw new Error('bad format'); prefs.fmt = q.fmt; savePrefs(); dealHand(q.seat, q.cards, id); }},
     pot:  {name:'Pot odds', rec:() => potStats, fresh:newQuestion, show:(q, id) => { q.rv = id; showQuestion(q); }},
     board:{name:'Board', rec:() => btStats, fresh:btNew, show:(q, id) => { q.rv = id; btShow(q); }},
-    opp:  {name:'Opponents', rec:() => oppStatsRec, fresh:newOpp, show:(q, id) => { q.rv = id; showOpp(q); }}
+    opp:  {name:'Opponents', rec:() => oppStatsRec, fresh:newOpp, show:(q, id) => { q.rv = id; showOpp(q); }},
+    hand: {name:'Full hand', rec:() => fhStats, fresh:fhNew, show:(q, id) => fhShow(q, id)}
   };
   const rvData = loadJSON(RV_KEY);
   rvData.items = (Array.isArray(rvData.items) ? rvData.items : []).filter(m => m && m.id && m.q && RV[m.tab]);
@@ -2827,20 +2827,29 @@ tr:last-child td{border-bottom:0}
 
   const freshHand = () => ({hands:0, perfect:0, total:0, correct:0, ch:{}});
   let fhStats = Object.assign(freshHand(), loadJSON(STORE + ':hand'));
-  const fh = {hand:null, step:0, answered:false, choice:null, log:[], deck:[], handNo:1};
+  const fh = {hand:null, step:0, answered:false, choice:null, log:[], deck:[], handNo:1, rv:null};
 
-  function fhNew() {
-    if (!fh.deck.length) fh.deck = shuffle(FH_HANDS.filter(h => !fh.hand || h.id !== fh.hand.id || FH_HANDS.length < 2));
-    const H = fh.deck.pop(), m = suitMapper();
-    fh.hand = Object.assign({}, H, {
-      hero:H.hero.map(m), board:H.board.map(m),
-      steps:H.steps.map(s => Object.assign({}, s, {opts:shuffle(s.o.map(([label, correct]) => ({label, correct:!!correct})))}))
-    });
-    fh.step = 0; fh.answered = false; fh.choice = null; fh.log = [];
+  // Deal a hand: H from FH_HANDS, with its cards already relabelled.
+  function fhDeal(H, hero, board, step, rvId) {
+    fh.hand = Object.assign({}, H, {hero, board,
+      steps:H.steps.map(s => Object.assign({}, s, {opts:shuffle(s.o.map(([label, correct]) => ({label, correct:!!correct})))}))});
+    fh.step = step; fh.answered = false; fh.choice = null; fh.rv = rvId || null;
+    fh.log = H.steps.slice(0, step).map(() => ({skip:true}));
     fh.handNo = fhStats.hands + 1;
     fhRender();
   }
-  const fhLast = () => fh.step === fh.hand.steps.length - 1;
+  // A saved miss is one decision: the review replays that street of the same hand, with the same cards.
+  function fhShow(q, id) {
+    const H = FH_HANDS.find(h => h.id === q.id);
+    if (!H || !H.steps[q.step] || !Array.isArray(q.hero) || !Array.isArray(q.board)) throw new Error('bad hand');
+    fhDeal(H, q.hero, q.board, q.step, id);
+  }
+  function fhNew() {
+    if (!fh.deck.length) fh.deck = shuffle(FH_HANDS.filter(h => !fh.hand || h.id !== fh.hand.id || FH_HANDS.length < 2));
+    const H = fh.deck.pop(), m = suitMapper();
+    fhDeal(H, H.hero.map(m), H.board.map(m), 0);
+  }
+  const fhLast = () => !!fh.rv || fh.step === fh.hand.steps.length - 1;
   function fhAnswer(i) {
     const S = fh.hand.steps[fh.step];
     if (fh.answered || !S.opts[i]) return;
@@ -2850,14 +2859,16 @@ tr:last-child td{border-bottom:0}
     fhStats.total++; if (ok) fhStats.correct++;
     const c = fhStats.ch[S.ch] || (fhStats.ch[S.ch] = {n:0, c:0});
     c.n++; if (ok) c.c++;
-    if (fhLast()) { fhStats.hands++; if (fh.log.every(l => l.ok)) fhStats.perfect++; }
+    if (fhLast() && !fh.rv) { fhStats.hands++; if (fh.log.every(l => l.ok)) fhStats.perfect++; }
     saveJSON(STORE + ':hand', fhStats);
+    const H = fh.hand, step = fh.step;
+    rvRecord('hand', ok, fh.rv, () => ({id:H.id, step, hero:H.hero, board:H.board}));
     fhRender();
     const nb = $('#fh-next'); if (nb) nb.focus({preventScroll:true});
   }
   function fhNext() {
     if (!fh.answered) return;
-    if (fhLast()) { fhNew(); return; }
+    if (fhLast()) { rvNext() || fhNew(); return; }
     fh.step++; fh.answered = false; fh.choice = null;
     fhRender();
   }
@@ -2891,10 +2902,10 @@ tr:last-child td{border-bottom:0}
   function fhRender() {
     fhRenderScore();
     const H = fh.hand, S = H.steps[fh.step];
-    $('#fh-eyebrow').textContent = `Hand ${fh.handNo} · ${H.name}`;
+    $('#fh-eyebrow').textContent = `${rvLabel(fh.rv) || 'Hand ' + fh.handNo} · ${H.name}`;
     $('#fh-meta').innerHTML = `<span class="pill">You: ${cap(FH_SEAT[H.seat])}</span><span class="pill">Against: ${H.opp}</span><span class="pill">6-max · 100bb</span>`;
     $('#fh-steps').innerHTML = H.steps.map((s, i) => {
-      const l = fh.log[i], cls = l ? (l.ok ? 'ok' : 'bad') : i === fh.step ? 'now' : '';
+      const l = fh.log[i] && !fh.log[i].skip ? fh.log[i] : null, cls = l ? (l.ok ? 'ok' : 'bad') : i === fh.step ? 'now' : '';
       return `<li class="${cls}"${i === fh.step ? ' aria-current="step"' : ''}>${l ? (l.ok ? '✓ ' : '✕ ') : ''}${fhLbl(s)}</li>`;
     }).join('');
     $('#fh-scene').innerHTML = fhSceneHTML(H, S);
@@ -2908,6 +2919,8 @@ tr:last-child td{border-bottom:0}
     }).join('');
     $('#fh-log').innerHTML = H.steps.map((s, i) => {
       const l = fh.log[i];
+      if (l && l.skip) return `<li class="todo"><span class="m" aria-hidden="true">${i + 1}</span><b>${fhLbl(s)}</b><span>${s.opts.find(o => o.correct).label}</span></li>`;
+      if (fh.rv && i > fh.step) return '';
       if (!l) return `<li class="todo"><span class="m" aria-hidden="true">${i + 1}</span><b>${fhLbl(s)}</b><span>${i === fh.step ? 'Your decision now' : 'Still to come'}</span></li>`;
       const right = s.opts.find(o => o.correct).label;
       return `<li class="${l.ok ? 'ok' : 'bad'}"><span class="m" aria-hidden="true">${l.ok ? '✓' : '✕'}</span><b>${fhLbl(s)} · ${FH_CH[s.ch].name}</b><span>${l.ok ? right : `You: ${s.opts[l.i].label}. Better: ${right}`}</span></li>`;
@@ -2916,16 +2929,17 @@ tr:last-child td{border-bottom:0}
     if (!fh.answered) { el.hidden = true; el.innerHTML = ''; return; }
     const ok = S.opts[fh.choice].correct, right = S.opts.find(o => o.correct).label, last = fhLast();
     const got = fh.log.filter(l => l.ok).length;
+    const head = fh.rv ? (ok ? 'Review: this one is cleared from your misses.' : 'Better: ' + right) : last ? `Hand over: ${got} of ${H.steps.length} decisions right.` : ok ? fhChTag(S.ch) : 'Better: ' + right;
     el.hidden = false;
     el.innerHTML = `
       <div class="verdict ${ok ? 'ok' : 'bad'}">
         <span class="mark" aria-hidden="true">${ok ? '✓' : '✕'}</span>
-        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${last ? `Hand over: ${got} of ${H.steps.length} decisions right.` : ok ? fhChTag(S.ch) : 'Better: ' + right}</p></div>
-        <button type="button" class="new-hand" id="fh-next">${last ? 'New hand' : 'Next decision'} <kbd>N</kbd></button>
+        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${head}</p></div>
+        <button type="button" class="new-hand" id="fh-next">${fh.rv ? 'Next' : last ? 'New hand' : 'Next decision'} <kbd>N</kbd></button>
       </div>
       <p class="work">${S.why}</p>
       <p class="rule"><strong>Rule from the ${FH_CH[S.ch].name} chapter</strong>${S.rule}</p>
-      <p class="fh-then"><strong>${last ? 'How the hand ends' : ok ? 'What happens next' : `The hand goes on as if you had played: ${right}`}</strong>${S.next}</p>
+      <p class="fh-then"><strong>${last && !fh.rv ? 'How the hand ends' : ok ? 'What happens next' : `The hand goes on as if you had played: ${right}`}</strong>${S.next}</p>
       ${ok ? '' : `<button type="button" class="fh-go" data-fhgo="${S.ch}">Practise this in the ${FH_CH[S.ch].name} tab</button>`}`;
   }
 
@@ -2934,7 +2948,7 @@ tr:last-child td{border-bottom:0}
     if (e.target.closest('#fh-next')) fhNext();
     const g = e.target.closest('[data-fhgo]'); if (g) setTab(g.dataset.fhgo);
   });
-  armReset($('#fh-reset'), () => { fhStats = freshHand(); saveJSON(STORE + ':hand', fhStats); fhRenderScore(); });
+  armReset($('#fh-reset'), () => { fhStats = freshHand(); saveJSON(STORE + ':hand', fhStats); fhRenderScore(); rvClear('hand'); });
 
   /* =====================================================================
      TABS AND KEYS
@@ -2997,7 +3011,7 @@ tr:last-child td{border-bottom:0}
     }
     if (prefs.tab === 'hand') {
       if (!fh.answered && /^[1-4]$/.test(k)) fhAnswer(+k - 1);
-      else if (fh.answered && k === 'n') { e.preventDefault(); fhNext(); }
+      else if (fh.answered && k === 'n') { e.preventDefault(); fhNext(); }   // fhNext calls rvNext() at the end of a hand
       return;
     }
     if (prefs.tab === 'opp') {

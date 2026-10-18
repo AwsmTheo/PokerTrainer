@@ -4,11 +4,12 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 
 ## The trainer
 
-[`preflop-seat-drill.html`](preflop-seat-drill.html) is a single self-contained page with no build step and no install. It has three drills:
+[`preflop-seat-drill.html`](preflop-seat-drill.html) is a single self-contained page with no build step and no install. Its drills:
 
 - **Seats: which hands to open.** You get a random seat and hand with everyone before you folded, and choose fold, call or raise. Switch between 6-max and 9-handed tables, and between any hand or close calls only. Your record is tracked by seat.
 - **Pot odds: price every call.** A quiz on the equity a call needs, how often a bluff must work, and the minimum defence frequency (MDF) for a given pot and bet. Each answer shows the working.
 - **Board: read the flop.** Random flops to classify by texture (dry, wet, low and connected, monotone, paired), decide whose range they favour, choose a continuation-bet plan in or out of position and multiway, and sort a hand into a strength bucket. Each answer explains the read and the default plan, with reference tables for c-bets and hand buckets.
+- **Full hand: play it to the river.** One scripted hand at a time, from the preflop decision to the river, with a decision on each street. Every decision is tagged with the chapter its rule comes from (seats, pot odds, board or opponents), a wrong answer plays on along the right line, and your accuracy is tracked per chapter. Suits are relabelled at random each time.
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
@@ -25,7 +26,7 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
 
-That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds` or `#board-texture` at the end of the URL.
+That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds`, `#board-texture`, `#opponents` or `#full-hand` at the end of the URL.
 
 ## Strategy guide
 
