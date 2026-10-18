@@ -418,9 +418,16 @@ tr:last-child td{border-bottom:0}
 .lg-note{margin:12px 0 0;font-size:12.5px;color:var(--muted)}
 
 /* Progress and review of misses */
-.rv{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
-.rv.on{border-color:var(--brass)}
-.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;flex:1 1 560px;min-width:0}
+.rv{position:relative;align-self:flex-start;max-width:100%}
+.rv summary{display:inline-flex;align-items:center;gap:8px;list-style:none;cursor:pointer;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font:600 13.5px/1 var(--font-body);color:var(--ink);white-space:nowrap}
+.rv summary::-webkit-details-marker{display:none}
+.rv summary::after{content:"";width:6px;height:6px;margin:-3px 2px 0;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);opacity:.6}
+.rv[open] summary::after{margin-top:3px;transform:rotate(-135deg)}
+.rv summary:focus-visible{outline:3px solid var(--call);outline-offset:2px}
+.rv-count{font:700 11px/1 var(--font-mono);padding:3px 6px;border-radius:999px;background:var(--brass);color:var(--on-brass)}
+.rv.on summary{border-color:var(--brass)}
+.rv-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:min(980px, calc(100vw - 32px));display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;flex:1 1 100%;min-width:0}
 @media (min-width:900px){.rv-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}   /* one row for the six drills */
 .rv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:9px 11px;border-radius:10px;background:var(--surface-2);border-left:3px solid var(--line);min-width:0}
 .rv-tile.has{border-left-color:var(--brass)}
@@ -451,7 +458,7 @@ tr:last-child td{border-bottom:0}
 .dy-text{flex:1 1 220px;min-width:0}
 @media (max-width:560px){
   .dy{padding:12px}
-  .rv{padding:10px;gap:10px}
+  .rv-pop{padding:10px;gap:10px}
   .rv-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-basis:100%}
   .rv-tile{padding:7px 8px;gap:3px}
   .rv-name{font-size:10px;letter-spacing:.05em}
@@ -506,10 +513,13 @@ tr:last-child td{border-bottom:0}
       <h1 id="app-title">Preflop Seat Drill</h1>
       <p class="tag" id="app-tag">You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.</p>
     </div>
-    <section class="rv" id="rv" aria-label="Your progress and missed questions">
-      <div class="rv-grid" id="rv-grid"></div>
-      <div class="rv-side" id="rv-side" aria-live="polite"></div>
-    </section>
+    <details class="rv" id="rv">
+      <summary id="rv-sum">Your progress</summary>
+      <div class="rv-pop" aria-label="Your progress and missed questions">
+        <div class="rv-grid" id="rv-grid"></div>
+        <div class="rv-side" id="rv-side"></div>
+      </div>
+    </details>
   </header>
 
   <main>
@@ -3413,6 +3423,9 @@ tr:last-child td{border-bottom:0}
     }).join('');
     $('#rv').classList.toggle('on', rv.active);
     const total = rvData.items.length, wrong = rv.done - rv.right;
+    $('#rv-sum').innerHTML = rv.active ? `Reviewing ${rv.pos} of ${rv.n}`
+      : rv.ended ? `Review done: ${rv.right} of ${rv.done} right`
+      : total ? `Review misses <span class="rv-count">${total}</span>` : 'Your progress';
     $('#rv-side').innerHTML = rv.active
       ? `<p><b>Reviewing your misses</b> · ${rv.pos} of ${rv.n} · ${rv.right} right so far</p><button type="button" class="link-btn" id="rv-stop">Stop review</button>`
       : rv.ended
@@ -3424,9 +3437,14 @@ tr:last-child td{border-bottom:0}
   }
   $('#rv').addEventListener('click', e => {
     const b = e.target.closest('[data-rvtab]');
-    if (b && !b.disabled) { rvStart(b.dataset.rvtab || null); return; }
+    if (b && !b.disabled) { $('#rv').open = false; rvStart(b.dataset.rvtab || null); return; }
     if (e.target.closest('#rv-stop')) rvStop();
     else if (e.target.closest('#rv-close')) { rv.ended = false; renderRv(); }
+  });
+  // A dropdown: closes on Escape or a click anywhere outside it.
+  document.addEventListener('click', e => { if ($('#rv').open && !e.target.closest('#rv')) $('#rv').open = false; });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && $('#rv').open) { $('#rv').open = false; $('#rv-sum').focus(); }
   });
 
   /* =====================================================================
