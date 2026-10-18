@@ -5,6 +5,7 @@
 //   - answer buttons carry a <kbd> shortcut and are disabled once you answer;
 //   - the "next" button that appears after an answer carries <kbd>N</kbd>.
 // A new drill that keeps these conventions is covered without editing this file.
+// A tab that isn't a drill (its panel carries data-tool, like the session log) gets its own test.
 const path = require('path');
 const { pathToFileURL } = require('url');
 const { test, expect } = require('@playwright/test');
@@ -79,13 +80,14 @@ test.describe('drills', () => {
   const fs = require('fs');
   const html = fs.readFileSync(path.join(__dirname, '..', 'preflop-seat-drill.html'), 'utf8');
   const names = [...html.matchAll(/role="tab"[^>]*aria-controls="([^"]+)"/g)].map(m => m[1]);
+  const drills = names.filter(id => !new RegExp(`id="${id}"[^>]*\\sdata-tool`).test(html));
 
   test('the page file has tabs to drill', async ({ page }) => {
-    expect(names.length).toBeGreaterThan(0);
+    expect(drills.length).toBeGreaterThan(0);
     expect(names.length, 'the regex finds every tab the browser sees').toBe(await page.getByRole('tab').count());
   });
 
-  for (const panelId of names) {
+  for (const panelId of drills) {
     test(`answers ${ROUNDS} questions in ${panelId}`, async ({ page }) => {
       const tab = page.locator(`[role=tab][aria-controls="${panelId}"]`);
       await tab.click();
@@ -185,4 +187,71 @@ test('progress moves to another device with a file', async ({ page }) => {
   await page.locator('#sv-input').setInputFiles(file);
   await page.locator('#sv-yes').click();
   await expect(page.locator('.rv-tile', { hasText: 'Seats' })).toContainText(record);
+});
+
+test('the session log adds, edits and deletes sessions and counts the bankroll', async ({ page }) => {
+  await page.locator('[role=tab][aria-controls="view-log"]').click();
+  const panel = page.locator('#view-log');
+  await expect(panel.locator('.lg-empty')).toBeVisible();
+
+  // A missing amount is caught before saving.
+  await page.locator('#lg-stakes').fill('1/2 live');
+  await page.locator('#lg-hours').fill('3');
+  await page.locator('#lg-in').fill('400');
+  await page.locator('#lg-save').click();
+  await expect(page.locator('#lg-msg')).toContainText('cashed out');
+  await expect(page.locator('#lg-out')).toHaveAttribute('aria-invalid', 'true');
+
+  await page.locator('#lg-out').fill('1 000');
+  await expect(page.locator('#lg-preview')).toContainText('+600 kr');
+  await page.locator('#lg-save').click();
+  await expect(page.locator('#lg-msg')).toContainText('Session saved');
+  await expect(page.locator('#lgst-n')).toHaveText('1');
+  await expect(page.locator('#lgst-res')).toHaveText('+600 kr');
+  await expect(page.locator('#lgst-hr')).toHaveText('+200 kr');
+
+  // A losing session at other stakes, with the hours as h:mm and a decimal comma.
+  await page.locator('#lg-stakes').fill('2/4 live');
+  await page.locator('#lg-hours').fill('1:30');
+  await page.locator('#lg-in').fill('800');
+  await page.locator('#lg-out').fill('500,5');
+  await page.locator('#lg-save').click();
+  await expect(page.locator('#lgst-res')).toHaveText('+301 kr');
+  await expect(page.locator('#lgst-h')).toHaveText('4.5');
+  await expect(page.locator('#lg-by-wrap')).toBeVisible();
+
+  // The bankroll in buy-ins: 5,000 + 300.5 is 26.5 buy-ins of 200.
+  await page.locator('#lg-start').fill('5000');
+  await page.locator('#lg-game').fill('200');
+  await expect(page.locator('#lg-bank')).toContainText('5,301 kr');
+  await expect(page.locator('#lg-bank')).toContainText('26.5 buy-ins');
+  await expect(page.locator('#lg-bank')).toContainText('aggressive');
+
+  // Edit the losing session into a win.
+  const lose = panel.locator('.lg-item', { hasText: '2/4 live' });
+  await lose.getByRole('button', { name: 'Edit' }).click();
+  await expect(page.locator('#lg-save')).toHaveText('Save changes');
+  await expect(page.locator('#lg-hours')).toHaveValue('1.5');
+  await page.locator('#lg-out').fill('900');
+  await page.locator('#lg-save').click();
+  await expect(page.locator('#lg-msg')).toContainText('Session updated');
+  await expect(page.locator('#lgst-n')).toHaveText('2');
+  await expect(page.locator('#lgst-res')).toHaveText('+700 kr');
+
+  // It survives a reload, shows in another currency, and deletes with two taps.
+  await page.reload();
+  await expect(page.getByRole('tab', { selected: true })).toHaveAttribute('aria-controls', 'view-log');
+  await expect(page.locator('#lgst-res')).toHaveText('+700 kr');
+  await expect(page.locator('#lg-start')).toHaveValue('5000');
+  await panel.locator('[data-cur="USD"]').click();
+  await expect(page.locator('#lgst-res')).toHaveText('+$70');
+  await panel.locator('[data-cur="NOK"]').click();
+  const del = panel.locator('.lg-item', { hasText: '2/4 live' }).getByRole('button', { name: 'Delete' });
+  await del.click();
+  await expect(panel.locator('.lg-item')).toHaveCount(2);
+  await panel.locator('.lg-item', { hasText: '2/4 live' }).getByRole('button', { name: 'Tap again to delete' }).click();
+  await expect(panel.locator('.lg-item')).toHaveCount(1);
+  await expect(page.locator('#lgst-res')).toHaveText('+600 kr');
+  await expect(page.locator('#lg-by-wrap')).toBeHidden();
+  await noSideScroll(page);
 });
