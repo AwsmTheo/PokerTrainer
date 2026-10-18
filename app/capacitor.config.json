@@ -1,0 +1,13 @@
+{
+  "appId": "com.awsmtheo.pokertrainer",
+  "appName": "PokerTrainer",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "presentationOptions": ["banner", "sound"]
+    }
+  }
+}
