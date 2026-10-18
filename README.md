@@ -12,6 +12,8 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
+The **progress panel** under the title shows your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
+
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
 ### How to open it
