@@ -425,6 +425,30 @@ tr:last-child td{border-bottom:0}
   .rv-tile .rv-k{display:block;color:var(--brass);font-weight:600}
   .rv-side .new-hand{flex:1;justify-content:center}
 }
+/* Move your progress */
+.sv{border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.sv summary{cursor:pointer;padding:12px 16px;font:600 13.5px/1.3 var(--font-body);color:var(--muted)}
+.sv[open] summary{color:var(--ink)}
+.sv summary:focus-visible,.sv textarea:focus-visible{outline:3px solid var(--call);outline-offset:2px}
+.sv-body{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;padding:0 16px 16px}
+@media (min-width:760px){.sv-body{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sv-part{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sv h2{margin:0;font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sv p{margin:0;font-size:13.5px;color:var(--muted)}
+.sv p b{color:var(--ink)}
+.sv p.sv-bad{color:var(--bad)}
+.sv-msg:empty{display:none}
+.sv-row{display:flex;flex-wrap:wrap;gap:8px}
+.sv-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:9px 14px;font:600 13px/1 var(--font-body);color:var(--ink);cursor:pointer}
+.sv-btn.go{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.sv textarea{display:block;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);padding:8px 10px;font:12.5px/1.4 ui-monospace,Menlo,Consolas,monospace;word-break:break-all;resize:vertical}
+.sv textarea[hidden]{display:none}
+.sv-ask{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid var(--brass);border-radius:10px}
+@media (max-width:560px){
+  .sv summary{padding:12px}
+  .sv-body{padding:0 12px 12px}
+  .sv textarea{font-size:16px}   /* below 16px, iPhones zoom in on focus */
+}
 @media (prefers-reduced-motion: reduce){
   .seat.acting,.card,.result{animation:none}
   .act,.opt{transition:none}
@@ -916,6 +940,34 @@ tr:last-child td{border-bottom:0}
       </footer>
     </section>
   </main>
+
+  <!-- ===================== Move your progress ===================== -->
+  <details class="sv" id="sv">
+    <summary>Move your progress to another device</summary>
+    <div class="sv-body">
+      <div class="sv-part">
+        <h2>Save it here</h2>
+        <p>Your progress is kept on this device only. Copy it as a code, or save it as a file, and load it on your other device.</p>
+        <div class="sv-row">
+          <button type="button" class="sv-btn" id="sv-copy">Copy code</button>
+          <button type="button" class="sv-btn" id="sv-file">Save file</button>
+        </div>
+        <textarea id="sv-code" rows="3" readonly aria-label="Your save code" hidden></textarea>
+        <p class="sv-msg" id="sv-out" aria-live="polite"></p>
+      </div>
+      <div class="sv-part">
+        <h2>Load a save</h2>
+        <p>Paste a code or pick a save file. It replaces the progress on this device.</p>
+        <textarea id="sv-in" rows="3" aria-label="Save code to load" placeholder="Paste a save code here" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+        <div class="sv-row">
+          <button type="button" class="sv-btn" id="sv-load">Load code</button>
+          <button type="button" class="sv-btn" id="sv-pick">Load file</button>
+          <input type="file" id="sv-input" accept=".json,.txt,application/json,text/plain" hidden>
+        </div>
+        <div class="sv-msg" id="sv-ask" aria-live="polite"></div>
+      </div>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -3904,6 +3956,156 @@ tr:last-child td{border-bottom:0}
     const g = e.target.closest('[data-fhgo]'); if (g) setTab(g.dataset.fhgo);
   });
   armReset($('#fh-reset'), () => { fhStats = freshHand(); saveJSON(STORE + ':hand', fhStats); fhRenderScore(); rvClear('hand'); });
+
+  /* =====================================================================
+     MOVE YOUR PROGRESS
+     Progress lives in this device's storage only, so it moves by hand. A
+     save holds every key under STORE, either as a file or as a text code
+     (gzip and base64 when the browser can) that survives being pasted
+     through Notes or Messages. Loading one replaces this device's progress
+     after asking, then reloads so every drill reads it fresh.
+     ===================================================================== */
+  const SV_APP = 'PokerTrainer';
+  const SV_DONE = STORE + ':loaded';   // in sessionStorage: says "loaded" after the reload
+  const svKeys = () => {
+    const out = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(STORE + ':')) out.push(k); }
+    } catch (e) { /* no storage */ }
+    return out;
+  };
+  function svCollect() {
+    const data = {};
+    svKeys().forEach(k => { const v = loadJSON(k); if (Object.keys(v).length) data[k.slice(STORE.length + 1)] = v; });
+    return {app:SV_APP, v:1, saved:new Date().toISOString(), data};
+  }
+  const svB64 = bytes => {
+    let s = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  };
+  const svUnB64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+  const svPipe = (bytes, Stream) =>
+    new Response(new Blob([bytes]).stream().pipeThrough(new Stream('gzip'))).arrayBuffer().then(b => new Uint8Array(b));
+  async function svEncode(save) {
+    const bytes = new TextEncoder().encode(JSON.stringify(save));
+    if (window.CompressionStream) {
+      try { return 'PT1z.' + svB64(await svPipe(bytes, CompressionStream)); } catch (e) { /* send it uncompressed */ }
+    }
+    return 'PT1.' + svB64(bytes);
+  }
+  // Reads a save from a code (text around it is fine) or from a save file. Returns null if it isn't one.
+  async function svDecode(text) {
+    try {
+      let json = String(text).trim();
+      if (!json.startsWith('{')) {
+        const m = /PT1(z?)\.([A-Za-z0-9_-]+)/.exec(json);
+        if (!m) return null;
+        const bytes = svUnB64(m[2]);
+        json = new TextDecoder().decode(m[1] ? await svPipe(bytes, DecompressionStream) : bytes);
+      }
+      const save = JSON.parse(json), data = save && save.data;
+      if (save.app !== SV_APP || !data || typeof data !== 'object') return null;
+      const ok = Object.keys(data).every(k => /^[a-z][a-z-]{0,31}$/.test(k) && data[k] && typeof data[k] === 'object');
+      return ok ? save : null;
+    } catch (e) { return null; }
+  }
+  const SV_RECS = ['stats', 'pot', 'board', 'opp', 'hand', 'bank'];
+  function svSummary(data) {
+    const n = SV_RECS.reduce((sum, k) => sum + (data[k] && data[k].total > 0 ? Math.floor(data[k].total) : 0), 0);
+    const d = data.daily || {}, today = dyDay();
+    const streak = d.last === today || d.last === dyBefore(today) ? Math.floor(d.streak) || 0 : 0;
+    return `${n} ${n === 1 ? 'answer' : 'answers'}${streak ? `, a ${streak}-day streak` : ''}`;
+  }
+  const svNative = () => !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform());
+  function svSay(el, text, bad) { el.innerHTML = text ? `<p${bad ? ' class="sv-bad"' : ''}>${text}</p>` : ''; }
+
+  $('#sv-copy').addEventListener('click', async () => {
+    const box = $('#sv-code'), out = $('#sv-out');
+    const code = svEncode(svCollect());
+    let copied = false;
+    try {   // Safari wants the clipboard call inside the tap, with the text still on its way
+      if (window.ClipboardItem && navigator.clipboard.write) {
+        await navigator.clipboard.write([new ClipboardItem({'text/plain':code.then(c => new Blob([c], {type:'text/plain'}))})]);
+      } else await navigator.clipboard.writeText(await code);
+      copied = true;
+    } catch (e) { /* show it to copy by hand */ }
+    box.value = await code;
+    box.hidden = false;
+    box.select();
+    if (!copied) { try { copied = document.execCommand('copy'); } catch (e) { /* by hand */ } }
+    svSay(out, copied
+      ? '<b>Copied.</b> Send it to yourself, in Notes or Messages for example, and paste it under Load a save on your other device.'
+      : 'Your code is above. Select all of it and copy it, then paste it under Load a save on your other device.');
+  });
+
+  $('#sv-file').addEventListener('click', async () => {
+    const out = $('#sv-out'), name = `pokertrainer-save-${dyDay()}.json`;
+    const blob = new Blob([JSON.stringify(svCollect(), null, 1)], {type:'application/json'});
+    if (svNative()) {   // the app can't download, so the file goes to the share sheet (Save to Files, AirDrop)
+      const file = new File([blob], name, {type:'application/json'});
+      try {
+        await navigator.share({files:[file]});
+        svSay(out, `<b>Saved ${name}.</b> Load it on your other device with Load file.`);
+      } catch (e) {
+        if (e && e.name !== 'AbortError') svSay(out, 'This app can’t save the file. Use Copy code instead.', true);
+      }
+      return;
+    }
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    svSay(out, `<b>Downloading ${name}.</b> Load it on your other device with Load file.`);
+  });
+
+  let svPending = null;
+  async function svRead(text) {
+    const ask = $('#sv-ask');
+    svPending = await svDecode(text);
+    if (!svPending) {
+      svSay(ask, 'That isn’t a PokerTrainer save. Check that you copied the whole code or picked the right file.', true);
+      return;
+    }
+    const when = new Date(svPending.saved);
+    const from = isNaN(when) ? '' : ` from ${when.toLocaleString(undefined, {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})}`;
+    ask.innerHTML = `<div class="sv-ask">
+      <p><b>Save${from}:</b> ${svSummary(svPending.data)}.</p>
+      <p>Loading it replaces the progress on this device (${svSummary(svCollect().data)}), saved misses and settings included.</p>
+      <div class="sv-row"><button type="button" class="sv-btn go" id="sv-yes">Replace my progress</button><button type="button" class="sv-btn" id="sv-no">Cancel</button></div>
+    </div>`;
+  }
+  function svApply(save) {
+    const old = svKeys().map(k => [k, localStorage.getItem(k)]);
+    try {
+      old.forEach(([k]) => localStorage.removeItem(k));
+      Object.keys(save.data).forEach(k => localStorage.setItem(STORE + ':' + k, JSON.stringify(save.data[k])));
+    } catch (e) {   // put back what was here
+      try { svKeys().forEach(k => localStorage.removeItem(k)); old.forEach(([k, v]) => localStorage.setItem(k, v)); } catch (e2) { /* nothing more to do */ }
+      svSay($('#sv-ask'), 'This device wouldn’t store the save, so nothing changed. Private browsing can block it.', true);
+      return;
+    }
+    try { sessionStorage.setItem(SV_DONE, '1'); } catch (e) { /* no note after the reload */ }
+    location.reload();
+  }
+  $('#sv-load').addEventListener('click', () => svRead($('#sv-in').value));
+  $('#sv-pick').addEventListener('click', () => $('#sv-input').click());
+  $('#sv-input').addEventListener('change', async e => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (f) svRead(f.size < 2e6 ? await f.text() : '');
+  });
+  $('#sv-ask').addEventListener('click', e => {
+    if (e.target.closest('#sv-yes') && svPending) svApply(svPending);
+    else if (e.target.closest('#sv-no')) { svPending = null; svSay($('#sv-ask'), ''); }
+  });
+  try {
+    if (sessionStorage.getItem(SV_DONE)) {
+      sessionStorage.removeItem(SV_DONE);
+      $('#sv').open = true;
+      svSay($('#sv-ask'), `<b>Your save is loaded:</b> ${svSummary(svCollect().data)}.`);
+    }
+  } catch (e) { /* no storage */ }
 
   /* =====================================================================
      TABS AND KEYS

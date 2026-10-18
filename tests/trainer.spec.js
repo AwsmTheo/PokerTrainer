@@ -133,3 +133,56 @@ test('the daily set plays in its own tab and starts a streak', async ({ page }) 
   await expect(daily).toContainText('Today’s set is done');
   await noSideScroll(page);
 });
+
+/** Answers one seat question and returns the Seats tile's "x of y right" text. @param {import('@playwright/test').Page} page */
+async function answerOneSeat(page) {
+  await page.locator('[role=tab][aria-controls="view-seats"]').click();
+  await page.locator('#view-seats button:visible:has(kbd)').first().click();
+  return (await page.locator('.rv-tile', { hasText: 'Seats' }).locator('.rv-sub').first().textContent() || '').trim();
+}
+
+test('progress moves to another device with a code', async ({ page }) => {
+  const record = await answerOneSeat(page);
+  expect(record).toMatch(/of 1 right/);
+  await page.locator('#sv summary').click();
+  await page.locator('#sv-copy').click();
+  const code = page.locator('#sv-code');
+  await expect(code).toBeVisible();
+  const text = await code.inputValue();
+  expect(text).toMatch(/^PT1z?\./);
+
+  // A fresh device: nothing saved, then the code pasted with some chat text around it.
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await expect(page.locator('.rv-tile', { hasText: 'Seats' })).toContainText('Not started');
+  await page.locator('#sv summary').click();
+  await page.locator('#sv-in').fill('nonsense');
+  await page.locator('#sv-load').click();
+  await expect(page.locator('#sv-ask')).toContainText('isn’t a PokerTrainer save');
+  await page.locator('#sv-in').fill(`here's my save:\n${text}\n`);
+  await page.locator('#sv-load').click();
+  await expect(page.locator('#sv-ask')).toContainText('1 answer');
+  await page.locator('#sv-yes').click();
+  await expect(page.locator('#sv-ask')).toContainText('Your save is loaded');
+  await expect(page.locator('.rv-tile', { hasText: 'Seats' })).toContainText(record);
+  await noSideScroll(page);
+});
+
+test('progress moves to another device with a file', async ({ page }) => {
+  const record = await answerOneSeat(page);
+  await page.locator('#sv summary').click();
+  const download = page.waitForEvent('download');
+  await page.locator('#sv-file').click();
+  const file = await (await download).path();
+
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.locator('#sv summary').click();
+  await page.locator('#sv-input').setInputFiles(file);
+  await expect(page.locator('#sv-ask')).toContainText('replaces the progress on this device (0 answers)');
+  await page.locator('#sv-no').click();
+  await expect(page.locator('#sv-ask')).toBeEmpty();
+  await page.locator('#sv-input').setInputFiles(file);
+  await page.locator('#sv-yes').click();
+  await expect(page.locator('.rv-tile', { hasText: 'Seats' })).toContainText(record);
+});
