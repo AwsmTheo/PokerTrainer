@@ -15,7 +15,7 @@ The pot odds tab also has a **Workbench** where you plug in your own numbers: th
 
 The **progress panel** under the title shows your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
 
-The **daily set** at the top of the panel is a short mixed set each day: two questions from each quiz tab in a shuffled order, then one full hand, moving between tabs for you. You can stop and pick it up later the same day. Finishing a set on consecutive days builds a streak; a full hand counts as right only if every decision in it was. The set and streak are saved under their own key, apart from each tab's record.
+The **Daily** tab is a short mixed set each day: two questions from each quiz tab in a shuffled order, then one full hand, all played inside the tab. If you leave it, it carries on where you were when you come back the same day. Finishing a set on consecutive days builds a streak, shown in the tab; a full hand counts as right only if every decision in it was. After the set, extra mixed questions keep coming but don't count. The set and streak are saved under their own key, apart from each tab's record.
 
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
@@ -28,7 +28,7 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
 
-That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds`, `#board-texture`, `#opponents` or `#full-hand` at the end of the URL.
+That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#daily`, `#seats`, `#pot-odds`, `#board-texture`, `#opponents` or `#full-hand` at the end of the URL.
 
 ### iPhone app
 

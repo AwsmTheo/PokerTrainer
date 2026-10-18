@@ -57,7 +57,9 @@ test('each tab shows only its own panel', async ({ page }) => {
     await expect(tab).toHaveAttribute('aria-selected', 'true');
     for (const other of tabs) {
       const panel = page.locator(`#${other.panelId}`);
-      if (other.panelId === panelId) await expect(panel).toBeVisible();
+      // A panel may host another tab's drill inside it (the Daily tab does), and then that drill is part of it.
+      const hosted = await page.locator(`#${panelId} #${other.panelId}`).count();
+      if (other.panelId === panelId || hosted) await expect(panel).toBeVisible();
       else await expect(panel).toBeHidden();
     }
     await noSideScroll(page);
@@ -108,22 +110,25 @@ test.describe('drills', () => {
   }
 });
 
-test('the daily set runs across tabs and starts a streak', async ({ page }) => {
+test('the daily set plays in its own tab and starts a streak', async ({ page }) => {
+  await page.locator('[role=tab][aria-controls="view-daily"]').click();
+  const panel = page.locator('#view-daily');
   const daily = page.locator('#dy');
-  await daily.getByRole('button', { name: /Start today’s set/ }).click();
   const nKey = page.locator('kbd', { hasText: /^N$/ });
-  // Answer whatever the open tab asks until the set says it is done. A full hand has several decisions.
-  for (let step = 0; step < 60 && !(await daily.textContent() || '').includes('done'); step++) {
-    const panel = page.locator(`#${await page.getByRole('tab', { selected: true }).getAttribute('aria-controls')}`);
-    const next = panel.locator('button:visible:has(kbd)').filter({ has: nKey });
+  const next = panel.locator('button:visible:has(kbd)').filter({ has: nKey });
+  const open = panel.locator('button:visible:has(kbd)').filter({ hasNot: nKey }).and(page.locator(':enabled'));
+  // Answer whatever the set asks until it says it is done. A full hand has several decisions.
+  for (let step = 0; step < 60 && !(await daily.textContent() || '').includes('is done'); step++) {
+    await expect(page.getByRole('tab', { selected: true }), 'the set stays in the Daily tab').toHaveAttribute('aria-controls', 'view-daily');
     if (await next.count()) { await next.click(); continue; }
-    const open = panel.locator('button:visible:has(kbd)').filter({ hasNot: nKey }).and(page.locator(':enabled'));
     await expect(open.first()).toBeVisible();
     await open.first().click();
   }
   await expect(daily).toContainText('Today’s set is done');
   await expect(daily.locator('.dy-streak b')).toHaveText('1');
   await expect(daily.locator('.dy-dots li.ok, .dy-dots li.bad')).toHaveCount(9);
+  await next.click();
+  await expect(panel.locator('.eyebrow:visible', { hasText: 'Extra question' })).toHaveCount(1);
   await page.reload();
   await expect(daily).toContainText('Today’s set is done');
   await noSideScroll(page);
