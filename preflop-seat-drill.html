@@ -377,7 +377,6 @@ tr:last-child td{border-bottom:0}
 @media (max-width:520px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* seven tabs: rows of four and three */
 @media (max-width:380px){.tab b{font-size:12.5px;letter-spacing:-.01em}}
 /* Bankroll drill */
-.bk-h{margin:18px 0 4px;font:800 20px/1.1 var(--font-display)}
 .bk-rules{margin:4px 0 0;display:flex;flex-direction:column}
 .bk-rules div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
 .bk-rules dt{color:var(--muted)}
@@ -441,7 +440,7 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-board" aria-controls="view-board" data-tab="board"><b>Board</b><span>Read the flop</span></button>
       <button type="button" role="tab" class="tab" id="tab-opp" aria-controls="view-opp" data-tab="opp"><b>Opponents</b><span>Adjust to the player</span></button>
       <button type="button" role="tab" class="tab" id="tab-hand" aria-controls="view-hand" data-tab="hand"><b>Full hand</b><span>Play it to the river</span></button>
-      <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Money and mindset</span></button>
+      <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Size your bankroll</span></button>
     </nav>
     <div class="brand">
       <p class="eyebrow" id="app-eyebrow">Chapter · Your seat decides how many hands you can play</p>
@@ -893,27 +892,14 @@ tr:last-child td{border-bottom:0}
           <div class="result" id="bk-result" hidden aria-live="polite"></div>
         </article>
 
-        <aside class="panel opp-guide" aria-label="Bankroll and tilt">
+        <aside class="panel opp-guide" aria-label="Bankroll rules">
           <h3>Your bankroll</h3>
           <p>Money set aside only for poker, counted in buy-ins of the game you play.</p>
           <dl class="bk-rules" id="bk-rules"></dl>
-          <h3 class="bk-h">Seven kinds of tilt</h3>
-          <p>Name the tilt first. Then find its root cause in a written mental hand history.</p>
-          <ul class="opp-types" id="bk-tilts"></ul>
         </aside>
       </div>
 
       <section class="reference" aria-label="Reference">
-        <div class="ref wide">
-          <h3>A staged plan</h3>
-          <p>Master one concept before moving to the next, with a learn, apply and review cycle and about 70% practice to 30% theory. The milestones are the guide's own suggestions, not a published standard.</p>
-          <div class="tbl-wrap">
-            <table class="bt-table">
-              <thead><tr><th>Stage</th><th>Focus</th><th>Milestone</th></tr></thead>
-              <tbody id="bk-stages"></tbody>
-            </table>
-          </div>
-        </div>
         <div class="ref wide">
           <h3>Rules to remember</h3>
           <ul class="rules">
@@ -921,17 +907,13 @@ tr:last-child td{border-bottom:0}
             <li>Move down once you fall below 20 buy-ins.</li>
             <li>Move up only when you have both the money and a proven win rate over 30,000–50,000 hands.</li>
             <li>For a student, the practical bankroll is a separate budget you can afford to lose entirely.</li>
-            <li>Tilt is a symptom. Stopping it after it has been triggered is too late, so find the root cause with a written mental hand history.</li>
-            <li>Judge sessions by decision quality, not by the result, and quit when tilt appears.</li>
-            <li>Improve by raising your worst play, your C-game, rather than chasing your best sessions.</li>
-            <li>Start with cash games, which have fixed blinds, deep stacks and measurable results, before tournaments and ICM.</li>
           </ul>
         </div>
       </section>
 
       <footer class="sources">
-        <p>Questions follow the guide's chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>. Example games use round buy-ins in the currency you pick. The guide's own amounts are in NOK and are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK. The guide names the seven kinds of tilt; the one-line descriptions of the first six are this drill's summaries of Tendler.</p>
-        <p>Sources: <a href="https://www.vip-grinders.com/bankroll-management/" target="_blank" rel="noopener">VIP-Grinders, bankroll management</a> · <a href="https://www.pokernews.com/strategy/9-key-beginner-mistakes-low-stakes-how-to-fix-22957.htm" target="_blank" rel="noopener">PokerNews, beginner mistakes</a> · <a href="https://www.pokernews.com/strategy/tilt-a-phenomenal-roi-killer-39932.htm" target="_blank" rel="noopener">PokerNews, Tendler on tilt</a> · <a href="https://www.uschess.org/index.php/Jennifer-s-Blog/Chess-Lessons-From-the-Mental-Game-of-Poker.html" target="_blank" rel="noopener">US Chess, the inchworm</a> · <a href="https://www.casino.org/blog/the-ultimate-poker-study-guide/" target="_blank" rel="noopener">Casino.org, study guide</a> · <a href="https://pokerology.com/lessons/cash-games-vs-tournaments/" target="_blank" rel="noopener">Pokerology, cash vs tournaments</a> · <a href="https://thepokerbank.com/articles/etiquette/live" target="_blank" rel="noopener">ThePokerBank, live etiquette</a></p>
+        <p>Questions follow the bankroll part of the guide's chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>. Example games use round buy-ins in the currency you pick. The guide's own amounts are in NOK and are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK.</p>
+        <p>Sources: <a href="https://www.vip-grinders.com/bankroll-management/" target="_blank" rel="noopener">VIP-Grinders, bankroll management</a> · <a href="https://www.pokernews.com/strategy/9-key-beginner-mistakes-low-stakes-how-to-fix-22957.htm" target="_blank" rel="noopener">PokerNews, beginner mistakes</a></p>
       </footer>
     </section>
   </main>
@@ -2760,45 +2742,8 @@ tr:last-child td{border-bottom:0}
   const bkBand = n => BK_BANDS.filter(b => n >= b.min).pop();
   const bkHands = n => n.toLocaleString('en-US');
 
-  // Tendler's seven kinds of tilt. The guide names them and describes desperation; the other descriptions are this drill's summaries.
-  const TILTS = [
-    {k:'run', name:'Running-bad tilt', how:'Builds up over a long stretch of bad cards and lost all-ins, until good decisions stop feeling worth it.',
-     cases:[() => 'You have lost with strong hands three sessions in a row. You start playing hands you would normally fold, just to make something happen.',
-            () => 'After a month of cold cards and lost coin flips, every session starts with the feeling that nothing you do matters.']},
-    {k:'inj', name:'Injustice tilt', how:'Anger that poker is unfair: a bad beat feels like something you did not deserve.',
-     cases:[() => 'An opponent calls your all-in with 7-2 offsuit, makes two pair on the river and takes your aces. All you can think is “I didn’t deserve that.”',
-            () => 'The worst player at the table keeps getting lucky against you, and it feels deeply unfair.']},
-    {k:'hate', name:'Hate-losing tilt', how:'Hating to lose at all, even small pots you played well.',
-     cases:[() => 'You played a small pot correctly and lost it, and you are furious simply because you lost.',
-            () => 'You call a river bet you are fairly sure is value, because you can’t stand letting them take the pot.']},
-    {k:'err', name:'Mistake tilt', how:'Anger at your own errors, which then causes more errors.',
-     cases:[() => 'You misread the board and called off your stack. You keep replaying it and are angry with yourself for the next hour.',
-            () => 'You forgot a flush draw and folded the best hand. You are so annoyed with yourself that your next decisions get sloppy.']},
-    {k:'ent', name:'Entitlement tilt', how:'Believing you deserve to win because you are better or have worked harder.',
-     cases:[() => 'You are clearly the best player at the table, so losing to these players makes you angry: you should be winning.',
-            () => 'You have studied for months, so you feel you deserve to beat these recreational players every session.']},
-    {k:'rev', name:'Revenge tilt', how:'Wanting to get back at one opponent rather than make the best play.',
-     cases:[() => 'One player has re-raised you four times this hour. You decide to get back at them and re-raise their next raise with any two cards.',
-            () => 'The player who took your stack moves to another table, and you change seats just to play every pot against them.']},
-    {k:'desp', name:'Desperation tilt', how:'The urge to win losses back. It drives long sessions and jumps in stakes.',
-     cases:[c => `You are down ${money(fromNok(1500, c), c)} tonight, so you keep playing past midnight and move to a bigger game to win it back.`,
-            () => 'After a losing week you double your usual stake, hoping one good night fixes everything.']}
-  ];
-
-  // The guide's staged plan.
-  const STAGES = [
-    {name:'Preflop', focus:'Position charts, raising instead of limping, 3-bet sizes, blind play', mile:'Open, fold or 3-bet from any seat without hesitating; play about 20% of hands at 6-max'},
-    {name:'Maths', focus:'Pot odds, outs, implied odds, SPR (alongside preflop)', mile:'Work out the equity you need in a few seconds'},
-    {name:'Postflop basics', focus:'C-betting by texture, value betting, no slowplaying against passive players', mile:'State why you bet (value or bluff) on every street in reviews'},
-    {name:'Hand reading', focus:'Ranges, combinations, equity against ranges', mile:'Write down the opponent’s likely range for each reviewed hand'},
-    {name:'Opponent adjustments', focus:'Player types, notes, folding to passive aggression', mile:'Change at least one decision per session because of a read'},
-    {name:'GTO concepts', focus:'Defence frequencies, polarised vs merged ranges, solver spot-checks', mile:'Explain why a solver mixes actions and when to deviate'},
-    {name:'Tournaments (optional)', focus:'Push/fold, ICM', mile:'Use free ICM calculators for stack decisions'}
-  ];
-
   const BK_RULE = 'Keep 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and 100–200 for tournaments.';
   const BK_MOVE = 'Move down below 20 buy-ins. Move up only with both the money and a proven win rate over 30,000–50,000 hands.';
-  const TILT_RULE = 'Tilt is a symptom: find its root cause with a written mental hand history, judge sessions by decisions, and quit when tilt appears.';
 
   function qBkRate() {
     const c = prefs.cur, Y = pick(BK_STAKES[c]), n = pick([8, 12, 15, 18, 22, 25, 27, 32, 35, 40, 45, 55, 60, 80]), B = Y * n, band = bkBand(n);
@@ -2860,26 +2805,6 @@ tr:last-child td{border-bottom:0}
       options:fixedOpts([[`Move down to ${money(down, c)} games`, ans === 'down'], [`Stay at ${money(Y, c)} games`, ans === 'stay'], [`Move up to ${money(up, c)} games`, ans === 'up']]),
       work, rule:BK_MOVE};
   }
-  function qBkTilt() {
-    const c = prefs.cur, T = pick(TILTS);
-    return {cur:c, tilt:T.k,
-      prompt:`${pick(T.cases)(c)} Which kind of tilt is this?`,
-      options:opts(T.name, shuffle(TILTS.filter(x => x !== T)).map(x => x.name)),
-      work:`<b>${T.name}.</b> ${T.how}`,
-      rule:TILT_RULE};
-  }
-  function qBkStage() {
-    const kind = pick(['next', 'mile', 'focus']);
-    const i = kind === 'next' ? rand(STAGES.length - 1) : rand(STAGES.length);
-    const S = kind === 'next' ? STAGES[i + 1] : STAGES[i];
-    const prompt = {
-      next:`In the guide’s staged plan, which stage comes right after “${STAGES[i].name}”?`,
-      mile:`Which stage of the plan has this milestone: “${S.mile}”?`,
-      focus:`Which stage of the plan focuses on: ${S.focus.charAt(0).toLowerCase() + S.focus.slice(1)}?`}[kind];
-    return {prompt, options:opts(S.name, shuffle(STAGES.filter(x => x !== S && x !== STAGES[i])).map(x => x.name)),
-      work:`<b>${S.name}</b> focuses on ${S.focus.charAt(0).toLowerCase() + S.focus.slice(1)}. Milestone: ${S.mile.charAt(0).toLowerCase() + S.mile.slice(1)}.`,
-      rule:'Learn in order: preflop charts, then pot maths, then postflop play and hand reading, then adjusting to opponents. Master one concept before the next.'};
-  }
 
   const BK_CONCEPTS = [
     {cat:'rate', prompt:'Why keep a bankroll at all?',
@@ -2894,46 +2819,12 @@ tr:last-child td{border-bottom:0}
      options:['No: the guide wants 30,000–50,000 hands before you trust it.', 'Yes: 5,000 hands is plenty.', 'Yes, if you won most sessions.', 'Only if you won a big pot.'],
      work:'Short samples swing wildly. The guide asks for a win rate over 30,000–50,000 hands before moving up.',
      rule:BK_MOVE},
-    {cat:'tilt', prompt:'What does Tendler say about controlling tilt once it has started?',
-     options:['Control is a bandaid: stopping tilt after it has been triggered is too late.', 'Take a deep breath and play on.', 'Play bigger to win it back quickly.', 'Tilt is luck, not a skill.'],
-     work:'Tendler treats tilt as a symptom of underlying flaws. He recommends finding the root cause with a written mental hand history.',
-     rule:TILT_RULE},
-    {cat:'tilt', prompt:'How should you judge a poker session?',
-     options:['By the quality of your decisions, not the result.', 'By how much money you won.', 'By how many pots you won.', 'By how long you played.'],
-     work:'Results swing with luck in the short run. Decisions are what you control.',
-     rule:'Judge sessions by decision quality, not by the result.'},
-    {cat:'tilt', prompt:'What does Tendler’s “inchworm” model say is the fastest way to improve?',
-     options:['Raise your worst play, your C-game.', 'Chase your best sessions.', 'Play more hours.', 'Move up in stakes.'],
-     work:'Pulling up the back end of the inchworm, your worst play, moves your average more than chasing peak performances.',
-     rule:'Improve by raising your C-game.'},
-    {cat:'tilt', prompt:'You notice tilt in the middle of a session. What does the guide say to do?',
-     options:['Quit the session.', 'Keep playing until you are even.', 'Move to a bigger game.', 'Play more hands to shake it off.'],
-     work:'Playing on while tilted turns one bad hand into a bad night.',
-     rule:'Quit when tilt appears.'},
-    {cat:'plan', prompt:'Roughly how should study time split between practice and theory?',
-     options:['About 70% practice, 30% theory.', 'About 70% theory, 30% practice.', 'All theory until you know it.', 'Half and half.'],
-     work:'Tricia Cardner recommends a learn–apply–review cycle with one or two goals per session and about 70% practice to 30% theory.',
-     rule:'Learn, apply and review, with about 70% practice.'},
-    {cat:'plan', prompt:'Which kind of game does the guide say to start with?',
-     options:['Cash games: fixed blinds, deep stacks and measurable results.', 'Tournaments, for the big prizes.', 'Whatever has the biggest buy-in.', 'Heads-up games only.'],
-     work:'Pokerology recommends cash games first, then tournament concepts like ICM.',
-     rule:'Start with cash games before adding tournament concepts.'},
-    {cat:'plan', prompt:'At a live table you want to raise. How do you avoid a string bet?',
-     options:['Say “raise” out loud, or move all the chips in one motion.', 'Put the chips in a few at a time.', 'Splash the chips into the pot.', 'Wait to see how your opponent reacts.'],
-     work:'Live games add procedure that online software handles for you: act in turn, avoid string bets, don’t splash chips, and don’t slow-roll a winning hand.',
-     rule:'Act in turn, state your raise or move the chips in one motion, and never slow-roll.'},
-    {cat:'plan', prompt:'As of October 2026, where can you play poker legally in Norway?',
-     options:['Only in person: private home games and the Norwegian Championship.', 'On any foreign poker site.', 'Online at Norsk Tipping.', 'Nowhere at all.'],
-     work:'All legal poker in Norway is played in person. The government has proposed letting Norsk Tipping offer online poker, but no launch date has been set.',
-     rule:'Check the home-game limits against Lotteritilsynet before relying on them.'}
   ];
 
   const BKCATS = [
     {id:'mixed', name:'Mixed'},
     {id:'rate', name:'Bankroll sums', gen:[qBkRate, qBkNeed, qBkMax, qBkBudget]},
-    {id:'move', name:'Move up or down', gen:[qBkMove]},
-    {id:'tilt', name:'Name the tilt', gen:[qBkTilt]},
-    {id:'plan', name:'Study plan', gen:[qBkStage]}
+    {id:'move', name:'Move up or down', gen:[qBkMove]}
   ];
   const bkCat = id => BKCATS.find(c => c.id === id);
   const bkprefs = Object.assign({cat:'mixed'}, loadJSON(STORE + ':bank-prefs'));
@@ -3006,10 +2897,6 @@ tr:last-child td{border-bottom:0}
       [`Standard for ${money(Y, c)} games`, money(Y * 30, c)],
       [`A ${money(B, c)} budget`, `${money(nice(B / 50), c)}–${money(nice(B / 30), c)} buy-ins`]
     ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-    const on = bk.q && bk.answered ? bk.q.tilt : null;
-    $('#bk-tilts').innerHTML = TILTS.map(T =>
-      `<li class="opp-type${T.k === on ? ' on' : ''}" style="--gc:var(--brass)"><h4>${T.name}</h4><p>${T.how}</p></li>`).join('');
-    $('#bk-stages').innerHTML = STAGES.map((S, i) => `<tr><td>${i + 1}. ${S.name}</td><td>${S.focus}</td><td>${S.mile}</td></tr>`).join('');
   }
   function renderBank() {
     renderBankCats();
@@ -4035,8 +3922,8 @@ tr:last-child td{border-bottom:0}
          tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'},
     hand:{hash:'full-hand', eyebrow:'All four chapters · One hand from the deal to the river', title:'Full Hand Drill',
           tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'},
-    bank:{hash:'bankroll', eyebrow:'Chapter · A staged plan, a bankroll and a tilt routine protect the learning', title:'Bankroll and Tilt Drill',
-          tag:'Size your bankroll in buy-ins, decide when to move up or down, name the kind of tilt, and know what to study next. Pick NOK, USD or EUR.'}
+    bank:{hash:'bankroll', eyebrow:'Chapter · A staged plan, a bankroll and a tilt routine protect the learning', title:'Bankroll Drill',
+          tag:'Size your bankroll in buy-ins, work out what a game needs, and decide when to move up or down. Pick NOK, USD or EUR.'}
   };
   function setTab(id) {
     if (!TABS[id]) id = 'seats';
