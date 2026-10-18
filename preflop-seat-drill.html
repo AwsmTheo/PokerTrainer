@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preflop Seat Drill</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one header with chapter tabs; each tab is a drill with the felt as its hero and a working panel beside it. */
+:root{
+  --bg:#e8ebe5;
+  --surface:#f8f9f5;
+  --surface-2:#eef1eb;
+  --ink:#18201c;
+  --muted:#56635c;
+  --line:#cfd6ce;
+  --felt:#22644d;
+  --felt-deep:#113a2d;
+  --felt-ink:#e8f3ed;
+  --felt-dim:rgba(232,243,237,.66);
+  --felt-line:rgba(232,243,237,.16);
+  --felt-shade:rgba(0,0,0,.3);
+  --rail:#4b3427;
+  --rail-hi:#7a5640;
+  --card:#fffdf7;
+  --card-ink:#1a1a1a;
+  --card-red:#c2362c;
+  --card-edge:rgba(0,0,0,.16);
+  --card-back:#8a2f27;
+  --brass:#a5711a;
+  --on-brass:#fffaf0;
+  --call:#2b6987;
+  --good:#22774a;
+  --good-soft:#dcefe3;
+  --bad:#b0372b;
+  --bad-soft:#f6e0dc;
+  --g-early:#b8553b;
+  --g-middle:#b48319;
+  --g-late:#33709e;
+  --g-blinds:#76579e;
+  --cell-in:#d8a748;
+  --cell-in-ink:#2b1d04;
+  --cell-out:#e1e6de;
+  --cell-out-ink:#87918a;
+  --shadow:0 1px 2px rgba(20,30,25,.06), 0 8px 24px rgba(20,30,25,.08);
+  --seat-shadow:0 4px 12px rgba(0,0,0,.2);
+  --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1311; --surface:#161d1a; --surface-2:#1c2521; --ink:#e4eae6; --muted:#98a69e; --line:#2a3530;
+    --felt:#1c5644; --felt-deep:#0b2820; --rail:#2c1e16; --rail-hi:#4d3527;
+    --card:#f3efe4; --card-ink:#151515; --card-red:#c23a2f; --card-back:#7a2c25;
+    --brass:#d6a24b; --on-brass:#1b1204; --call:#5aa3c7;
+    --good:#5fc48c; --good-soft:#15291e; --bad:#ef7d6e; --bad-soft:#351915;
+    --g-early:#e08163; --g-middle:#dcae4e; --g-late:#6ea6dc; --g-blinds:#ab8fd8;
+    --cell-in:#b98a34; --cell-in-ink:#140d01; --cell-out:#1f2924; --cell-out-ink:#6b7a72;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    --seat-shadow:0 4px 14px rgba(0,0,0,.45);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1311; --surface:#161d1a; --surface-2:#1c2521; --ink:#e4eae6; --muted:#98a69e; --line:#2a3530;
+  --felt:#1c5644; --felt-deep:#0b2820; --rail:#2c1e16; --rail-hi:#4d3527;
+  --card:#f3efe4; --card-ink:#151515; --card-red:#c23a2f; --card-back:#7a2c25;
+  --brass:#d6a24b; --on-brass:#1b1204; --call:#5aa3c7;
+  --good:#5fc48c; --good-soft:#15291e; --bad:#ef7d6e; --bad-soft:#351915;
+  --g-early:#e08163; --g-middle:#dcae4e; --g-late:#6ea6dc; --g-blinds:#ab8fd8;
+  --cell-in:#b98a34; --cell-in-ink:#140d01; --cell-out:#1f2924; --cell-out-ink:#6b7a72;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  --seat-shadow:0 4px 14px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--call);outline-offset:2px}
+a{color:var(--call)}
+kbd{font:700 10px/1 var(--font-mono);padding:3px 5px;border-radius:4px;border:1px solid currentColor;opacity:.55}
+
+.app{max-width:1280px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));display:flex;flex-direction:column;gap:20px}
+
+/* Header and chapter tabs */
+.top{display:flex;flex-direction:column;gap:16px}
+.tabs{display:inline-flex;align-self:flex-start;max-width:100%;gap:4px;padding:4px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.tab{display:flex;flex-direction:column;align-items:flex-start;gap:3px;border:0;background:transparent;border-radius:10px;padding:9px 16px;cursor:pointer;color:var(--muted);text-align:left;min-width:0}
+.tab b{font:800 16px/1.1 var(--font-display)}
+.tab span{font-size:11.5px;line-height:1.2}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.brand{min-width:0;max-width:680px}
+.eyebrow{margin:0;font:700 11.5px/1.3 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{margin:4px 0 0;font:800 clamp(30px,4.4vw,44px)/1.02 var(--font-display);letter-spacing:-.025em;text-wrap:balance}
+.tag{margin:8px 0 0;color:var(--muted);max-width:62ch}
+
+.view{display:flex;flex-direction:column;gap:18px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 16px}
+.ctl{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ctl-label{font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--muted);font:600 13px/1 var(--font-body);padding:9px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+
+/* Score bar */
+.scorebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px;padding-block:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{display:flex;align-items:baseline;gap:8px}
+.stat b{font:800 21px/1 var(--font-display);font-variant-numeric:tabular-nums}
+.stat span{font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.link-btn{margin-left:auto;border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.link-btn.armed{border-color:var(--bad);color:var(--bad)}
+
+/* Seat drill grid */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"table" "panel" "extras";gap:20px}
+@media (min-width:1000px){
+  .layout{grid-template-columns:minmax(0,1.55fr) minmax(340px,1fr);grid-template-rows:auto 1fr;grid-template-areas:"table panel" "extras panel";align-items:start}
+}
+.table-area{grid-area:table;min-width:0}
+.layout > .panel{grid-area:panel}
+.extras{grid-area:extras;min-width:0;display:flex;flex-direction:column;gap:16px}
+
+/* Table */
+.table-wrap{position:relative;width:100%;max-width:100%;aspect-ratio:1.85/1}
+@media (max-width:640px){.table-wrap{aspect-ratio:1.22/1}}
+.felt{position:absolute;inset:11% 8%;border-radius:999px;background:radial-gradient(ellipse at 50% 35%, var(--felt) 0%, var(--felt-deep) 96%);border:clamp(9px,1.6vw,15px) solid var(--rail);box-shadow:inset 0 0 0 1px var(--rail-hi), inset 0 12px 36px var(--felt-shade), 0 18px 40px -14px rgba(0,0,0,.5)}
+.felt::before{content:"";position:absolute;inset:8%;border-radius:999px;border:1.5px solid var(--felt-line)}
+.felt-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--felt-ink);text-align:center;pointer-events:none}
+.pot-label{font:700 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--felt-dim)}
+.pot{font:800 clamp(18px,2.6vw,27px)/1 var(--font-display);font-variant-numeric:tabular-nums}
+.felt-note{font:500 clamp(9.5px,1.1vw,11.5px)/1.2 var(--font-body);color:var(--felt-dim)}
+
+.seat{position:absolute;transform:translate(-50%,-50%);z-index:2;width:clamp(52px,8.2vw,80px);min-height:clamp(42px,5.6vw,54px);padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--seat-shadow);text-align:center;cursor:default}
+.seat .pos{font:800 clamp(11.5px,1.45vw,15px)/1 var(--font-display);white-space:nowrap;padding-bottom:3px;border-bottom:2.5px solid var(--gc)}
+.seat .alias{font:600 9.5px/1 var(--font-body);color:var(--muted);letter-spacing:.04em}
+.seat .status{font:700 clamp(8.5px,.95vw,10px)/1 var(--font-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.seat .backs{display:flex;gap:2px}
+.seat .backs b{width:9px;height:13px;border-radius:2px;background:var(--card-back);box-shadow:0 0 0 1px var(--card)}
+.seat.folded{opacity:.45}
+.seat.hero{border:2px solid var(--brass)}
+.seat.hero .status{color:var(--brass)}
+.seat.acting{animation:glow 1.8s ease-in-out infinite}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--brass) 60%, transparent), var(--seat-shadow)}
+  50%{box-shadow:0 0 0 8px color-mix(in srgb, var(--brass) 0%, transparent), var(--seat-shadow)}
+}
+@media (max-width:640px){.seat .alias{display:none}.seat{border-radius:10px;gap:3px;padding:5px 3px}}
+
+.chip{position:absolute;transform:translate(-50%,-50%);z-index:1;display:inline-flex;align-items:center;gap:5px;padding:2px 8px 2px 3px;border-radius:999px;background:var(--felt-shade);color:var(--felt-ink);font:700 12px/1 var(--font-mono);white-space:nowrap}
+.chip i{width:16px;height:16px;border-radius:50%;background:var(--brass);border:2.5px dashed var(--card)}
+.dealer{position:absolute;transform:translate(-50%,-50%);z-index:1;width:24px;height:24px;border-radius:50%;background:var(--card);color:var(--card-ink);font:800 12px/24px var(--font-display);text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.4)}
+.mini-cards{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;gap:3px}
+.mini{width:clamp(20px,3.2vw,31px);aspect-ratio:5/7;border-radius:4px;background:var(--card);color:var(--card-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 clamp(10px,1.55vw,15px)/1 var(--font-display);box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.mini span{font-size:.85em;line-height:1.05}
+.mini.red{color:var(--card-red)}
+
+/* Extras under the table */
+.mini-head{margin:0 0 8px;font:700 10.5px/1.3 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.groups{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px}
+.groups li{display:flex;align-items:center;gap:7px}
+.groups span{color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--gc);display:inline-block;flex:none}
+.bb-note{margin:8px 0 0;font-size:12.5px;color:var(--muted);max-width:70ch}
+.records{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.rec{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.rec-pos{font:700 13px/1 var(--font-display);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.rec-n{font:600 12px/1 var(--font-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--good)}
+
+/* Panels */
+.panel{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;gap:18px}
+@media (max-width:480px){.panel{padding:16px;border-radius:14px}}
+.scenario h2{margin:6px 0 10px;font:800 clamp(22px,2.6vw,28px)/1.1 var(--font-display);letter-spacing:-.015em;text-wrap:balance}
+.sc-meta{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-size:12.5px;font-weight:600}
+
+.hand{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cards{display:flex;gap:8px}
+.card{position:relative;width:clamp(64px,17vw,82px);aspect-ratio:5/7;border-radius:9px;background:var(--card);color:var(--card-ink);border:1px solid var(--card-edge);box-shadow:0 6px 14px rgba(0,0,0,.18);font-family:var(--font-display);animation:deal .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
+.card .r{position:absolute;top:7px;left:8px;font-weight:800;font-size:clamp(20px,5vw,26px);line-height:1;letter-spacing:-.05em}
+.card .s{position:absolute;top:calc(9px + clamp(20px,5vw,26px));left:9px;font-size:15px;line-height:1}
+.card .pip{position:absolute;right:7px;bottom:6px;font-size:clamp(30px,8vw,42px);line-height:1}
+.card.red{color:var(--card-red)}
+@keyframes deal{from{opacity:0;transform:translateY(-14px) rotate(-4deg)}to{opacity:1;transform:none}}
+.hand-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hand-code{font:800 36px/1 var(--font-display);letter-spacing:-.01em}
+.hand-name{color:var(--muted);font-size:14px}
+
+.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.act{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 12px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;text-align:left;transition:transform .12s ease, box-shadow .12s ease}
+.act .nm{font:800 19px/1.1 var(--font-display)}
+.act small{font-size:12px;line-height:1.25;color:var(--muted)}
+.act kbd{position:absolute;top:10px;right:10px}
+.act:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
+.act.call{border-color:var(--call)}
+.act.call .nm{color:var(--call)}
+.act.raise{background:var(--brass);border-color:var(--brass);color:var(--on-brass)}
+.act.raise small{color:var(--on-brass);opacity:.82}
+.act:disabled{cursor:default;opacity:.38}
+.act.answer,.act.chosen{opacity:1}
+.act.chosen{box-shadow:0 0 0 3px var(--surface), 0 0 0 5px var(--ink)}
+.act.answer::after{content:"Correct";position:absolute;top:-9px;left:10px;font:700 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;background:var(--good);color:var(--surface);padding:4px 7px;border-radius:999px}
+@media (max-width:400px){.act kbd{display:none}.act{padding:12px 10px 10px}}
+
+.result{display:flex;flex-direction:column;gap:16px;padding-top:18px;border-top:1px solid var(--line);animation:rise .3s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.verdict{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--good-soft)}
+.verdict.bad{background:var(--bad-soft)}
+.mark{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:var(--surface);font:800 18px/1 var(--font-display)}
+.verdict.bad .mark{background:var(--bad)}
+.v-text h3{margin:0;font:800 20px/1.15 var(--font-display);color:var(--good)}
+.verdict.bad h3{color:var(--bad)}
+.v-text p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.new-hand{border:0;border-radius:10px;padding:11px 14px;background:var(--ink);color:var(--bg);font:700 14px/1 var(--font-body);cursor:pointer;display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
+.new-hand kbd{opacity:.6}
+@media (max-width:440px){.verdict{grid-template-columns:auto minmax(0,1fr)}.new-hand{grid-column:1/-1;justify-content:center}}
+
+.why{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.why li{position:relative;padding-left:18px;font-size:14px;line-height:1.55}
+.why li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--brass)}
+.why b{font-family:var(--font-mono);font-weight:700;font-size:.92em}
+
+.strip{display:flex;flex-wrap:wrap;gap:6px}
+.strip button{display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 9px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);font:600 12.5px/1 var(--font-body);cursor:pointer}
+.strip button[aria-pressed="true"]{border-color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 1px var(--ink)}
+.strip .you{font-weight:500;color:var(--muted)}
+.yn{font:700 10px/1 var(--font-mono);padding:3px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:.02em}
+.yn.raise{background:var(--cell-in);color:var(--cell-in-ink)}
+.yn.fold{background:var(--cell-out);color:var(--cell-out-ink)}
+
+.chart{display:flex;flex-direction:column;gap:9px}
+.chart-head{margin:0;font-size:13.5px}
+.chart-head b{font:800 15px var(--font-display)}
+.grid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:2px;width:100%;max-width:460px}
+.cell{aspect-ratio:1;display:grid;place-items:center;border-radius:3px;background:var(--cell-out);color:var(--cell-out-ink);font:600 clamp(7.5px,1.9vw,10px)/1 var(--font-mono);letter-spacing:-.03em;user-select:none}
+.cell.in{background:var(--cell-in);color:var(--cell-in-ink)}
+.cell.me{outline:2.5px solid var(--ink);outline-offset:1px;position:relative;z-index:1;font-weight:700}
+.chart-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px;background:var(--cell-out);vertical-align:-1px;margin-right:5px}
+.sw.in{background:var(--cell-in)}
+.sw.me{background:transparent;outline:2px solid var(--ink);outline-offset:-1px}
+.notation{margin:0;font:500 12px/1.65 var(--font-mono);overflow-wrap:anywhere}
+.src{margin:0;font-size:12px;color:var(--muted)}
+
+/* Pot odds drill */
+.cats{display:flex;flex-wrap:wrap;gap:6px}
+.cat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);font:600 13px/1 var(--font-body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.cat small{font:700 10.5px/1 var(--font-mono);opacity:.75}
+.cat[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pot-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media (min-width:1000px){.pot-layout{grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);align-items:start}}
+
+.scene{background:radial-gradient(ellipse at 50% 25%, var(--felt) 0%, var(--felt-deep) 100%);border:clamp(7px,1.2vw,10px) solid var(--rail);border-radius:24px;padding:16px 18px;color:var(--felt-ink);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 24px;box-shadow:inset 0 0 0 1px var(--rail-hi), inset 0 8px 24px var(--felt-shade)}
+.scene-cards{display:flex;flex-wrap:wrap;gap:14px 22px}
+.cardgroup{display:flex;flex-direction:column;gap:7px}
+.lbl{font:700 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--felt-dim)}
+.cardrow{display:flex;gap:5px}
+.pc{width:clamp(36px,7vw,44px);aspect-ratio:5/7;border-radius:6px;background:var(--card);color:var(--card-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 clamp(15px,3vw,18px)/1 var(--font-display);box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.pc span{font-size:.9em;line-height:1.1}
+.pc.red{color:var(--card-red)}
+.facts{display:flex;flex-wrap:wrap;gap:12px 22px;margin:0}
+.facts div{display:flex;flex-direction:column;gap:6px}
+.facts dt{font:700 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--felt-dim)}
+.facts dd{margin:0;font:800 clamp(18px,2.4vw,24px)/1 var(--font-display);font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.facts dd small{font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)}
+.q-prompt{margin:0;font:700 clamp(18px,2.1vw,21px)/1.35 var(--font-display);text-wrap:pretty}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.options.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:520px){.options{grid-template-columns:minmax(0,1fr)}}
+.opt{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;text-align:left;font:600 15px/1.35 var(--font-body);font-variant-numeric:tabular-nums;transition:border-color .12s ease, transform .12s ease}
+.opt kbd{flex:none}
+.opt:hover:not(:disabled){border-color:var(--ink);transform:translateY(-1px)}
+.opt:disabled{cursor:default;opacity:.45}
+.opt.right{opacity:1;border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{opacity:1;border-color:var(--bad);background:var(--bad-soft)}
+.work{margin:0;font-size:14.5px;line-height:1.65}
+.work b{font-family:var(--font-mono);font-size:.92em}
+.rule{margin:0;padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);font-size:13.5px}
+.rule strong{display:block;margin-bottom:4px;font:700 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+
+.bench{gap:0}
+.bench > h3{margin:0 0 4px;font:800 20px/1.1 var(--font-display)}
+.bench > p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.calc{display:flex;flex-direction:column;gap:10px;padding-block:16px;border-top:1px solid var(--line)}
+.calc:last-child{padding-bottom:0}
+.calc h4{margin:0;font:700 14px/1.2 var(--font-body)}
+.inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted);min-width:0}
+.field input{width:100%;min-width:0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px/1.2 var(--font-mono)}
+.outputs{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;margin:0;font-size:13.5px}
+.outputs dt{color:var(--muted)}
+.outputs dd{margin:0;font:700 13.5px/1.4 var(--font-mono);text-align:right;font-variant-numeric:tabular-nums}
+.outputs dd.pos{color:var(--good)}
+.outputs dd.neg{color:var(--bad)}
+.calc-note{margin:0;font-size:12.5px;color:var(--muted)}
+
+.reference{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media (min-width:1000px){.reference{grid-template-columns:repeat(2,minmax(0,1fr))}.ref.wide{grid-column:1/-1}}
+.ref{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.ref h3{margin:0 0 4px;font:800 18px/1.2 var(--font-display)}
+.ref > p{margin:0 0 12px;color:var(--muted);font-size:13px;max-width:75ch}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+th{font:700 10.5px/1.3 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);vertical-align:bottom}
+td{font:500 12.5px/1.3 var(--font-mono)}
+td:first-child{font:600 13px/1.3 var(--font-body)}
+tr:last-child td{border-bottom:0}
+.rules{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:9px;font-size:14px}
+
+.sources{border-top:1px solid var(--line);padding-top:14px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.sources p{margin:0;max-width:90ch}
+
+@media (prefers-reduced-motion: reduce){
+  .seat.acting,.card,.result{animation:none}
+  .act,.opt{transition:none}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <nav class="tabs" role="tablist" aria-label="Chapters">
+      <button type="button" role="tab" class="tab" id="tab-seats" aria-controls="view-seats" data-tab="seats"><b>Seats</b><span>Which hands to open</span></button>
+      <button type="button" role="tab" class="tab" id="tab-pot" aria-controls="view-pot" data-tab="pot"><b>Pot odds</b><span>Price every call</span></button>
+    </nav>
+    <div class="brand">
+      <p class="eyebrow" id="app-eyebrow">Chapter · Your seat decides how many hands you can play</p>
+      <h1 id="app-title">Preflop Seat Drill</h1>
+      <p class="tag" id="app-tag">You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== Seat drill ===================== -->
+    <section class="view" id="view-seats" role="tabpanel" aria-labelledby="tab-seats">
+      <div class="toolbar">
+        <div class="ctl">
+          <span class="ctl-label" id="lbl-fmt">Table</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-fmt">
+            <button type="button" role="radio" id="fmt-six" data-fmt="six">6-max</button>
+            <button type="button" role="radio" id="fmt-nine" data-fmt="nine">9-handed</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <span class="ctl-label" id="lbl-deal">Deal</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-deal">
+            <button type="button" role="radio" id="deal-any" data-deal="any" title="Any two cards, at their real frequency">Any hand</button>
+            <button type="button" role="radio" id="deal-close" data-deal="close" title="Mostly hands whose answer changes with the seat">Close calls</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="scorebar" aria-label="Your seat drill record">
+        <div class="stat"><b id="st-correct">0/0</b><span>Correct</span></div>
+        <div class="stat"><b id="st-acc">–</b><span>Accuracy</span></div>
+        <div class="stat"><b id="st-streak">0</b><span>Streak</span></div>
+        <div class="stat"><b id="st-best">0</b><span>Best</span></div>
+        <button type="button" class="link-btn" id="reset">Reset record</button>
+      </section>
+
+      <div class="layout">
+        <section class="table-area" aria-label="Poker table">
+          <div class="table-wrap" id="table"></div>
+        </section>
+
+        <aside class="panel" aria-label="Your decision">
+          <div class="scenario">
+            <p class="eyebrow" id="sc-eyebrow"></p>
+            <h2 id="sc-head"></h2>
+            <div class="sc-meta" id="sc-meta"></div>
+          </div>
+          <div class="hand" id="hand"></div>
+          <div class="actions">
+            <button type="button" class="act fold" data-act="fold"><span class="nm">Fold</span><small>muck the hand</small><kbd>F</kbd></button>
+            <button type="button" class="act call" data-act="call"><span class="nm">Call</span><small id="sub-call">limp 1 bb</small><kbd>C</kbd></button>
+            <button type="button" class="act raise" data-act="raise"><span class="nm">Raise</span><small id="sub-raise">open to 2.5 bb</small><kbd>R</kbd></button>
+          </div>
+          <div class="result" id="result" hidden aria-live="polite"></div>
+        </aside>
+
+        <section class="extras">
+          <div>
+            <h4 class="mini-head">Seat groups</h4>
+            <ul class="groups" id="groups"></ul>
+            <p class="bb-note">You are never dealt the big blind here. If everyone folds to it, the big blind wins the pot without a decision. Hover a seat to see its opening range.</p>
+          </div>
+          <div>
+            <h4 class="mini-head">Your record by seat</h4>
+            <div class="records" id="records"></div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="sources">
+        <p>Opening ranges follow the guide's chapter <i>Your seat decides how many hands you can play</i>: Upswing's 6-max 100bb charts for the lojack through the small blind, and Upswing's 9-handed beginner list for full-ring UTG. Full-ring UTG+1 and UTG+2 are not charted in the guide, so they are interpolated between those two. Percentages are shares of the 1,326 starting combinations.</p>
+        <p>Sources: <a href="https://upswingpoker.com/preflop-open-strategy-rfi-explained/" target="_blank" rel="noopener">Upswing, opening ranges</a> · <a href="https://upswingpoker.com/texas-holdem-starting-hands-guide/" target="_blank" rel="noopener">Upswing, starting hands</a> · <a href="https://pokercoaching.com/preflop-charts/" target="_blank" rel="noopener">PokerCoaching charts</a> · <a href="https://redchippoker.com/what-to-open-raise-preflop/" target="_blank" rel="noopener">Red Chip, what to open</a></p>
+      </footer>
+    </section>
+
+    <!-- ===================== Pot odds drill ===================== -->
+    <section class="view" id="view-pot" role="tabpanel" aria-labelledby="tab-pot" hidden>
+      <div class="toolbar">
+        <div class="ctl">
+          <span class="ctl-label">Practise</span>
+          <div class="cats" id="pcats"></div>
+        </div>
+      </div>
+
+      <section class="scorebar" aria-label="Your pot odds record">
+        <div class="stat"><b id="pst-correct">0/0</b><span>Correct</span></div>
+        <div class="stat"><b id="pst-acc">–</b><span>Accuracy</span></div>
+        <div class="stat"><b id="pst-streak">0</b><span>Streak</span></div>
+        <div class="stat"><b id="pst-best">0</b><span>Best</span></div>
+        <button type="button" class="link-btn" id="preset">Reset record</button>
+      </section>
+
+      <div class="pot-layout">
+        <article class="panel" aria-label="Question">
+          <p class="eyebrow" id="q-eyebrow"></p>
+          <div id="q-scene"></div>
+          <h2 class="q-prompt" id="q-prompt"></h2>
+          <div class="options" id="q-options"></div>
+          <div class="result" id="q-result" hidden aria-live="polite"></div>
+        </article>
+
+        <aside class="panel bench" aria-label="Workbench">
+          <h3>Workbench</h3>
+          <p>Plug in your own numbers. Everything updates as you type.</p>
+          <div class="calc">
+            <h4>Price of a call</h4>
+            <div class="inputs">
+              <label class="field">Pot before the bet<input id="w-pot" type="number" inputmode="decimal" min="0" step="any" value="100"></label>
+              <label class="field">Bet to call<input id="w-bet" type="number" inputmode="decimal" min="0" step="any" value="50"></label>
+            </div>
+            <dl class="outputs" id="w-price"></dl>
+          </div>
+          <div class="calc">
+            <h4>Expected value of the call</h4>
+            <div class="inputs">
+              <label class="field">Your equity (%)<input id="w-eq" type="number" inputmode="decimal" min="0" max="100" step="any" value="35"></label>
+            </div>
+            <dl class="outputs" id="w-ev"></dl>
+          </div>
+          <div class="calc">
+            <h4>Outs</h4>
+            <div class="inputs">
+              <label class="field">Clean outs<input id="w-outs" type="number" inputmode="numeric" min="1" max="20" step="1" value="9"></label>
+            </div>
+            <dl class="outputs" id="w-outsout"></dl>
+          </div>
+          <div class="calc">
+            <h4>Stack-to-pot ratio</h4>
+            <div class="inputs">
+              <label class="field">Effective stack<input id="w-stack" type="number" inputmode="decimal" min="0" step="any" value="97.5"></label>
+              <label class="field">Pot on the flop<input id="w-fpot" type="number" inputmode="decimal" min="0" step="any" value="5.5"></label>
+            </div>
+            <dl class="outputs" id="w-spr"></dl>
+            <p class="calc-note" id="w-sprnote"></p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="reference" aria-label="Reference">
+        <div class="ref wide">
+          <h3>Every bet size, four numbers</h3>
+          <p>The same arithmetic gives the caller's price, the bluffer's break-even and the defender's minimum. Half-pot needs a quarter, pot needs a third, and no bet ever needs 50%.</p>
+          <div class="tbl-wrap"><table id="tbl-sizes"></table></div>
+        </div>
+        <div class="ref">
+          <h3>Outs and the chance to hit</h3>
+          <p>Rule of 2 and 4: outs × 4 with two cards to come, × 2 with one. Above 8 outs, subtract (outs − 8) from the × 4 figure.</p>
+          <div class="tbl-wrap"><table id="tbl-outs"></table></div>
+        </div>
+        <div class="ref">
+          <h3>Where one pair can commit</h3>
+          <p>Sources draw the SPR lines in different places. The working rule all four support is below the table.</p>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Source</th><th>One pair can commit</th><th>Decision zone</th><th>Want two pair+</th></tr></thead>
+              <tbody>
+                <tr><td>Pokerology</td><td>0–3</td><td>3–6</td><td>6–10; 10+ pot control</td></tr>
+                <tr><td>DeucesCracked</td><td>under 3</td><td>3–6</td><td>over 8</td></tr>
+                <tr><td>PokerTube</td><td>1–3</td><td>4–6</td><td>7–12; 13+ implied odds</td></tr>
+                <tr><td>ThePokerBank</td><td>0–6</td><td>7–16</td><td>17+</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin:12px 0 0">Below about 3, top pair good kicker or better is happy to go all-in. Between 3 and 6, overpairs and strong top pairs can commit on safe boards. Above about 10, one pair is pot control.</p>
+        </div>
+        <div class="ref wide">
+          <h3>Rules to remember</h3>
+          <ul class="rules">
+            <li>Equity needed = your call ÷ the pot after you call. Never compare the call with the pot before the bet.</li>
+            <li>The two-card (Rule of 4) figure applies only when someone is all-in. With stacks behind, compare the one-card odds with the current price.</li>
+            <li>Count only outs that win. Discount draws to a second-best hand, outs that complete a flush for someone else, and pairing your ace against a set.</li>
+            <li>Implied odds need deep effective stacks and a hidden, strong hand. Set mining wants at least 15× the raise behind, about 25× out of position.</li>
+            <li>Reverse implied odds: if you won't be sure to have the best hand when you hit, count fewer outs and expect to win less.</li>
+            <li>EV(call) = equity × the pot you win − (1 − equity) × your call. EV(bluff) = fold% × pot − call% × bet.</li>
+            <li>MDF is a sanity check. Against players who rarely bluff, fold more.</li>
+            <li>SPR = effective stack ÷ pot on the flop. About 17.7 after a called button open, about 4 in a called 3-bet pot, about 1.6 in a called 4-bet pot.</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="sources">
+        <p>Questions and tables follow the guide's chapter <i>Pot size sets the price of every call and every commitment</i>. Numbers are generated fresh for each question; worked examples from the chapter come up as they appear there.</p>
+        <p>Sources: <a href="https://www.pokerskill.com/charts/odds/" target="_blank" rel="noopener">Poker Skill, odds charts</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/reverse-implied-odds/" target="_blank" rel="noopener">Upswing, reverse implied odds</a> · <a href="https://blog.gtowizard.com/mdf-alpha/" target="_blank" rel="noopener">GTO Wizard, MDF and alpha</a> · <a href="https://pokercoaching.com/blog/mdf-poker/" target="_blank" rel="noopener">PokerCoaching, MDF</a> · <a href="https://www.pokerology.com/poker/strategy/spr/" target="_blank" rel="noopener">Pokerology, SPR</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a></p>
+      </footer>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const RANKS = 'AKQJT98765432';
+  const ri = r => RANKS.indexOf(r);
+  const RNAME = {A:'ace',K:'king',Q:'queen',J:'jack',T:'ten','9':'nine','8':'eight','7':'seven','6':'six','5':'five','4':'four','3':'three','2':'deuce'};
+  const RPLURAL = {A:'aces',K:'kings',Q:'queens',J:'jacks',T:'tens','9':'nines','8':'eights','7':'sevens','6':'sixes','5':'fives','4':'fours','3':'threes','2':'deuces'};
+  const SUITS = [
+    {k:'s', sym:'♠', red:false, name:'spades'},
+    {k:'h', sym:'♥', red:true,  name:'hearts'},
+    {k:'d', sym:'♦', red:true,  name:'diamonds'},
+    {k:'c', sym:'♣', red:false, name:'clubs'}
+  ];
+  const showRank = r => r === 'T' ? '10' : r;
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const fmtBB = n => (n % 1 ? n.toFixed(1) : String(n));
+
+  function rand(n) {
+    if (window.crypto && crypto.getRandomValues) { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+    return Math.floor(Math.random() * n);
+  }
+  const pick = arr => arr[rand(arr.length)];
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
+
+  // Storage is a per-viewer convenience; the drills work without it.
+  const STORE = 'preflop-seat-drill:v1';
+  function loadJSON(key) { try { const v = JSON.parse(localStorage.getItem(key)); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } }
+  function saveJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* ignore */ } }
+  const prefs = Object.assign({fmt:'six', deal:'any', tab:'seats', potCat:'mixed'}, loadJSON(STORE + ':prefs'));
+  const savePrefs = () => saveJSON(STORE + ':prefs', prefs);
+
+  // Two-click reset, since the viewer has no confirm() dialog.
+  function armReset(btn, onReset) {
+    let timer = null;
+    btn.addEventListener('click', () => {
+      if (!timer) {
+        btn.textContent = 'Click again to reset'; btn.classList.add('armed');
+        timer = setTimeout(() => { timer = null; btn.textContent = 'Reset record'; btn.classList.remove('armed'); }, 3000);
+        return;
+      }
+      clearTimeout(timer); timer = null;
+      btn.classList.remove('armed'); btn.textContent = 'Record cleared';
+      setTimeout(() => { if (!timer) btn.textContent = 'Reset record'; }, 1500);
+      onReset();
+    });
+  }
+
+  /* =====================================================================
+     SEAT DRILL
+     ===================================================================== */
+
+  // Range notation from the guide: "s" suited, "o" offsuit, "+" = that hand and every better one of its kind.
+  function expand(token) {
+    const plus = token.endsWith('+');
+    const t = plus ? token.slice(0, -1) : token;
+    const hi = t[0], lo = t[1], kind = t[2] || '';
+    const out = [];
+    if (hi === lo) {
+      if (plus) for (let i = ri(hi); i >= 0; i--) out.push(RANKS[i] + RANKS[i]);
+      else out.push(t);
+    } else if (plus) {
+      for (let i = ri(lo); i > ri(hi); i--) out.push(hi + RANKS[i] + kind);
+    } else {
+      out.push(t);
+    }
+    return out;
+  }
+  const combos = c => c.length === 2 ? 6 : (c[2] === 's' ? 4 : 12);
+
+  const RANGES = {
+    UTG9:   {txt:'77+, ATs+, KTs+, QTs+, T9s, AQo+',
+             src:"Upswing's simpler 9-handed beginner list for under the gun."},
+    UTG1_9: {txt:'66+, A9s+, KTs+, QTs+, JTs, T9s, AJo+, KQo', interp:true,
+             src:"Not charted in the guide. Interpolated between UTG and the lojack, sized to PokerCoaching's 11.4% 8-handed UTG."},
+    UTG2_9: {txt:'55+, A7s+, A5s, K9s+, QTs+, JTs, T9s, 98s, AJo+, KQo', interp:true,
+             src:'Not charted in the guide. Interpolated between UTG+1 and the lojack.'},
+    LJ:     {txt:'55+, A2s+, K9s+, Q9s+, J9s+, T8s+, 98s, 87s, 76s, AJo+, KQo', pub:16.0,
+             src:'Upswing 6-max UTG/LJ opening range, 100bb.'},
+    HJ:     {txt:'44+, A2s+, K9s+, Q9s+, J9s+, T8s+, 97s+, 87s, 76s, 65s, ATo+, KJo+, QJo', pub:20.4,
+             src:'Upswing 6-max HJ opening range, 100bb.'},
+    CO:     {txt:'22+, A2s+, K8s+, Q8s+, J8s+, T8s+, 97s+, 86s+, 76s, 65s, 54s, ATo+, KTo+, QTo+, JTo', pub:24.9,
+             src:'Upswing 6-max CO opening range, 100bb.'},
+    BTN:    {txt:'22+, A2s+, K3s+, Q5s+, J6s+, T6s+, 96s+, 85s+, 75s+, 64s+, 54s, 43s, A2o+, K9o+, Q9o+, J9o+, T9o', pub:40.9,
+             src:'Upswing 6-max BTN opening range, 100bb.'},
+    SB:     {txt:'22+, A2s+, K2s+, Q4s+, J6s+, T6s+, 95s+, 84s+, 74s+, 63s+, 53s+, 43s, 32s, A2o+, K8o+, Q8o+, J8o+, T8o+, 98o', pub:47.8,
+             src:'Upswing 6-max SB opening range, 100bb, played raise-or-fold.'}
+  };
+  for (const key in RANGES) {
+    const R = RANGES[key];
+    R.set = new Set(R.txt.split(',').map(s => s.trim()).flatMap(expand));
+    R.pct = [...R.set].reduce((n, c) => n + combos(c), 0) / 13.26;
+  }
+  const pctText = R => (R.pub != null ? R.pub : R.pct).toFixed(1) + '%';
+
+  const NOTE = {
+    CO: 'Late position. Only the button and the blinds are left behind you, and you will often act last after the flop.',
+    BTN: 'The button acts last on every street after the flop. That information edge, plus control of the pot size, is why it opens around 41% of hands.',
+    SB: 'The hardest seat: you act first on every street after the flop. Upswing opens about 40–50% here to about 3 bb and plays raise-or-fold. Even strong players lose about 15 bb/100 from the small blind.'
+  };
+  const BB = {label:'BB', full:'Big blind', group:'blinds', range:null};
+  const FORMATS = {
+    six: {
+      name:'6-max',
+      ring:['BTN','SB','BB','UTG','HJ','CO'],          // clockwise from the button
+      order:['UTG','HJ','CO','BTN','SB'],               // preflop action order (BB never opens)
+      legend:[['early','none in 6-max'],['middle','UTG (LJ), HJ (MP)'],['late','CO, BTN'],['blinds','SB, BB']],
+      seats:{
+        UTG:{label:'UTG', alias:'LJ', full:'Under the gun', group:'middle', range:'LJ', ref:'UTG', pc:17.6,
+             note:'In 6-max the three early full-ring seats disappear, so UTG plays like the full-ring lojack.'},
+        HJ:{label:'HJ', alias:'MP', full:'Hijack', group:'middle', range:'HJ', ref:'the hijack', where:'in the hijack', pc:21.4,
+            note:'Middle position. With one player fewer behind you than UTG, the range widens to about 20%.'},
+        CO:{label:'CO', full:'Cutoff', group:'late', range:'CO', ref:'the cutoff', where:'in the cutoff', pc:27.8, note:NOTE.CO},
+        BTN:{label:'BTN', full:'Button', group:'late', range:'BTN', ref:'the button', where:'on the button', pc:43.5, note:NOTE.BTN},
+        SB:{label:'SB', full:'Small blind', group:'blinds', range:'SB', ref:'the small blind', where:'in the small blind', pc:62.3, pcNote:'raise or call', note:NOTE.SB},
+        BB:BB
+      }
+    },
+    nine: {
+      name:'9-handed',
+      ring:['BTN','SB','BB','UTG','UTG1','UTG2','LJ','HJ','CO'],
+      order:['UTG','UTG1','UTG2','LJ','HJ','CO','BTN','SB'],
+      legend:[['early','UTG, UTG+1, UTG+2'],['middle','LJ (MP), HJ'],['late','CO, BTN'],['blinds','SB, BB']],
+      seats:{
+        UTG:{label:'UTG', full:'Under the gun', group:'early', range:'UTG9', ref:'UTG',
+             note:"Early position with eight players behind you, any of whom may raise, so this is the tightest range. Red Chip's live advice goes tighter still: 77+, AQs+, AKo."},
+        UTG1:{label:'UTG+1', full:'Under the gun +1', group:'early', range:'UTG1_9', ref:'UTG+1', where:'at UTG+1', pc:11.4, pcNote:'8-handed UTG',
+              note:"Early position with seven players behind you. The guide doesn't chart this seat, so the range is interpolated to match PokerCoaching's 8-handed UTG, which has the same seven players behind it."},
+        UTG2:{label:'UTG+2', full:'Under the gun +2', group:'early', range:'UTG2_9', ref:'UTG+2', where:'at UTG+2',
+              note:"Early position with six players behind you. The guide doesn't chart this seat, so the range is interpolated between UTG+1 and the lojack."},
+        LJ:{label:'LJ', alias:'MP', full:'Lojack', group:'middle', range:'LJ', ref:'the lojack', where:'in the lojack', pc:15.7, pcNote:'8-handed',
+            note:'Middle position. From here on a full-ring table plays like 6-max, so the lojack uses the 6-max UTG/LJ chart.'},
+        HJ:{label:'HJ', full:'Hijack', group:'middle', range:'HJ', ref:'the hijack', where:'in the hijack',
+            note:'Middle position, using the 6-max hijack chart.'},
+        CO:{label:'CO', full:'Cutoff', group:'late', range:'CO', ref:'the cutoff', where:'in the cutoff', pc:26.1, pcNote:'8-handed', note:NOTE.CO},
+        BTN:{label:'BTN', full:'Button', group:'late', range:'BTN', ref:'the button', where:'on the button', pc:40.3, pcNote:'8-handed', note:NOTE.BTN},
+        SB:{label:'SB', full:'Small blind', group:'blinds', range:'SB', ref:'the small blind', where:'in the small blind', note:NOTE.SB},
+        BB:BB
+      }
+    }
+  };
+  const GROUP = {early:'Early', middle:'Middle', late:'Late', blinds:'Blinds'};
+  const GROUP_LONG = {early:'Early position', middle:'Middle position', late:'Late position', blinds:'Blinds'};
+
+  const freshStats = () => ({total:0, correct:0, streak:0, best:0, seats:{}});
+  let stats = Object.assign(freshStats(), loadJSON(STORE + ':stats'));
+  if (!FORMATS[prefs.fmt]) prefs.fmt = 'six';
+  if (prefs.deal !== 'any' && prefs.deal !== 'close') prefs.deal = 'any';
+
+  const state = {seat:null, cards:null, hand:null, answered:false, choice:null, chartSeat:null, handNo:1, dealId:0};
+
+  function dealTwo() {
+    const a = rand(52); let b = rand(51); if (b >= a) b++;
+    return [a, b].map(i => Object.assign({r: RANKS[i % 13]}, SUITS[Math.floor(i / 13)])).sort((x, y) => ri(x.r) - ri(y.r));
+  }
+  const codeOf = ([h, l]) => h.r === l.r ? h.r + l.r : h.r + l.r + (h.k === l.k ? 's' : 'o');
+  const seatSet = (F, key) => RANGES[F.seats[key].range].set;
+  function isContested(code, F) {
+    const ins = F.order.map(k => seatSet(F, k).has(code));
+    return ins.some(Boolean) && !ins.every(Boolean);
+  }
+  const fmtNow = () => FORMATS[prefs.fmt];
+  const correctAction = () => seatSet(fmtNow(), state.seat).has(state.hand) ? 'raise' : 'fold';
+  const playersBehind = () => { const F = fmtNow(); return F.order.length - F.order.indexOf(state.seat); };
+
+  function newHand() {
+    const F = fmtNow();
+    state.seat = F.order[rand(F.order.length)];
+    let cards = dealTwo();
+    if (prefs.deal === 'close') {
+      for (let tries = 0; tries < 300; tries++) {
+        if (isContested(codeOf(cards), F) || Math.random() < 0.2) break;
+        cards = dealTwo();
+      }
+    }
+    state.cards = cards;
+    state.hand = codeOf(cards);
+    state.answered = false;
+    state.choice = null;
+    state.chartSeat = state.seat;
+    state.handNo = stats.total + 1;
+    state.dealId++;
+    render();
+  }
+
+  function answer(choice) {
+    if (state.answered) return;
+    state.answered = true;
+    state.choice = choice;
+    const ok = choice === correctAction();
+    stats.total++;
+    if (ok) { stats.correct++; stats.streak++; stats.best = Math.max(stats.best, stats.streak); }
+    else stats.streak = 0;
+    const key = prefs.fmt + ':' + state.seat;
+    const s = stats.seats[key] || (stats.seats[key] = {n:0, c:0});
+    s.n++; if (ok) s.c++;
+    saveJSON(STORE + ':stats', stats);
+    render();
+    const nb = $('#newHand'); if (nb) nb.focus({preventScroll:true});
+  }
+
+  /* ---------- Feedback text, built from the chapter ---------- */
+  function handName(code) {
+    if (code.length === 2) return 'Pocket ' + RPLURAL[code[0]];
+    return cap(RNAME[code[0]]) + '-' + RNAME[code[1]] + (code[2] === 's' ? ' suited' : ' offsuit');
+  }
+  function cutoffLine(code, set, ref) {
+    if (code.length === 2) {
+      const pairs = [...RANKS].filter(r => set.has(r + r));
+      if (!pairs.length) return 'No pairs are opened from ' + ref + '.';
+      const low = pairs[pairs.length - 1];
+      return low === '2' ? `Pairs from ${ref}: every pair, 22 and up.` : `Pairs from ${ref}: ${low}${low} and up.`;
+    }
+    const hi = code[0], kind = code[2];
+    const kick = [...RANKS.slice(ri(hi) + 1)];
+    const cat = (kind === 's' ? 'suited ' : 'offsuit ') + RPLURAL[hi];
+    const hits = kick.map(k => set.has(hi + k + kind));
+    if (!hits.some(Boolean)) return `No ${cat} are opened from ${ref}.`;
+    const parts = [];
+    let i = 0;
+    while (i < kick.length) {
+      if (!hits[i]) { i++; continue; }
+      let j = i;
+      while (j + 1 < kick.length && hits[j + 1]) j++;
+      const a = hi + kick[i] + kind, b = hi + kick[j] + kind;
+      if (i === 0) parts.push(j === 0 ? a : b + '+');
+      else parts.push(i === j ? a : a + '–' + b);
+      i = j + 1;
+    }
+    return `${cap(cat)} from ${ref}: ${parts.join(', ')}.`;
+  }
+  function dominators(code) {
+    const a = code[0], b = code[1];
+    const list = [...RANKS.slice(0, ri(b))].filter(k => k !== a).map(k => ri(k) < ri(a) ? k + a : a + k).slice(0, 3);
+    return list.length > 1 ? list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1] : list[0];
+  }
+  function typeNote(code, first) {
+    const a = code[0], b = code[1], pair = code.length === 2, suited = code[2] === 's';
+    if ((pair && ri(a) <= ri('T')) || (a === 'A' && (b === 'K' || b === 'Q')))
+      return 'TT+ and AK/AQ are raised from every seat. They are the core of every opening range.';
+    if (pair) {
+      if (ri(a) >= ri('4'))
+        return 'Pairs 22–44 are not raised from early seats. They earn mainly by set mining: a pair flops a set 11.8% of the time (about 7.5-to-1), which only pays when deep stacks are behind.';
+      return 'Middle pairs are good hands, but play them less aggressively than big pairs. A pair flops a set 11.8% of the time, while an unpaired hand flops a pair about 29% of the time.';
+    }
+    if (first === -1) return suited
+      ? 'Suitedness alone is not a big factor in hand strength. With cards this weak, even the small blind folds it.'
+      : 'Hands like Q5o or 84o are never opened. Don’t start opening trash out of boredom.';
+    if (suited) {
+      if (a === 'A') return 'Suited aces come in early in every chart.' + ('5432'.includes(b) ? ' The small ones (A5s–A2s) also make good 3-bet bluffs from the button or small blind, because they block strong aces.' : '');
+      if (ri(a) >= ri('T') && ri(b) - ri(a) <= 2)
+        return 'Suited connectors flop a straight only about 1.3% of the time and a flush less than 1%. Their value comes from draws and strong hands that are hard to see coming, so they widen toward the button.';
+      if (ri(b) <= ri('T')) return 'Suited high cards come in early. From there, suited kings, queens and connectors widen steadily toward the button.';
+      return 'Suited kings, queens and jacks with low kickers widen steadily toward the button. Suitedness alone is not a big factor in hand strength, so a weak kicker needs a late seat.';
+    }
+    if (ri(b) <= ri('T'))
+      return `Offsuit high cards suffer from domination: when ${code} pairs its ${RNAME[a]}, it loses big pots to ${dominators(code)}. They come in last, big cards first: AJo and KQo early, then ATo, KJo and QJo.`;
+    if (a === 'A' || a === 'K') return 'Weak offsuit aces and kings only come in on the button and in the small blind.';
+    return 'Low offsuit hands come in last of all. Only the button and small blind open them, with few players left to act.';
+  }
+  function limpNote(isSB) {
+    return 'Calling when you are first in is an open-limp, and the guide’s most important preflop rule is to raise instead. Raising builds the pot, cuts the number of opponents, gives you the initiative and stops you getting raised off your hand.' +
+      (isSB ? ' Solver charts do mix in some small-blind limps, but the guide says beginners can skip that and play raise-or-fold.' : '');
+  }
+  function sizeNote(seatKey) {
+    return seatKey === 'SB'
+      ? 'Size: open to about 3 bb from the small blind.'
+      : 'Size: open to 2–2.5 bb online (Upswing uses 2.25 bb, or 2.5 bb on the button). Live, about 3 bb is standard, plus 1 bb for each limper.';
+  }
+  function feedback() {
+    const F = fmtNow(), seat = F.seats[state.seat], R = RANGES[seat.range];
+    const code = state.hand, inR = R.set.has(code);
+    const correct = inR ? 'raise' : 'fold', choice = state.choice, ok = choice === correct;
+    const first = F.order.map(k => seatSet(F, k).has(code)).indexOf(true);
+    const reach = first === -1 ? 'No seat opens it, not even the small blind.'
+      : first === 0 ? 'Every seat opens it.'
+      : `It becomes an open from ${F.seats[F.order[first]].ref} onward.`;
+    const items = [
+      `<b>${code}</b> is ${inR ? 'in' : 'not in'} the ${seat.label} opening range (${pctText(R)} of hands). ${reach}`,
+      cutoffLine(code, R.set, seat.ref),
+      typeNote(code, first)
+    ];
+    if (choice === 'call') items.push(limpNote(state.seat === 'SB'));
+    else if (!ok && choice === 'raise') {
+      const n = playersBehind();
+      items.push(`Opening hands below the cut-off is how players end up in too many pots. From ${seat.ref}, ${n === 1 ? 'the big blind is' : n + ' players are'} still to act behind you.`);
+    } else if (!ok && choice === 'fold') items.push('The hand is profitable to open from this seat, so folding it gives up money.');
+    if (correct === 'raise' && choice !== 'call') items.push(sizeNote(state.seat));
+    items.push(seat.note);
+    return {
+      ok, correct, items,
+      title: ok ? `Correct. ${cap(correct)}.` : `The chart says ${correct}.`,
+      sub: ok ? `Streak: ${stats.streak}` : `You chose ${choice === 'call' ? 'call, which is an open-limp' : choice}.`
+    };
+  }
+
+  /* ---------- Rendering ---------- */
+  const RX = 42.5, RY = 41, SQ = 2.6;   // seat ring radii (% of table box) and squareness of the rail
+  function ringPos(ang, t) {
+    const c = Math.cos(ang), s = Math.sin(ang);
+    const sx = Math.sign(c) * Math.pow(Math.abs(c), 2 / SQ), sy = Math.sign(s) * Math.pow(Math.abs(s), 2 / SQ);
+    return {x: (50 + RX * t * sx).toFixed(2), y: (50 + RY * t * sy).toFixed(2)};
+  }
+  const blindOf = key => key === 'SB' ? 0.5 : key === 'BB' ? 1 : 0;
+  function heroBet() {
+    if (state.choice === 'raise') return state.seat === 'SB' ? 3 : 2.5;
+    if (state.choice === 'call') return 1;
+    return blindOf(state.seat);
+  }
+  const betFor = key => (key === state.seat && state.answered) ? heroBet() : blindOf(key);
+  const potSize = () => 1.5 + (state.answered ? heroBet() - blindOf(state.seat) : 0);
+  const ACT_DONE = {fold:'Folded', call:'Limped', raise:'Raised'};
+
+  function seatTitle(F, key) {
+    const s = F.seats[key];
+    if (!s.range) return `${s.full}. Never opens: if everyone folds, the big blind wins the pot.`;
+    return `${s.full} · ${GROUP_LONG[s.group]} · opens ${pctText(RANGES[s.range])} of hands`;
+  }
+  const miniCard = c => `<div class="mini${c.red ? ' red' : ''}">${showRank(c.r)}<span>${c.sym}</span></div>`;
+  const bigCard = (c, i) => `<div class="card${c.red ? ' red' : ''}" style="--d:${i * 110}ms" role="img" aria-label="${cap(RNAME[c.r])} of ${c.name}"><span class="r">${showRank(c.r)}</span><span class="s">${c.sym}</span><span class="pip">${c.sym}</span></div>`;
+
+  function renderControls() {
+    document.querySelectorAll('[data-fmt]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.fmt === prefs.fmt)));
+    document.querySelectorAll('[data-deal]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.deal === prefs.deal)));
+  }
+  function renderScore() {
+    $('#st-correct').textContent = `${stats.correct}/${stats.total}`;
+    $('#st-acc').textContent = stats.total ? Math.round(stats.correct / stats.total * 100) + '%' : '–';
+    $('#st-streak').textContent = stats.streak;
+    $('#st-best').textContent = stats.best;
+  }
+  function renderTable() {
+    const F = fmtNow(), n = F.ring.length;
+    const heroOrder = F.order.indexOf(state.seat);
+    const out = [`<div class="felt"><div class="felt-mid"><span class="pot-label">Pot</span><span class="pot">${fmtBB(potSize())} bb</span><span class="felt-note">${F.name} · 100bb deep · no antes</span></div></div>`];
+    F.ring.forEach((key, i) => {
+      const seat = F.seats[key];
+      const ang = (90 + i * 360 / n) * Math.PI / 180;
+      const p = ringPos(ang, 1);
+      const ord = F.order.indexOf(key);
+      const hero = key === state.seat;
+      let cls = 'seat', status;
+      if (hero) { cls += ' hero' + (state.answered ? '' : ' acting'); status = `<span class="status">${state.answered ? ACT_DONE[state.choice] : 'You'}</span>`; }
+      else if (ord !== -1 && ord < heroOrder) { cls += ' folded'; status = '<span class="status">Folded</span>'; }
+      else status = '<span class="backs" aria-label="Still to act"><b></b><b></b></span>';
+      out.push(`<div class="${cls}" style="left:${p.x}%;top:${p.y}%;--gc:var(--g-${seat.group})" title="${seatTitle(F, key)}"><span class="pos">${seat.label}</span>${seat.alias ? `<span class="alias">aka ${seat.alias}</span>` : ''}${status}</div>`);
+      // Cards sit straight in from the seat; chips sit just clockwise of it, the dealer button just counter-clockwise.
+      const bet = betFor(key);
+      if (bet) { const c = ringPos(ang + 20 * Math.PI / 180, 0.64); out.push(`<div class="chip" style="left:${c.x}%;top:${c.y}%"><i></i>${fmtBB(bet)}</div>`); }
+      if (key === 'BTN') { const d = ringPos(ang - 22 * Math.PI / 180, 0.66); out.push(`<div class="dealer" style="left:${d.x}%;top:${d.y}%" title="Dealer button">D</div>`); }
+      if (hero && state.choice !== 'fold') { const c = ringPos(ang, 0.55); out.push(`<div class="mini-cards" style="left:${c.x}%;top:${c.y}%">${state.cards.map(miniCard).join('')}</div>`); }
+    });
+    $('#table').innerHTML = out.join('');
+  }
+  function renderExtras() {
+    const F = fmtNow();
+    $('#groups').innerHTML = F.legend.map(([g, seats]) => `<li><i class="dot" style="--gc:var(--g-${g})"></i><b>${GROUP[g]}</b><span>${seats}</span></li>`).join('');
+    $('#records').innerHTML = F.order.map(k => {
+      const s = stats.seats[prefs.fmt + ':' + k] || {n:0, c:0}, seat = F.seats[k];
+      const pct = s.n ? Math.round(s.c / s.n * 100) : 0;
+      return `<div class="rec"><span class="rec-pos"><i class="dot" style="--gc:var(--g-${seat.group})"></i>${seat.label}</span><span class="rec-n">${s.n ? s.c + '/' + s.n : '–'}</span><span class="bar"><span style="width:${pct}%"></span></span></div>`;
+    }).join('');
+  }
+  function renderPanel() {
+    const F = fmtNow(), seat = F.seats[state.seat], idx = F.order.indexOf(state.seat), behind = playersBehind();
+    $('#sc-eyebrow').textContent = `Hand ${state.handNo} · ${F.name} · 100bb cash`;
+    $('#sc-head').textContent = idx === 0 ? 'You are first to act, under the gun' : `It folds to you ${seat.where}`;
+    $('#sc-meta').innerHTML = `<span class="pill"><i class="dot" style="--gc:var(--g-${seat.group})"></i>${seat.label}${seat.alias ? ' (' + seat.alias + ')' : ''} · ${GROUP_LONG[seat.group]}</span><span class="pill">${behind} ${behind === 1 ? 'player' : 'players'} left to act</span>`;
+    const handEl = $('#hand');
+    if (handEl.dataset.deal !== String(state.dealId)) {   // only redraw (and re-animate) on a new deal
+      handEl.dataset.deal = String(state.dealId);
+      handEl.innerHTML = `<div class="cards">${state.cards.map(bigCard).join('')}</div><div class="hand-txt"><span class="hand-code">${state.hand}</span><span class="hand-name">${handName(state.hand)}</span></div>`;
+    }
+    $('#sub-call').textContent = state.seat === 'SB' ? 'complete to 1 bb' : 'limp 1 bb';
+    $('#sub-raise').textContent = state.seat === 'SB' ? 'open to 3 bb' : 'open to 2.5 bb';
+    const correct = correctAction();
+    document.querySelectorAll('.act').forEach(b => {
+      b.disabled = state.answered;
+      b.classList.toggle('chosen', state.answered && b.dataset.act === state.choice);
+      b.classList.toggle('answer', state.answered && b.dataset.act === correct);
+    });
+  }
+  function renderResult() {
+    const el = $('#result');
+    if (!state.answered) { el.hidden = true; el.innerHTML = ''; return; }
+    const fb = feedback();
+    el.hidden = false;
+    el.innerHTML = `
+      <div class="verdict ${fb.ok ? 'ok' : 'bad'}">
+        <span class="mark" aria-hidden="true">${fb.ok ? '✓' : '✕'}</span>
+        <div class="v-text"><h3>${fb.title}</h3><p>${fb.sub}</p></div>
+        <button type="button" class="new-hand" id="newHand">New hand <kbd>N</kbd></button>
+      </div>
+      <ul class="why">${fb.items.map(t => `<li>${t}</li>`).join('')}</ul>
+      <div>
+        <h4 class="mini-head">${state.hand} at every seat · pick one to see its chart</h4>
+        <div class="strip" id="strip"></div>
+      </div>
+      <div class="chart" id="chart"></div>`;
+    renderChart();
+  }
+  function renderChart() {
+    const F = fmtNow(), seat = F.seats[state.chartSeat], R = RANGES[seat.range];
+    $('#strip').innerHTML = F.order.map(k => {
+      const inR = seatSet(F, k).has(state.hand);
+      return `<button type="button" data-chart="${k}" aria-pressed="${k === state.chartSeat}"><span>${F.seats[k].label}${k === state.seat ? ' <span class="you">(you)</span>' : ''}</span><span class="yn ${inR ? 'raise' : 'fold'}">${inR ? 'Raise' : 'Fold'}</span></button>`;
+    }).join('');
+    let cells = '';
+    for (let i = 0; i < 13; i++) for (let j = 0; j < 13; j++) {
+      const c = i === j ? RANKS[i] + RANKS[j] : i < j ? RANKS[i] + RANKS[j] + 's' : RANKS[j] + RANKS[i] + 'o';
+      cells += `<div class="cell${R.set.has(c) ? ' in' : ''}${c === state.hand ? ' me' : ''}">${c}</div>`;
+    }
+    const pub = R.pub != null ? `${R.pub.toFixed(1)}% (Upswing)` : `${R.pct.toFixed(1)}%${R.interp ? ' (interpolated)' : ''}`;
+    const pc = seat.pc ? ` · PokerCoaching${seat.pcNote ? ' ' + seat.pcNote : ''}: ${seat.pc}%` : '';
+    $('#chart').innerHTML = `
+      <p class="chart-head"><b>${seat.label}</b> opens ${pub}${pc}</p>
+      <div class="grid" role="img" aria-label="${seat.label} opening chart: ${R.txt}">${cells}</div>
+      <div class="chart-legend"><span><i class="sw in"></i>Raise</span><span><i class="sw"></i>Fold</span><span><i class="sw me"></i>Your hand</span><span>Suited above the diagonal, offsuit below</span></div>
+      <p class="notation">${R.txt}</p>
+      <p class="src">${R.src}</p>`;
+  }
+  function render() {
+    renderControls(); renderScore(); renderTable(); renderExtras(); renderPanel(); renderResult();
+  }
+
+  document.querySelectorAll('.act').forEach(b => b.addEventListener('click', () => answer(b.dataset.act)));
+  $('#result').addEventListener('click', e => {
+    if (e.target.closest('#newHand')) { newHand(); return; }
+    const tab = e.target.closest('[data-chart]');
+    if (tab) {
+      state.chartSeat = tab.dataset.chart;
+      renderChart();
+      const again = document.querySelector(`[data-chart="${state.chartSeat}"]`);
+      if (again) again.focus({preventScroll:true});
+    }
+  });
+  document.querySelectorAll('[data-fmt]').forEach(b => b.addEventListener('click', () => {
+    if (prefs.fmt === b.dataset.fmt) return;
+    prefs.fmt = b.dataset.fmt; savePrefs(); newHand();
+  }));
+  document.querySelectorAll('[data-deal]').forEach(b => b.addEventListener('click', () => {
+    if (prefs.deal === b.dataset.deal) return;
+    prefs.deal = b.dataset.deal; savePrefs();
+    if (state.answered) renderControls(); else newHand();
+  }));
+  armReset($('#reset'), () => { stats = freshStats(); saveJSON(STORE + ':stats', stats); renderScore(); renderExtras(); });
+
+  /* =====================================================================
+     POT ODDS DRILL
+     ===================================================================== */
+
+  const pc1 = x => { const v = Math.round(x * 1000) / 10; return (Number.isInteger(v) ? String(v) : v.toFixed(1)) + '%'; };
+  const num = x => { const v = Math.round(x * 10) / 10; return Number.isInteger(v) ? String(v) : v.toFixed(1); };
+  const ratio = (x, d = 2) => String(Math.round(x * Math.pow(10, d)) / Math.pow(10, d));
+  const signed = x => (x >= 0 ? '+' : '−') + num(Math.abs(x));
+  const two = n => 1 - (47 - n) * (46 - n) / (47 * 46);    // hit by the river, from the flop, seeing both cards
+  const round5 = x => Math.max(5, Math.round(x / 5) * 5);
+  const fBet = s => (Math.cbrt(1 + 2 * s) - 1) / 2;          // equal bet (share of pot) that gets SPR s all-in over three streets
+  const toCard = code => Object.assign({r: code[0]}, SUITS.find(s => s.k === code[1]));
+  function suitMapper() {   // relabel suits at random so the same spot looks fresh
+    const perm = shuffle(['s', 'h', 'd', 'c']);
+    const m = {s:perm[0], h:perm[1], d:perm[2], c:perm[3]};
+    return code => toCard(code[0] + m[code[1]]);
+  }
+  const pcHTML = c => `<div class="pc${c.red ? ' red' : ''}" role="img" aria-label="${cap(RNAME[c.r])} of ${c.name}">${showRank(c.r)}<span>${c.sym}</span></div>`;
+
+  // Options: the correct answer first in the list, common mistakes next; shuffled for display.
+  function opts(correct, wrongs, max = 4) {
+    const labels = [correct];
+    for (const w of wrongs) if (w != null && !labels.includes(w) && labels.length < max) labels.push(w);
+    return shuffle(labels.map((l, i) => ({label: l, correct: i === 0})));
+  }
+  function pctOpts(x, wrongs) {
+    const vals = [x];
+    const fits = v => isFinite(v) && v > 0.004 && v < 0.996 && vals.every(u => Math.abs(u - v) >= 0.015 && pc1(u) !== pc1(v));
+    for (const w of wrongs) if (vals.length < 4 && fits(w)) vals.push(w);
+    for (const d of [0.08, -0.06, 0.14, -0.1, 0.2, 0.05]) if (vals.length < 4 && fits(x + d)) vals.push(x + d);
+    return shuffle(vals.map((v, i) => ({label: pc1(v), correct: i === 0})));
+  }
+  const fixedOpts = list => list.map(([label, correct]) => ({label, correct}));
+
+  const SIZE_ROWS = [
+    {n:'1/4 pot', f:0.25}, {n:'1/3 pot', f:1/3}, {n:'1/2 pot', f:0.5}, {n:'2/3 pot', f:2/3},
+    {n:'3/4 pot', f:0.75}, {n:'Pot', f:1}, {n:'1.5x pot', f:1.5}, {n:'2x pot', f:2}
+  ];
+  const sz = f => ({odds:(1 + f) / f, need:f / (1 + 2 * f), bluff:f / (1 + f), mdf:1 / (1 + f)});
+
+  // Flop spots: outs are invariant under relabelling suits.
+  const DRAWS = [
+    {name:'Gutshot straight draw', outs:4, hero:['9c','8d'], board:['Qs','Th','3c'], blank:'2s', why:'Only a jack completes your straight (Q-J-T-9-8): 4 outs.'},
+    {name:'Two overcards', outs:6, hero:['Ad','Kc'], board:['8s','6h','2c'], blank:'3d', why:'Three aces and three kings give you top pair: 6 outs, and often only partly live.'},
+    {name:'Open-ended straight draw', outs:8, hero:['Jh','Tc'], board:['9s','8d','3c'], blank:'2h', why:'Any queen or any seven makes your straight: 4 + 4 = 8 outs.'},
+    {name:'Flush draw', outs:9, hero:['7h','6h'], board:['Kh','9h','2c'], blank:'3s', why:'There are 13 cards in your suit and you can see 4, so 9 remain.'},
+    {name:'Flush draw + gutshot', outs:12, hero:['9s','8s'], board:['Qs','Ts','3d'], blank:'2c', why:'9 flush cards, plus the 3 jacks that are not in your suit: 12 outs.'},
+    {name:'Flush draw + overcard', outs:12, hero:['As','9s'], board:['Qs','7s','3d'], blank:'2c', why:'9 flush cards, plus the 3 aces that are not in your suit: 12 outs.'},
+    {name:'Flush draw + open-ended straight draw', outs:15, hero:['9h','8h'], board:['Th','7h','2c'], blank:'3d', why:'9 flush cards, plus the 3 jacks and 3 sixes that are not in your suit: 15 outs.'},
+    {name:'Two pair to a full house', outs:4, hero:['Kc','9d'], board:['Kh','9s','4c'], blank:'2d', why:'The two remaining kings and two remaining nines make a full house: 4 outs.'}
+  ];
+  const DIRTY = [
+    {hero:['9s','8s'], board:['Ks','5s','2c'], raw:9, worth:6,
+     why:'You have 9 raw flush outs, but your opponent’s range holds bigger flush draws, so some of your flushes still lose. Poker Skill counts this draw as worth about 6 outs, which turns a call into a fold.'},
+    {hero:['Ts','9d'], board:['Ac','7h','8h'], raw:8, worth:6,
+     why:'Any six or jack makes your straight, but the six and jack of the board’s two-flush suit also complete a flush for anyone holding two of that suit. Only 6 outs are clean.'}
+  ];
+  const IMPLIED_DRAWS = [   // draws to the nuts, for implied-odds spots
+    {name:'nut flush draw', outs:9, hero:['Kh','Qh'], board:['Ah','7h','2c'], blank:'4s'},
+    {name:'open-ended straight draw to the nuts', outs:8, hero:['Jh','Tc'], board:['9s','8d','3c'], blank:'2h'}
+  ];
+
+  function qPrice() {
+    if (rand(4) === 0) {   // facing a raise
+      const P = pick([60, 80, 100, 120, 150, 200]);
+      const B = round5(P * pick([1/3, 0.5, 2/3, 0.75]));
+      const R = round5(B * pick([2.5, 3, 3.5, 4]));
+      const call = R - B, final = P + 2 * R, need = call / final;
+      return {
+        scene:{facts:[{k:'Pot', v:P}, {k:'Your bet', v:B}, {k:'Raised to', v:R}]},
+        prompt:`You bet ${B} into a pot of ${P} and your opponent raises to ${R}. What equity do you need to call?`,
+        options:pctOpts(need, [call / (P + B + R), call / (P + B), R / (P + 2 * R)]),
+        work:`You call <b>${call}</b> more (${R} − ${B}). After your call the pot is ${P} + ${B} + ${R} + ${call} = <b>${final}</b>. ${call} ÷ ${final} = <b>${pc1(need)}</b>.`,
+        rule:'Equity needed = your call ÷ the pot after you call. It works the same way when you face a raise.'
+      };
+    }
+    const P = pick([40, 60, 80, 100, 120, 150, 180, 200, 240, 300]);
+    const b = round5(P * pick([0.25, 1/3, 0.4, 0.5, 0.6, 2/3, 0.75, 0.8, 1, 1.5, 2]));
+    const final = P + 2 * b, need = b / final;
+    return {
+      scene:{facts:[{k:'Pot', v:P}, {k:'Bet', v:b}]},
+      prompt:`The pot is ${P} and your opponent bets ${b}. What equity do you need to call?`,
+      options:pctOpts(need, [b / P, b / (P + b)]),
+      work:`You call <b>${b}</b> to win a final pot of ${P} + ${b} + ${b} = <b>${final}</b>. ${b} ÷ ${final} = <b>${pc1(need)}</b>.` +
+        (b < P ? ` Dividing ${b} by the ${P} already in the middle gives ${pc1(b / P)}: that is the classic mistake of using the pot before the bet.` : ''),
+      rule:'Divide your call by the pot after you call.'
+    };
+  }
+
+  function qSizes() {
+    const i = rand(SIZE_ROWS.length), row = SIZE_ROWS[i], s = sz(row.f), P = 120, b = Math.round(P * row.f);
+    const near = [i - 1, i + 1, i - 2, i + 2].filter(j => j >= 0 && j < SIZE_ROWS.length).map(j => sz(SIZE_ROWS[j].f));
+    const size = row.f === 1 ? 'a pot-sized bet' : `a ${row.n} bet`;
+    const scene = {facts:[{k:'Bet size', v:row.f === 1 ? 'Pot' : row.n}]};
+    const kind = pick(['need', 'need', 'odds', 'bluff', 'mdf', 'vb']);
+    if (kind === 'need') return {scene,
+      prompt:`Your opponent makes ${size}. What equity do you need to call?`,
+      options:pctOpts(s.need, [s.bluff, ...near.map(x => x.need)]),
+      work:`Take a pot of ${P}: the bet is ${b}. You call ${b} to win ${P} + ${b} + ${b} = ${P + 2 * b}, and ${b} ÷ ${P + 2 * b} = <b>${pc1(s.need)}</b>.`,
+      rule:'Half-pot needs a quarter, pot needs a third, and no bet ever needs 50%.'};
+    if (kind === 'odds') return {scene,
+      prompt:`What pot odds does ${size} offer the caller?`,
+      options:opts(ratio(s.odds) + ' : 1', near.map(x => ratio(x.odds) + ' : 1')),
+      work:`Take a pot of ${P}: after a bet of ${b} there is ${P + b} to win for a call of ${b}. ${P + b} : ${b} = <b>${ratio(s.odds)} : 1</b>.`,
+      rule:'Pot odds = what you can win : what you must call.'};
+    if (kind === 'bluff') return {scene,
+      prompt:`You bluff with ${size}. How often must your opponent fold for the bluff to break even?`,
+      options:pctOpts(s.bluff, [s.need, s.mdf, ...near.map(x => x.bluff)]),
+      work:`A bluff risks the bet to win the pot. Break-even (“alpha”) = bet ÷ (bet + pot) = ${b} ÷ (${b} + ${P}) = <b>${pc1(s.bluff)}</b>.`,
+      rule:'A pot-sized bluff must work half the time; a one-third-pot bluff needs only 25%.'};
+    if (kind === 'mdf') return {scene,
+      prompt:`Your opponent bets ${size}. What is your minimum defence frequency?`,
+      options:pctOpts(s.mdf, [s.bluff, 1 - s.need, ...near.map(x => x.mdf)]),
+      work:`MDF = pot ÷ (pot + bet) = ${P} ÷ (${P} + ${b}) = <b>${pc1(s.mdf)}</b>. Continue less often than that and your opponent profits by bluffing with any two cards.`,
+      rule:'MDF is a sanity check, not an instruction to call with junk. Fold more against players who rarely bluff.'};
+    return {scene,
+      prompt:`A balanced river bet of ${row.f === 1 ? 'pot' : row.n} carries how many value hands per bluff?`,
+      options:opts(ratio(s.odds) + ' : 1', near.map(x => ratio(x.odds) + ' : 1').concat(['1 : 1'])),
+      work:`The balanced value-to-bluff ratio equals the pot odds you offer the caller: (${P} + ${b}) : ${b} = <b>${ratio(s.odds)} : 1</b>.`,
+      rule:'A half-pot bet offers 3 : 1, so it carries three value hands per bluff.'};
+  }
+
+  function qOuts() {
+    const kind = pick(['count', 'count', 'dirty', 'river', 'turn', 'against', 'rule']);
+    const m = suitMapper();
+    const d = pick(DRAWS), n = d.outs;
+    const flop = {board:d.board.map(m), hero:d.hero.map(m), street:'Flop'};
+    const otherOuts = [...new Set(DRAWS.map(x => x.outs))].filter(x => x !== n).sort((a, b) => Math.abs(a - n) - Math.abs(b - n));
+    const rule24 = 'Rule of 2 and 4: outs × 4 with two cards to come, × 2 with one. Above 8 outs, subtract (outs − 8) from the × 4 figure.';
+    if (kind === 'count') return {scene:flop,
+      prompt:'How many outs do you have? Count the unseen cards that should make your hand the winner.',
+      options:opts(String(n), otherOuts.map(String)),
+      work:`${d.name}. ${d.why}`,
+      rule:'An out is an unseen card that should make your hand the winner.'};
+    if (kind === 'dirty') {
+      const x = pick(DIRTY);
+      return {scene:{board:x.board.map(m), hero:x.hero.map(m), street:'Flop'},
+        prompt:'You face a bet with this draw. How many outs should you really count?',
+        options:opts(`About ${x.worth}`, [`All ${x.raw}`, `About ${x.raw + 3}`, `About ${x.worth - 3}`]),
+        work:x.why,
+        rule:'Count only outs that win. Discount bigger draws in your opponent’s range and cards that complete someone else’s flush.'};
+    }
+    if (kind === 'river') return {scene:Object.assign(flop, {facts:[{k:'Outs', v:n}, {k:'Stacks', v:'All-in'}]}),
+      prompt:`${d.name}, ${n} outs, and someone is all-in on the flop, so you see both the turn and the river. How often do you hit by the river?`,
+      options:pctOpts(two(n), [n / 46, ...otherOuts.map(two)]),
+      work:`Exact: 1 − (${47 - n}/47 × ${46 - n}/46) = <b>${pc1(two(n))}</b>. The Rule of 4 estimate is ${n} × 4 = ${n * 4}%${n > 8 ? `, or ${n * 4 - (n - 8)}% after subtracting (outs − 8)` : ''}.`,
+      rule:rule24};
+    if (kind === 'turn') {
+      const turnBoard = d.board.map(m).concat(m(d.blank));
+      return {scene:{board:turnBoard, hero:d.hero.map(m), street:'Turn', facts:[{k:'Outs', v:n}]},
+        prompt:`${d.name}, ${n} outs, on the turn. How often do you hit on the river?`,
+        options:pctOpts(n / 46, [two(n), ...otherOuts.map(o => o / 46)]),
+        work:`${n} of the 46 unseen cards hit: ${n} ÷ 46 = <b>${pc1(n / 46)}</b>. The Rule of 2 gives ${n * 2}%.`,
+        rule:rule24};
+    }
+    if (kind === 'against') {
+      const odds = x => ratio((46 - x) / x, 1) + ' : 1';
+      return {scene:{facts:[{k:'Outs', v:n}, {k:'Cards to come', v:1}]},
+        prompt:`You have ${n} outs with one card to come (turn to river). What are the odds against hitting?`,
+        options:opts(odds(n), otherOuts.map(odds)),
+        work:`${46 - n} cards miss and ${n} hit, so the odds are ${46 - n} : ${n} = <b>${odds(n)}</b> against. Call when the pot odds you are offered are bigger than that.`,
+        rule:'Compare the odds against hitting with the pot odds on offer.'};
+    }
+    // Rule of 2 and 4 estimate
+    const twoCards = rand(2) === 0;
+    const est = twoCards ? n * 4 - Math.max(0, n - 8) : n * 2;
+    const wrongs = twoCards ? [n * 4, n * 2, n * 3, n * 4 + 8] : [n * 4, n, n * 3];
+    return {scene:{facts:[{k:'Outs', v:n}, {k:'Cards to come', v:twoCards ? '2 (all-in)' : 1}]},
+      prompt:`Estimate it at the table with the Rule of 2 and 4: ${n} outs with ${twoCards ? 'two cards to come, and someone is all-in' : 'one card to come'}.`,
+      options:opts(est + '%', wrongs.map(w => w + '%')),
+      work:twoCards
+        ? `${n} × 4 = ${n * 4}%${n > 8 ? `, minus (${n} − 8) = <b>${est}%</b>. The shortcut overstates big draws; the exact figure is ${pc1(two(n))}` : ` = <b>${est}%</b>. The exact figure is ${pc1(two(n))}`}.`
+        : `${n} × 2 = <b>${est}%</b>. The exact figure is ${pc1(n / 46)}.`,
+      rule:rule24};
+  }
+
+  function qEV() {
+    for (let t = 0; t < 80; t++) {
+      const d = pick(DRAWS), n = d.outs, m = suitMapper();
+      const mode = pick(['allin', 'allin', 'behind', 'turn']);
+      const P = pick([60, 80, 100, 120, 150, 200]);
+      const b = round5(P * pick([1/3, 0.5, 2/3, 0.75, 1, 1.5]));
+      const e = mode === 'allin' ? two(n) : mode === 'behind' ? n / 47 : n / 46;
+      const need = b / (P + 2 * b);
+      if (Math.abs(e - need) < 0.03) continue;
+      const ev = e * (P + b) - (1 - e) * b, call = e > need;
+      const board = d.board.map(m);
+      if (mode === 'turn') board.push(m(d.blank));
+      const draw = d.name.toLowerCase();
+      const prompt = mode === 'allin'
+        ? `Your opponent moves all-in for ${b} into a pot of ${P}, and you have them covered. You hold a ${draw}. Call or fold?`
+        : mode === 'behind'
+        ? `Your opponent bets ${b} into a pot of ${P}. Stacks are deep, so you will probably face another bet on the turn. You hold a ${draw}. On direct pot odds, call or fold?`
+        : `Your opponent bets ${b} into a pot of ${P} on the turn. You hold a ${draw}. On direct pot odds, call or fold?`;
+      const eqTxt = mode === 'allin'
+        ? `You are all-in, so you see both cards: ${n} outs give <b>${pc1(e)}</b> by the river.`
+        : mode === 'behind'
+        ? `With stacks behind you are only paying to see the turn: ${n} ÷ 47 = <b>${pc1(e)}</b>. Using the two-card ${pc1(two(n))} here is the Rule of 4 trap.`
+        : `One card to come: ${n} ÷ 46 = <b>${pc1(e)}</b>.`;
+      return {
+        scene:{board, hero:d.hero.map(m), street:mode === 'turn' ? 'Turn' : 'Flop',
+               facts:[{k:'Pot', v:P}, {k:'Bet', v:b, note:mode === 'allin' ? 'all-in' : ''}]},
+        prompt, two:true,
+        options:fixedOpts([['Call', call], ['Fold', !call]]),
+        work:`Price: ${b} ÷ (${P} + ${b} + ${b}) = <b>${pc1(need)}</b>. ${eqTxt} EV of calling = ${pc1(e)} × ${P + b} − ${pc1(1 - e)} × ${b} = <b>${signed(ev)}</b>, so ${call ? 'call' : 'fold'}.` +
+          (mode !== 'allin' && !call ? ' Only implied odds could close the gap.' : ''),
+        rule:'The two-card figure applies only when someone is all-in. With stacks behind, compare the one-card odds with the current price.'
+      };
+    }
+    return qPrice();
+  }
+
+  function qImplied() {
+    const kind = pick(['needed', 'needed', 'stack']);
+    for (let t = 0; t < 80; t++) {
+      const d = pick(IMPLIED_DRAWS), n = d.outs, e = n / 46, m = suitMapper();
+      const P = pick([20, 30, 40, 50, 60, 80, 100]);
+      const b = round5(P * pick([0.5, 2/3, 0.75, 1]));
+      const need = b / (P + 2 * b);
+      if (e >= need - 0.02) continue;
+      const X = Math.round(b / e - (P + 2 * b));
+      const scene = {board:d.board.map(m).concat(m(d.blank)), hero:d.hero.map(m), street:'Turn', facts:[{k:'Pot', v:'$' + P}, {k:'Bet', v:'$' + b}]};
+      const work = `Direct price: ${b} ÷ ${P + 2 * b} = ${pc1(need)}, but ${n} outs give only ${pc1(e)}. To break even the final pot must reach ${b} ÷ ${pc1(e)} ≈ $${Math.round(b / e)}. After your call it holds $${P + 2 * b}, so you must win about <b>$${X}</b> more on the river when you hit.`;
+      if (kind === 'needed') return {scene,
+        prompt:`The pot is $${P} and your opponent bets $${b}. Your ${d.name} hits the river ${pc1(e)} of the time. How much more must you win on the river, when you hit, for calling to break even?`,
+        options:opts('$' + X, ['$' + (X + b), '$' + Math.round(b / e), '$' + Math.max(5, Math.round(X / 2))]),
+        work,
+        rule:'Implied odds are the extra money you expect to win on later streets when you hit. They pay only when stacks are deep and your hand is hidden.'};
+      const short = rand(2) === 0;
+      const S = short ? Math.max(5, Math.round(X * pick([0.3, 0.45, 0.6]))) : Math.round(X * pick([1.8, 2.5, 4]));
+      scene.facts.push({k:'They have behind', v:'$' + S});
+      return {scene, two:true,
+        prompt:`The pot is $${P}. Your opponent bets $${b} and has $${S} left behind. You hold a ${d.name} (${pc1(e)} to hit) and will be paid in full when you hit. Can implied odds justify a call?`,
+        options:fixedOpts([['Call: enough is left to win', !short], ['Fold: too little left behind', short]]),
+        work:work + (short ? ` Your opponent only has $${S} left, so you can never win that much: fold.` : ` Your opponent has $${S} behind, enough to pay you: the call is justified.`),
+        rule:'You can never win more than your opponent has left. If you will not have the nuts when you hit, expect to win less.'};
+    }
+    return qPrice();
+  }
+
+  function qSetMine() {
+    for (let t = 0; t < 80; t++) {
+      const pr = pick(['2', '3', '4', '5', '6']);
+      const ip = rand(2) === 0;
+      const r = pick([4, 6, 8, 10, 12, 15]);
+      const you = pick([100, 150, 200, 300, 500]);
+      const them = rand(3) === 0 ? pick([60, 80, 100, 120, 150]) : pick([150, 200, 300, 400, 600]);
+      const eff = Math.min(you, them), mult = ip ? 15 : 25, x = eff / r;
+      if (Math.abs(x - mult) / mult < 0.2) continue;
+      const call = x >= mult;
+      const suits = shuffle(['s', 'h', 'd', 'c']);
+      return {
+        scene:{hero:[toCard(pr + suits[0]), toCard(pr + suits[1])], facts:[{k:'Raise to', v:'$' + r}, {k:'Your stack', v:'$' + you}, {k:'Their stack', v:'$' + them}]},
+        prompt:`Preflop. An opponent raises to $${r} and you hold ${pr}${pr} ${ip ? 'in position' : 'out of position'}. Is calling to set-mine profitable?`,
+        two:true,
+        options:fixedOpts([['Call to set-mine', call], ['Fold', !call]]),
+        work:`The effective stack is the smaller one: <b>$${eff}</b>, which is ${num(x)}× the raise. You flop a set only 11.8% of the time (about 7.5-to-1) and you won’t always get paid, so you want at least ${mult}× ${ip ? 'in position' : 'out of position'}. ${call ? 'That is enough: call.' : 'That is not enough: fold.'}`,
+        rule:'Set mining needs at least 15× the raise in effective stacks, and about 25× out of position.'
+      };
+    }
+    return qPrice();
+  }
+
+  function qBluff() {
+    const kind = pick(['alpha', 'ev', 'ev', 'mdf']);
+    for (let t = 0; t < 80; t++) {
+      const P = pick([40, 60, 80, 100, 120, 150, 200]);
+      const b = round5(P * pick([1/3, 0.5, 2/3, 0.75, 1, 1.25, 1.5]));
+      const alpha = b / (P + b);
+      if (kind === 'alpha') return {scene:{facts:[{k:'Pot', v:P}, {k:'Your bluff', v:b}]},
+        prompt:`You bluff ${b} into a pot of ${P}. How often must your opponent fold for the bluff to break even?`,
+        options:pctOpts(alpha, [b / (P + 2 * b), P / (P + b), b / P]),
+        work:`You risk ${b} to win ${P}. Break-even (“alpha”) = bet ÷ (bet + pot) = ${b} ÷ (${b} + ${P}) = <b>${pc1(alpha)}</b>.`,
+        rule:'A bluff needs folds at least bet ÷ (bet + pot) of the time.'};
+      if (kind === 'mdf') { const mdf = P / (P + b); return {scene:{facts:[{k:'Pot', v:P}, {k:'Their bet', v:b}]},
+        prompt:`Your opponent bets ${b} into a pot of ${P}. What is your minimum defence frequency?`,
+        options:pctOpts(mdf, [alpha, 1 - b / (P + 2 * b), b / (P + 2 * b)]),
+        work:`MDF = pot ÷ (pot + bet) = ${P} ÷ (${P} + ${b}) = <b>${pc1(mdf)}</b>. It is 1 − alpha: continue less often and any two cards bluff profitably.`,
+        rule:'MDF is a sanity check. Against players who almost never bluff, folding more is correct.'}; }
+      const F = pick([0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]);
+      if (Math.abs(F - alpha) < 0.05) continue;
+      const ev = F * P - (1 - F) * b;
+      return {scene:{facts:[{k:'Pot', v:P}, {k:'Your bluff', v:b}, {k:'They fold', v:Math.round(F * 100) + '%'}]},
+        prompt:`You bluff ${b} into a pot of ${P}, and your opponent folds ${Math.round(F * 100)}% of the time. What is the bluff’s expected value?`,
+        options:opts(signed(ev), [signed(F * (P + b) - (1 - F) * b), signed((1 - F) * P - F * b), signed(F * P - b)]),
+        work:`EV(bluff) = fold% × pot − call% × bet = ${pc1(F)} × ${P} − ${pc1(1 - F)} × ${b} = <b>${signed(ev)}</b>. It needs ${pc1(alpha)} folds to break even, so this bluff ${ev > 0 ? 'makes' : 'loses'} money.`,
+        rule:'EV(bluff) = fold% × pot − call% × bet. Choose the option with the highest EV, not the one most likely to win this hand.'};
+    }
+    return qPrice();
+  }
+
+  function sprZone(s) {
+    if (s < 3) return 'Below about 3, top pair with a good kicker or better is happy to go all-in.';
+    if (s <= 6) return 'Between 3 and 6, overpairs and strong top pairs can commit on safe boards.';
+    if (s <= 10) return 'Between 6 and 10 the sources differ; most want two pair or better before stacking off.';
+    return 'Above about 10, one pair is a pot-control hand: you want two pair or better for your whole stack.';
+  }
+  function qSPR() {
+    const kind = pick(['calc', 'calc', 'plan', 'size']);
+    if (kind === 'calc') {
+      for (let t = 0; t < 80; t++) {
+        const S = pick([50, 60, 100, 100, 100, 150, 200]);
+        const open = pick([2, 2.25, 2.5, 3]);
+        const type = pick(['single', 'single', '3bet', '4bet']);
+        const t3 = Math.round(open * 4 * 2) / 2, t4 = Math.round(t3 * 2.4 * 2) / 2;
+        const put = type === 'single' ? open : type === '3bet' ? t3 : t4;
+        if (put >= S * 0.7) continue;
+        const pot = 2 * put + 0.5, behind = S - put, spr = behind / pot;
+        const vals = [spr];
+        for (const w of [S / pot, behind / (2 * put), spr * 1.6, spr * 0.6, spr + 3]) {
+          if (vals.length < 4 && vals.every(v => Math.abs(v - w) >= 0.3)) vals.push(w);
+        }
+        const action = type === 'single' ? 'The big blind calls.'
+          : type === '3bet' ? `The big blind 3-bets to ${t3}bb and the button calls.`
+          : `The big blind 3-bets to ${t3}bb, the button 4-bets to ${t4}bb and the big blind calls.`;
+        return {scene:{facts:[{k:'Stacks', v:S + 'bb'}, {k:'Pot type', v:type === 'single' ? 'Single raised' : type === '3bet' ? '3-bet' : '4-bet'}]},
+          prompt:`Stacks are ${S}bb. The button opens to ${open}bb and the small blind folds. ${action} What is the SPR on the flop?`,
+          options:shuffle(vals.map((v, i) => ({label:v.toFixed(1), correct:i === 0}))),
+          work:`Pot on the flop: ${put} + ${put} + 0.5 (the small blind) = <b>${num(pot)}bb</b>. Behind: ${S} − ${put} = <b>${num(behind)}bb</b>. SPR = ${num(behind)} ÷ ${num(pot)} = <b>${spr.toFixed(1)}</b>. ${sprZone(spr)}`,
+          rule:'SPR = effective stack ÷ pot on the flop.'};
+      }
+    }
+    if (kind === 'plan') {
+      const zone = rand(3);
+      const spr = zone === 0 ? pick([1.2, 1.6, 2, 2.5]) : zone === 1 ? pick([3.5, 4, 4.5, 5, 5.5]) : pick([11, 13, 15, 17.7, 20]);
+      const hand = pick(['an overpair', 'top pair with a good kicker']);
+      return {scene:{facts:[{k:'SPR', v:spr}, {k:'Board', v:'Dry'}]},
+        prompt:`The SPR on the flop is ${spr}. You have ${hand} on a dry, safe board. What is your stack plan?`,
+        options:fixedOpts([['Happy to get all-in', zone === 0], ['Can commit on a safe board', zone === 1], ['Pot control: want two pair or better', zone === 2]]),
+        work:`${sprZone(spr)} To get all-in with three equal bets at SPR ${spr} you would bet about ${Math.round(fBet(spr) * 100)}% of the pot each street.`,
+        rule:'Below about 3, commit with top pair good kicker or better. From 3 to 6, overpairs and strong top pairs can commit on safe boards. Above about 10, one pair is pot control.'};
+    }
+    const spr = pick([2, 3, 4, 6, 8, 10, 15, 18]), f = fBet(spr);
+    const p = x => Math.round(x * 100) + '%';
+    return {scene:{facts:[{k:'SPR', v:spr}, {k:'Streets', v:3}]},
+      prompt:`The SPR on the flop is ${spr}. You want to get all-in by the river with three equal bets, each the same share of the pot. How big is each bet?`,
+      options:opts(p(f), [p(fBet(spr / 2)), p(fBet(spr * 2)), p(spr / 3)]),
+      work:`Each called bet of f × pot grows the pot by (1 + 2f). After three streets the whole stack is in, so (1 + 2f)³ = 1 + 2 × ${spr} = ${1 + 2 * spr}, which gives f ≈ <b>${p(f)}</b> of the pot.`,
+      rule:'At SPR 4, three bets of about 54% pot get it in. At SPR 15–18 you would need more than pot every street, which only very strong hands want.'};
+  }
+
+  const CONCEPTS = [
+    {cat:'price', prompt:'The pot is 100 and your opponent bets 50. A friend says you need 50% equity to call. What went wrong?',
+     options:['They compared the call with the pot before the bet. You need 25%.', 'Nothing. You need 50%.', 'They forgot implied odds. You need 33%.', 'They should divide by the bet. You need 100%.'],
+     work:'You call 50 to win a final pot of 200 (100 + 50 + 50), so you need 50 ÷ 200 = <b>25%</b>. Comparing 50 with the 100 already in the pot is the most common beginner mistake.',
+     rule:'Divide your call by the pot after you call.'},
+    {cat:'sizes', prompt:'Which statement about calling a bet is true?',
+     options:['No bet, however big, asks for 50% equity.', 'A pot-sized bet needs 50% equity.', 'A half-pot bet needs a third.', 'A 2x pot overbet needs more than half.'],
+     work:'Even a 2x pot overbet needs only 40%: you call 2 to win 5. Half-pot needs a quarter and pot needs a third.',
+     rule:'Half-pot needs a quarter, pot needs a third, and no bet ever needs 50%.'},
+    {cat:'outs', prompt:'When does the Rule of 4 (outs × 4 on the flop) give your real chance of winning?',
+     options:['Only when someone is all-in, so you see both cards for one price.', 'Any time you are on the flop.', 'Only on the turn.', 'Only with fewer than 8 outs.'],
+     work:'With stacks still behind you will probably face another bet on the turn, so you are only paying to see one card. A 50 all-in into 100 with a flush draw is worth about +20 on the flop, but the same bet on the turn is worth about −11.',
+     rule:'Unless someone is all-in, compare the one-card odds with the current price.'},
+    {cat:'outs', prompt:'Your opponent has flopped a set and you hold ace-high. How many outs do your three remaining aces give you?',
+     options:['None: a pair of aces still loses to a set.', 'Three.', 'Six.', 'Three, but only on the river.'],
+     work:'An out has to make your hand the winner. Pairing your ace against a set wins nothing.',
+     rule:'Count only outs that actually win.'},
+    {cat:'implied', prompt:'You hold 66 on a K-9-3 rainbow flop with 39% equity, and the bet only asks for 30%. What should you do?',
+     options:['Fold: you lose the pot every time your opponent bets the river.', 'Call: 39% beats 30%.', 'Raise to protect your hand.', 'Call and plan to bluff the river.'],
+     work:'Raw equity is not enough. Reverse implied odds, the money you lose on later streets, make this a fold: you can rarely win at showdown when your opponent keeps betting.',
+     rule:'Before calling, ask whether you are sure to be best when you hit. If not, count fewer outs and expect to win less.'},
+    {cat:'implied', prompt:'You have $500 and your opponent has $80. They raise to $8 and you hold 44. Which stack decides whether set mining works?',
+     options:['Their $80: you can never win more than they have.', 'Your $500.', 'Both stacks added together.', 'Neither: only the pot size matters.'],
+     work:'The effective stack is the smaller of the two, $80. 15 × $8 = $120 is more than $80, so calling to hit a set fails the test.',
+     rule:'Implied-odds multiples apply to the effective stack.'},
+    {cat:'implied', prompt:'Why does a J-7 suited flush draw, out of position against a player with $117 behind, fail the implied odds test?',
+     options:['You won’t have the nuts when you hit, and little money is left to win.', 'Flush draws never have implied odds.', 'Being out of position adds outs.', 'Because $117 is too much to win.'],
+     work:'Implied odds need deep stacks and a hand that is best when it hits. A low flush can lose a big pot to a better flush, and a short stack caps what you can win.',
+     rule:'Implied odds pay only when stacks are deep and your hand is hidden and strong.'},
+    {cat:'bluff', prompt:'A passive low-stakes player makes a big river bet. MDF says to continue 50% of the time. What should you do?',
+     options:['Fold more: their big bets are mostly value.', 'Call with the top 50% of your range anyway.', 'Raise as a bluff.', 'Call with any pair.'],
+     work:'MDF assumes your opponent bluffs at a balanced rate. Low-stakes live players bluff far less, so mechanically defending MDF against them is a leak.',
+     rule:'MDF is a sanity check, not an instruction to call with junk.'},
+    {cat:'spr', prompt:'Effective stacks are 30bb. An opponent opens to 3bb and a normal 3-bet would be about 10bb. You want to play a strong hand. What does the guide suggest?',
+     options:['Shove or fold instead of 3-betting to 10bb.', '3-bet to 10bb and decide on the flop.', 'Min-3-bet to 6bb.', 'Always just call.'],
+     work:'A 10bb 3-bet commits about a third of a 30bb stack. At that point PokerCoaching says to shove or fold rather than make a raise you can’t fold after.',
+     rule:'If a 3-bet would commit about a third of your stack, shove or fold instead.'},
+    {cat:'spr', prompt:'In a normal single-raised pot (SPR about 15–18) you have top pair. How should you think about value?',
+     options:['The SPR is usually too high to bet top pair for three streets.', 'Bet big on all three streets to get it in.', 'Always check and fold.', 'Shove the flop.'],
+     work:'Getting all-in by the river at SPR 15–18 takes more than a pot-sized bet every street. Only very strong hands want that much money in, so one pair controls the pot.',
+     rule:'Above about 10, one pair is a pot-control hand.'},
+    {cat:'spr', prompt:'What continuation-bet size does Upswing suggest in 3-bet pots, where the SPR is low?',
+     options:['Small: about 25–40% of the pot.', 'An overbet of 150% of the pot.', 'Always pot-sized.', 'Never c-bet in 3-bet pots.'],
+     work:'With SPR around 4, smaller bets on each street still get the stacks in by the river, so bet small and plan your sizes across all streets.',
+     rule:'Plan bet sizes across all streets so you don’t leave an awkward tiny river bet.'}
+  ];
+
+  const PCATS = [
+    {id:'mixed', name:'Mixed'},
+    {id:'price', name:'Price to call', gen:[qPrice]},
+    {id:'sizes', name:'Bet-size table', gen:[qSizes]},
+    {id:'outs', name:'Outs & odds', gen:[qOuts]},
+    {id:'ev', name:'Call or fold', gen:[qEV]},
+    {id:'implied', name:'Implied odds', gen:[qImplied, qSetMine]},
+    {id:'bluff', name:'Bluffs & defence', gen:[qBluff]},
+    {id:'spr', name:'Stack-to-pot ratio', gen:[qSPR]}
+  ];
+  const catById = id => PCATS.find(c => c.id === id);
+  if (!catById(prefs.potCat)) prefs.potCat = 'mixed';
+
+  const freshPot = () => ({total:0, correct:0, streak:0, best:0, cats:{}});
+  let potStats = Object.assign(freshPot(), loadJSON(STORE + ':pot'));
+  const pot = {q:null, answered:false, choice:null, qNo:1, lastPrompt:''};
+
+  function makeQuestion() {
+    const id = prefs.potCat === 'mixed' ? pick(PCATS.slice(1)).id : prefs.potCat;
+    const concepts = CONCEPTS.filter(c => c.cat === id && c.prompt !== pot.lastPrompt);
+    let q;
+    if (concepts.length && rand(100) < 18) {
+      const c = pick(concepts);
+      q = {prompt:c.prompt, options:opts(c.options[0], c.options.slice(1)), work:c.work, rule:c.rule, single:true};
+    } else {
+      for (let t = 0; t < 5; t++) { q = pick(catById(id).gen)(); if (q.prompt !== pot.lastPrompt) break; }
+    }
+    q.cat = id;
+    pot.lastPrompt = q.prompt;
+    return q;
+  }
+  function newQuestion() {
+    pot.q = makeQuestion();
+    pot.answered = false;
+    pot.choice = null;
+    pot.qNo = potStats.total + 1;
+    renderPot();
+  }
+  function answerPot(i) {
+    if (pot.answered || !pot.q.options[i]) return;
+    pot.answered = true;
+    pot.choice = i;
+    const ok = pot.q.options[i].correct;
+    potStats.total++;
+    if (ok) { potStats.correct++; potStats.streak++; potStats.best = Math.max(potStats.best, potStats.streak); }
+    else potStats.streak = 0;
+    const c = potStats.cats[pot.q.cat] || (potStats.cats[pot.q.cat] = {n:0, c:0});
+    c.n++; if (ok) c.c++;
+    saveJSON(STORE + ':pot', potStats);
+    renderPot();
+    const nb = $('#nextQ'); if (nb) nb.focus({preventScroll:true});
+  }
+
+  function sceneHTML(s) {
+    if (!s) return '';
+    const groups = [];
+    if (s.board) groups.push(`<div class="cardgroup"><span class="lbl">Board${s.street ? ' · ' + s.street : ''}</span><div class="cardrow">${s.board.map(pcHTML).join('')}</div></div>`);
+    if (s.hero) groups.push(`<div class="cardgroup"><span class="lbl">Your hand</span><div class="cardrow">${s.hero.map(pcHTML).join('')}</div></div>`);
+    const facts = (s.facts || []).map(f => `<div><dt>${f.k}</dt><dd>${f.v}${f.note ? `<small>${f.note}</small>` : ''}</dd></div>`).join('');
+    return `<div class="scene">${groups.length ? `<div class="scene-cards">${groups.join('')}</div>` : ''}${facts ? `<dl class="facts">${facts}</dl>` : ''}</div>`;
+  }
+  function renderPotCats() {
+    $('#pcats').innerHTML = PCATS.map(c => {
+      const s = c.id === 'mixed' ? {n:potStats.total, c:potStats.correct} : (potStats.cats[c.id] || {n:0, c:0});
+      return `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${c.id === prefs.potCat}">${c.name}${s.n ? `<small>${s.c}/${s.n}</small>` : ''}</button>`;
+    }).join('');
+  }
+  function renderPotScore() {
+    $('#pst-correct').textContent = `${potStats.correct}/${potStats.total}`;
+    $('#pst-acc').textContent = potStats.total ? Math.round(potStats.correct / potStats.total * 100) + '%' : '–';
+    $('#pst-streak').textContent = potStats.streak;
+    $('#pst-best').textContent = potStats.best;
+  }
+  function renderPot() {
+    renderPotCats();
+    renderPotScore();
+    const q = pot.q;
+    $('#q-eyebrow').textContent = `Question ${pot.qNo} · ${catById(q.cat).name}`;
+    $('#q-scene').innerHTML = sceneHTML(q.scene);
+    $('#q-scene').hidden = !q.scene;
+    $('#q-prompt').textContent = q.prompt;
+    $('#q-options').innerHTML = q.options.map((o, i) => {
+      let cls = 'opt';
+      if (pot.answered && o.correct) cls += ' right';
+      else if (pot.answered && i === pot.choice) cls += ' wrong';
+      return `<button type="button" class="${cls}" data-opt="${i}"${pot.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${o.label}</span></button>`;
+    }).join('');
+    const el = $('#q-result');
+    if (!pot.answered) { el.hidden = true; el.innerHTML = ''; return; }
+    const ok = q.options[pot.choice].correct;
+    const right = q.options.find(o => o.correct).label;
+    el.hidden = false;
+    el.innerHTML = `
+      <div class="verdict ${ok ? 'ok' : 'bad'}">
+        <span class="mark" aria-hidden="true">${ok ? '✓' : '✕'}</span>
+        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${ok ? 'Streak: ' + potStats.streak : 'Answer: ' + right}</p></div>
+        <button type="button" class="new-hand" id="nextQ">Next question <kbd>N</kbd></button>
+      </div>
+      <p class="work">${q.work}</p>
+      <p class="rule"><strong>Rule from the chapter</strong>${q.rule}</p>`;
+  }
+
+  $('#q-options').addEventListener('click', e => { const b = e.target.closest('[data-opt]'); if (b) answerPot(+b.dataset.opt); });
+  $('#q-result').addEventListener('click', e => { if (e.target.closest('#nextQ')) newQuestion(); });
+  $('#pcats').addEventListener('click', e => {
+    const b = e.target.closest('[data-cat]');
+    if (!b || b.dataset.cat === prefs.potCat) return;
+    prefs.potCat = b.dataset.cat; savePrefs(); newQuestion();
+  });
+  armReset($('#preset'), () => { potStats = freshPot(); saveJSON(STORE + ':pot', potStats); renderPotScore(); renderPotCats(); });
+
+  /* ---------- Workbench ---------- */
+  const val = id => { const v = parseFloat($(id).value); return isFinite(v) && v >= 0 ? v : 0; };
+  const dl = rows => rows.map(([k, v, cls]) => `<dt>${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${v}</dd>`).join('');
+  function updateBench() {
+    const P = val('#w-pot'), b = val('#w-bet');
+    if (b > 0) {
+      $('#w-price').innerHTML = dl([
+        ['You call', `${num(b)} to win ${num(P + 2 * b)}`],
+        ['Bet size', P > 0 ? pc1(b / P) + ' of pot' : '–'],
+        ['Equity needed', pc1(b / (P + 2 * b))],
+        ['Pot odds', ratio((P + b) / b) + ' : 1'],
+        ['Bluff must work', pc1(b / (P + b))],
+        ['Minimum defence', pc1(P / (P + b))],
+        ['River value : bluff', ratio((P + b) / b) + ' : 1']
+      ]);
+      const e = Math.min(100, val('#w-eq')) / 100;
+      const ev = e * (P + b) - (1 - e) * b;
+      $('#w-ev').innerHTML = dl([
+        ['EV of calling', signed(ev), ev >= 0 ? 'pos' : 'neg'],
+        ['Verdict', ev >= 0 ? 'Calling profits' : 'Calling loses']
+      ]);
+    } else {
+      $('#w-price').innerHTML = dl([['Enter a bet', '–']]);
+      $('#w-ev').innerHTML = dl([['EV of calling', '–']]);
+    }
+    const n = Math.min(20, Math.max(0, Math.round(val('#w-outs'))));
+    $('#w-outsout').innerHTML = n ? dl([
+      ['By the river, all-in on flop', pc1(two(n))],
+      ['Turn card only (n ÷ 47)', pc1(n / 47)],
+      ['River card only (n ÷ 46)', pc1(n / 46)],
+      ['Odds against, one card', ratio((46 - n) / n, 1) + ' : 1'],
+      ['Rule of 4 / Rule of 2', `${n * 4 - Math.max(0, n - 8)}% / ${n * 2}%`]
+    ]) : dl([['Enter your outs', '–']]);
+    const S = val('#w-stack'), fp = val('#w-fpot');
+    if (fp > 0) {
+      const s = S / fp;
+      $('#w-spr').innerHTML = dl([
+        ['SPR', num(s)],
+        ['Bet per street to be all-in', Math.round(fBet(s) * 100) + '% pot']
+      ]);
+      $('#w-sprnote').textContent = sprZone(s);
+    } else {
+      $('#w-spr').innerHTML = dl([['Enter the flop pot', '–']]);
+      $('#w-sprnote').textContent = '';
+    }
+  }
+  ['#w-pot', '#w-bet', '#w-eq', '#w-outs', '#w-stack', '#w-fpot'].forEach(id => $(id).addEventListener('input', updateBench));
+
+  function buildTables() {
+    $('#tbl-sizes').innerHTML = `<thead><tr><th>Bet size</th><th>Pot odds offered</th><th>Caller needs equity</th><th>A pure bluff must succeed</th><th>Minimum defence frequency</th><th>Balanced river value : bluff</th></tr></thead><tbody>` +
+      SIZE_ROWS.map(r => { const s = sz(r.f); return `<tr><td>${r.n}</td><td>${ratio(s.odds)} : 1</td><td>${pc1(s.need)}</td><td>${pc1(s.bluff)}</td><td>${pc1(s.mdf)}</td><td>${ratio(s.odds)} : 1</td></tr>`; }).join('') + '</tbody>';
+    const rows = [['Gutshot, or two pair to full house', 4], ['Two overcards', 6], ['Open-ended straight draw', 8], ['Flush draw', 9], ['Flush draw + gutshot or overcard', 12], ['Flush draw + open-ended', 15]];
+    $('#tbl-outs').innerHTML = `<thead><tr><th>Draw</th><th>Outs</th><th>By river (from flop)</th><th>On river (from turn)</th><th>Odds against, one card</th></tr></thead><tbody>` +
+      rows.map(([name, n]) => `<tr><td>${name}</td><td>${n}</td><td>${pc1(two(n))}</td><td>${pc1(n / 46)}</td><td>${ratio((46 - n) / n, 1)} : 1</td></tr>`).join('') + '</tbody>';
+  }
+
+  /* =====================================================================
+     TABS AND KEYS
+     ===================================================================== */
+  const TABS = {
+    seats:{hash:'seats', eyebrow:'Chapter · Your seat decides how many hands you can play', title:'Preflop Seat Drill',
+           tag:'You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.'},
+    pot:{hash:'pot-odds', eyebrow:'Chapter · Pot size sets the price of every call and every commitment', title:'Pot Odds Drill',
+         tag:'Fresh spots on pot odds, outs, expected value, implied odds, bluffs and stack-to-pot ratio. Pick a topic or mix them, and check your maths on the workbench.'}
+  };
+  function setTab(id) {
+    if (!TABS[id]) id = 'seats';
+    prefs.tab = id; savePrefs();
+    document.querySelectorAll('[data-tab]').forEach(b => {
+      const on = b.dataset.tab === id;
+      b.setAttribute('aria-selected', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+    $('#view-seats').hidden = id !== 'seats';
+    $('#view-pot').hidden = id !== 'pot';
+    const T = TABS[id];
+    $('#app-eyebrow').textContent = T.eyebrow;
+    $('#app-title').textContent = T.title;
+    $('#app-tag').textContent = T.tag;
+    try { history.replaceState(null, '', '#' + T.hash); } catch (e) { /* sandboxed */ }
+    if (id === 'pot' && !pot.q) newQuestion();
+  }
+  const tabBtns = [...document.querySelectorAll('[data-tab]')];
+  tabBtns.forEach((b, i) => {
+    b.addEventListener('click', () => setTab(b.dataset.tab));
+    b.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const next = tabBtns[(i + (e.key === 'ArrowRight' ? 1 : tabBtns.length - 1)) % tabBtns.length];
+      setTab(next.dataset.tab); next.focus();
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    const k = e.key.toLowerCase();
+    if (prefs.tab === 'pot') {
+      if (!pot.answered && /^[1-4]$/.test(k)) answerPot(+k - 1);
+      else if (pot.answered && k === 'n') { e.preventDefault(); newQuestion(); }
+      return;
+    }
+    if (!state.answered) {
+      if (k === 'f') answer('fold'); else if (k === 'c') answer('call'); else if (k === 'r') answer('raise');
+    } else if (k === 'n') {
+      e.preventDefault(); newHand();
+    }
+  });
+
+  buildTables();
+  updateBench();
+  newHand();
+  const fromHash = (location.hash || '').slice(1);
+  setTab(fromHash === 'pot-odds' ? 'pot' : fromHash === 'seats' ? 'seats' : prefs.tab);
+})();
+</script>
