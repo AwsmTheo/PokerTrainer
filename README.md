@@ -16,6 +16,10 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 
 ### How to open it
 
+**On any device, including your phone:** go to [awsmtheo.github.io/PokerTrainer](https://awsmtheo.github.io/PokerTrainer/). The site is published from `main` with GitHub Pages, so it always has the latest drills. On a phone you can use your browser's "Add to Home Screen" to keep it one tap away. Progress is saved separately on each device and browser.
+
+**Offline, from a copy of the repo:**
+
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
 
