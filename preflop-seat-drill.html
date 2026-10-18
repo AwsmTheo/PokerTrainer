@@ -374,6 +374,33 @@ tr:last-child td{border-bottom:0}
 @media (max-width:400px){.tab{padding:8px 2px}.tab b{font-size:13px}}
 @media (max-width:350px){.tab b{font-size:12px;letter-spacing:-.01em}}
 
+/* Progress and review of misses */
+.rv{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.rv.on{border-color:var(--brass)}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;flex:1 1 560px;min-width:0}
+.rv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:9px 11px;border-radius:10px;background:var(--surface-2);border-left:3px solid var(--line);min-width:0}
+.rv-tile.has{border-left-color:var(--brass)}
+.rv-name{font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.rv-acc{font:800 21px/1 var(--font-display);font-variant-numeric:tabular-nums}
+.rv-sub{font-size:12px;line-height:1.3;color:var(--muted)}
+.rv-btn{margin-top:2px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 10px;font:600 12px/1 var(--font-body);color:var(--ink);cursor:pointer;white-space:nowrap}
+.rv-btn:disabled{cursor:default;opacity:.5}
+.rv-side{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;flex:1 1 220px;min-width:0}
+.rv-side p{margin:0;font-size:13.5px;color:var(--muted)}
+.rv-side p b{color:var(--ink)}
+.rv-side .link-btn{margin-left:0}
+.rv-k{display:none}
+@media (max-width:560px){
+  .rv{padding:10px;gap:10px}
+  .rv-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;flex-basis:100%}
+  .rv-tile{padding:7px 8px;gap:3px}
+  .rv-name{font-size:10px;letter-spacing:.05em}
+  .rv-acc{font-size:18px}
+  .rv-tile .rv-sub,.rv-btn{display:none}
+  .rv-tile .rv-k{display:block;color:var(--brass);font-weight:600}
+  .rv-side .new-hand{flex:1;justify-content:center}
+}
+@media (max-width:360px){.rv-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-reduced-motion: reduce){
   .seat.acting,.card,.result{animation:none}
   .act,.opt{transition:none}
@@ -394,6 +421,10 @@ tr:last-child td{border-bottom:0}
       <h1 id="app-title">Preflop Seat Drill</h1>
       <p class="tag" id="app-tag">You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.</p>
     </div>
+    <section class="rv" id="rv" aria-label="Your progress and missed questions">
+      <div class="rv-grid" id="rv-grid"></div>
+      <div class="rv-side" id="rv-side" aria-live="polite"></div>
+    </section>
   </header>
 
   <main>
@@ -958,7 +989,7 @@ tr:last-child td{border-bottom:0}
 
   function newHand() {
     const F = fmtNow();
-    state.seat = F.order[rand(F.order.length)];
+    const seat = F.order[rand(F.order.length)];
     let cards = dealTwo();
     if (prefs.deal === 'close') {
       for (let tries = 0; tries < 300; tries++) {
@@ -966,6 +997,12 @@ tr:last-child td{border-bottom:0}
         cards = dealTwo();
       }
     }
+    dealHand(seat, cards, null);
+  }
+  function dealHand(seat, cards, rvId) {   // rvId: set when the hand is a saved miss
+    if (!fmtNow().seats[seat] || cards.length !== 2) throw new Error('bad hand');
+    state.seat = seat;
+    state.rv = rvId;
     state.cards = cards;
     state.hand = codeOf(cards);
     state.answered = false;
@@ -988,6 +1025,7 @@ tr:last-child td{border-bottom:0}
     const s = stats.seats[key] || (stats.seats[key] = {n:0, c:0});
     s.n++; if (ok) s.c++;
     saveJSON(STORE + ':stats', stats);
+    rvRecord('seats', ok, state.rv, () => ({fmt:prefs.fmt, seat:state.seat, cards:state.cards}));
     render();
     const nb = $('#newHand'); if (nb) nb.focus({preventScroll:true});
   }
@@ -1156,7 +1194,7 @@ tr:last-child td{border-bottom:0}
   }
   function renderPanel() {
     const F = fmtNow(), seat = F.seats[state.seat], idx = F.order.indexOf(state.seat), behind = playersBehind();
-    $('#sc-eyebrow').textContent = `Hand ${state.handNo} · ${F.name} · 100bb cash`;
+    $('#sc-eyebrow').textContent = `${rvLabel(state.rv) || 'Hand ' + state.handNo} · ${F.name} · 100bb cash`;
     $('#sc-head').textContent = idx === 0 ? 'You are first to act, under the gun' : `It folds to you ${seat.where}`;
     $('#sc-meta').innerHTML = `<span class="pill"><i class="dot" style="--gc:var(--g-${seat.group})"></i>${seat.label}${seat.alias ? ' (' + seat.alias + ')' : ''} · ${GROUP_LONG[seat.group]}</span><span class="pill">${behind} ${behind === 1 ? 'player' : 'players'} left to act</span>`;
     const handEl = $('#hand');
@@ -1218,7 +1256,7 @@ tr:last-child td{border-bottom:0}
 
   document.querySelectorAll('.act').forEach(b => b.addEventListener('click', () => answer(b.dataset.act)));
   $('#result').addEventListener('click', e => {
-    if (e.target.closest('#newHand')) { newHand(); return; }
+    if (e.target.closest('#newHand')) { rvNext() || newHand(); return; }
     const tab = e.target.closest('[data-chart]');
     if (tab) {
       state.chartSeat = tab.dataset.chart;
@@ -1236,7 +1274,7 @@ tr:last-child td{border-bottom:0}
     prefs.deal = b.dataset.deal; savePrefs();
     if (state.answered) renderControls(); else newHand();
   }));
-  armReset($('#reset'), () => { stats = freshStats(); saveJSON(STORE + ':stats', stats); renderScore(); renderExtras(); });
+  armReset($('#reset'), () => { stats = freshStats(); saveJSON(STORE + ':stats', stats); renderScore(); renderExtras(); rvClear('seats'); });
 
   /* =====================================================================
      POT ODDS DRILL
@@ -1657,8 +1695,9 @@ tr:last-child td{border-bottom:0}
     pot.lastPrompt = q.prompt;
     return q;
   }
-  function newQuestion() {
-    pot.q = makeQuestion();
+  function newQuestion() { showQuestion(makeQuestion()); }
+  function showQuestion(q) {
+    pot.q = q;
     pot.answered = false;
     pot.choice = null;
     pot.qNo = potStats.total + 1;
@@ -1675,6 +1714,7 @@ tr:last-child td{border-bottom:0}
     const c = potStats.cats[pot.q.cat] || (potStats.cats[pot.q.cat] = {n:0, c:0});
     c.n++; if (ok) c.c++;
     saveJSON(STORE + ':pot', potStats);
+    rvRecord('pot', ok, pot.q.rv, () => pot.q);
     renderPot();
     const nb = $('#nextQ'); if (nb) nb.focus({preventScroll:true});
   }
@@ -1703,7 +1743,7 @@ tr:last-child td{border-bottom:0}
     renderPotCats();
     renderPotScore();
     const q = pot.q;
-    $('#q-eyebrow').textContent = `Question ${pot.qNo} · ${catById(q.cat).name}`;
+    $('#q-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + pot.qNo} · ${catById(q.cat).name}`;
     $('#q-scene').innerHTML = sceneHTML(q.scene);
     $('#q-scene').hidden = !q.scene;
     $('#q-prompt').textContent = q.prompt;
@@ -1729,13 +1769,13 @@ tr:last-child td{border-bottom:0}
   }
 
   $('#q-options').addEventListener('click', e => { const b = e.target.closest('[data-opt]'); if (b) answerPot(+b.dataset.opt); });
-  $('#q-result').addEventListener('click', e => { if (e.target.closest('#nextQ')) newQuestion(); });
+  $('#q-result').addEventListener('click', e => { if (e.target.closest('#nextQ')) rvNext() || newQuestion(); });
   $('#pcats').addEventListener('click', e => {
     const b = e.target.closest('[data-cat]');
     if (!b || b.dataset.cat === prefs.potCat) return;
     prefs.potCat = b.dataset.cat; savePrefs(); newQuestion();
   });
-  armReset($('#preset'), () => { potStats = freshPot(); saveJSON(STORE + ':pot', potStats); renderPotScore(); renderPotCats(); });
+  armReset($('#preset'), () => { potStats = freshPot(); saveJSON(STORE + ':pot', potStats); renderPotScore(); renderPotCats(); rvClear('pot'); });
 
   /* ---------- Workbench ---------- */
   const val = id => { const v = parseFloat($(id).value); return isFinite(v) && v >= 0 ? v : 0; };
@@ -2081,8 +2121,9 @@ tr:last-child td{border-bottom:0}
     bt.lastPrompt = q.prompt;
     return q;
   }
-  function btNew() {
-    bt.q = btMake();
+  function btNew() { btShow(btMake()); }
+  function btShow(q) {
+    bt.q = q;
     bt.answered = false;
     bt.choice = null;
     bt.qNo = btStats.total + 1;
@@ -2099,6 +2140,7 @@ tr:last-child td{border-bottom:0}
     const c = btStats.cats[bt.q.cat] || (btStats.cats[bt.q.cat] = {n:0, c:0});
     c.n++; if (ok) c.c++;
     saveJSON(STORE + ':board', btStats);
+    rvRecord('board', ok, bt.q.rv, () => bt.q);
     btRender();
     const nb = $('#bt-next'); if (nb) nb.focus({preventScroll:true});
   }
@@ -2119,7 +2161,7 @@ tr:last-child td{border-bottom:0}
     btRenderCats();
     btRenderScore();
     const q = bt.q;
-    $('#bt-eyebrow').textContent = `Question ${bt.qNo} · ${btCat(q.cat).name}`;
+    $('#bt-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + bt.qNo} · ${btCat(q.cat).name}`;
     $('#bt-scene').innerHTML = sceneHTML(q.scene);
     $('#bt-scene').hidden = !q.scene;
     $('#bt-prompt').textContent = q.prompt;
@@ -2147,13 +2189,13 @@ tr:last-child td{border-bottom:0}
 
   $('#bt-buckets').innerHTML = Object.values(BT_BUCKETS).map(b => `<tr><td>${b.name}</td><td>${b.holds}</td><td>${b.plan}</td></tr>`).join('');
   $('#bt-options').addEventListener('click', e => { const b = e.target.closest('[data-btopt]'); if (b) btAnswer(+b.dataset.btopt); });
-  $('#bt-result').addEventListener('click', e => { if (e.target.closest('#bt-next')) btNew(); });
+  $('#bt-result').addEventListener('click', e => { if (e.target.closest('#bt-next')) rvNext() || btNew(); });
   $('#bt-cats').addEventListener('click', e => {
     const b = e.target.closest('[data-btcat]');
     if (!b || b.dataset.btcat === prefs.boardCat) return;
     prefs.boardCat = b.dataset.btcat; savePrefs(); btNew();
   });
-  armReset($('#bt-reset'), () => { btStats = freshBoard(); saveJSON(STORE + ':board', btStats); btRenderScore(); btRenderCats(); });
+  armReset($('#bt-reset'), () => { btStats = freshBoard(); saveJSON(STORE + ':board', btStats); btRenderScore(); btRenderCats(); rvClear('board'); });
 
   /* =====================================================================
      OPPONENT DRILL
@@ -2432,8 +2474,9 @@ tr:last-child td{border-bottom:0}
     opp.lastPrompt = q.prompt;
     return q;
   }
-  function newOpp() {
-    opp.q = makeOpp();
+  function newOpp() { showOpp(makeOpp()); }
+  function showOpp(q) {
+    opp.q = q;
     opp.answered = false;
     opp.choice = null;
     opp.qNo = oppStatsRec.total + 1;
@@ -2450,6 +2493,7 @@ tr:last-child td{border-bottom:0}
     const c = R.cats[opp.q.cat] || (R.cats[opp.q.cat] = {n:0, c:0});
     c.n++; if (ok) c.c++;
     saveJSON(STORE + ':opp', R);
+    rvRecord('opp', ok, opp.q.rv, () => opp.q);
     renderOpp();
     const nb = $('#oNext'); if (nb) nb.focus({preventScroll:true});
   }
@@ -2479,7 +2523,7 @@ tr:last-child td{border-bottom:0}
     renderOppScore();
     renderOppTypes();
     const q = opp.q;
-    $('#o-eyebrow').textContent = `Question ${opp.qNo} · ${ocatById(q.cat).name}`;
+    $('#o-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + opp.qNo} · ${ocatById(q.cat).name}`;
     $('#o-scene').innerHTML = q.scene ? oppSceneHTML(q.scene, opp.answered) : '';
     $('#o-scene').hidden = !q.scene;
     $('#o-prompt').textContent = q.prompt;
@@ -2505,13 +2549,114 @@ tr:last-child td{border-bottom:0}
   }
 
   $('#o-options').addEventListener('click', e => { const b = e.target.closest('[data-opt]'); if (b) answerOpp(+b.dataset.opt); });
-  $('#o-result').addEventListener('click', e => { if (e.target.closest('#oNext')) newOpp(); });
+  $('#o-result').addEventListener('click', e => { if (e.target.closest('#oNext')) rvNext() || newOpp(); });
   $('#ocats').addEventListener('click', e => {
     const b = e.target.closest('[data-cat]');
     if (!b || b.dataset.cat === oprefs.cat) return;
     oprefs.cat = b.dataset.cat; saveJSON(STORE + ':opp-prefs', oprefs); newOpp();
   });
-  armReset($('#oreset'), () => { oppStatsRec = freshOpp(); saveJSON(STORE + ':opp', oppStatsRec); renderOppScore(); renderOppCats(); });
+  armReset($('#oreset'), () => { oppStatsRec = freshOpp(); saveJSON(STORE + ':opp', oppStatsRec); renderOppScore(); renderOppCats(); rvClear('opp'); });
+
+  /* =====================================================================
+     PROGRESS AND REVIEW
+     Every missed question is saved so it can be asked again. A drill hooks
+     in with rvRecord() after scoring an answer, rvNext() before dealing its
+     next question, rvLabel() in its eyebrow and rvClear() on reset.
+     ===================================================================== */
+  const RV_KEY = STORE + ':review';
+  const RV_CAP = 30;   // misses kept per tab; the oldest drop off
+  const RV = {   // per tab: its record, how to show a saved question, and how to deal a fresh one
+    seats:{name:'Seats', rec:() => stats, fresh:newHand,
+           show:(q, id) => { if (!FORMATS[q.fmt]) throw new Error('bad format'); prefs.fmt = q.fmt; savePrefs(); dealHand(q.seat, q.cards, id); }},
+    pot:  {name:'Pot odds', rec:() => potStats, fresh:newQuestion, show:(q, id) => { q.rv = id; showQuestion(q); }},
+    board:{name:'Board', rec:() => btStats, fresh:btNew, show:(q, id) => { q.rv = id; btShow(q); }},
+    opp:  {name:'Opponents', rec:() => oppStatsRec, fresh:newOpp, show:(q, id) => { q.rv = id; showOpp(q); }}
+  };
+  const rvData = loadJSON(RV_KEY);
+  rvData.items = (Array.isArray(rvData.items) ? rvData.items : []).filter(m => m && m.id && m.q && RV[m.tab]);
+  const rv = {active:false, ended:false, queue:[], n:0, pos:0, done:0, right:0, cur:null, counted:false};
+  let rvSeq = 0;
+  const rvSave = () => saveJSON(RV_KEY, rvData);
+  const rvFind = id => rvData.items.find(m => m.id === id);
+  const rvDrop = id => { rvData.items = rvData.items.filter(m => m.id !== id); };
+  const rvClone = q => JSON.parse(JSON.stringify(q));
+
+  function rvRecord(tab, ok, id, snap) {
+    if (id && id === rv.cur && !rv.counted) { rv.counted = true; rv.done++; if (ok) rv.right++; }
+    const m = id && rvFind(id);
+    if (m && ok) rvDrop(id);
+    else if (m) { m.misses = (m.misses || 1) + 1; m.at = Date.now(); }
+    else if (!ok) {   // a new miss, or a saved one that was cleared while on screen
+      rvData.items.push({id:Date.now().toString(36) + '-' + (rvSeq++), tab, q:rvClone(snap()), at:Date.now()});
+      const mine = rvData.items.filter(m => m.tab === tab);
+      if (mine.length > RV_CAP) rvDrop(mine[0].id);
+    }
+    rvSave(); renderRv();
+  }
+  function rvClear(tab) {
+    rvData.items = rvData.items.filter(m => m.tab !== tab);
+    rvSave(); renderRv();
+  }
+  const rvLabel = id => !id ? '' : id === rv.cur && rv.n ? `Review ${rv.pos} of ${rv.n}` : 'Review';
+
+  function rvStart(tab) {
+    rv.queue = shuffle(rvData.items.filter(m => !tab || m.tab === tab).map(m => m.id));
+    if (!rv.queue.length) return;
+    Object.assign(rv, {active:true, ended:false, n:rv.queue.length, pos:0, done:0, right:0});
+    rvNext();
+  }
+  // Shows the next saved miss, on its own tab. Returns false when no review is running, so the drill deals as usual.
+  function rvNext() {
+    if (!rv.active) return false;
+    while (rv.queue.length) {
+      const id = rv.queue.shift(), m = rvFind(id);
+      if (!m) { rv.n--; continue; }
+      rv.cur = id; rv.counted = false; rv.pos = rv.n - rv.queue.length;
+      try { RV[m.tab].show(rvClone(m.q), id); }
+      catch (e) {   // a saved question this version can't show
+        rvDrop(id); rvSave(); rv.n--;
+        try { RV[m.tab].fresh(); } catch (e2) { /* ignore */ }
+        continue;
+      }
+      setTab(m.tab);
+      renderRv();
+      return true;
+    }
+    rv.active = false; rv.ended = rv.done > 0; rv.cur = null;
+    renderRv();
+    return false;
+  }
+  function rvStop() { rv.active = false; rv.queue = []; renderRv(); }
+
+  function renderRv() {
+    const counts = {};
+    rvData.items.forEach(m => { counts[m.tab] = (counts[m.tab] || 0) + 1; });
+    $('#rv-grid').innerHTML = Object.keys(RV).map(t => {
+      const R = RV[t].rec(), k = counts[t] || 0;
+      return `<div class="rv-tile${k ? ' has' : ''}">
+        <span class="rv-name">${RV[t].name}</span>
+        <b class="rv-acc">${R.total ? Math.round(R.correct / R.total * 100) + '%' : '–'}</b>
+        <span class="rv-sub">${R.total ? `${R.correct} of ${R.total} right` : 'Not started'}</span>
+        ${k ? `<span class="rv-sub rv-k">${k} to review</span>` : ''}
+        ${k ? `<button type="button" class="rv-btn" data-rvtab="${t}"${rv.active ? ' disabled' : ''}>Review ${k} ${k === 1 ? 'miss' : 'misses'}</button>` : '<span class="rv-sub">No misses saved</span>'}
+      </div>`;
+    }).join('');
+    $('#rv').classList.toggle('on', rv.active);
+    const total = rvData.items.length, wrong = rv.done - rv.right;
+    $('#rv-side').innerHTML = rv.active
+      ? `<p><b>Reviewing your misses</b> · ${rv.pos} of ${rv.n} · ${rv.right} right so far</p><button type="button" class="link-btn" id="rv-stop">Stop review</button>`
+      : rv.ended
+      ? `<p><b>Review done.</b> You got ${rv.right} of ${rv.done} right.${wrong ? ` The ${wrong === 1 ? 'one' : wrong} you missed ${wrong === 1 ? 'stays' : 'stay'} saved.` : ' Those are cleared from your misses.'}</p><button type="button" class="link-btn" id="rv-close">OK</button>`
+      : total
+      ? `<button type="button" class="new-hand" data-rvtab="">Review all misses <kbd>${total}</kbd></button>`
+      : '<p>Questions you miss are saved here so you can try them again.</p>';
+  }
+  $('#rv').addEventListener('click', e => {
+    const b = e.target.closest('[data-rvtab]');
+    if (b && !b.disabled) { rvStart(b.dataset.rvtab || null); return; }
+    if (e.target.closest('#rv-stop')) rvStop();
+    else if (e.target.closest('#rv-close')) { rv.ended = false; renderRv(); }
+  });
 
   /* =====================================================================
      FULL HAND DRILL
@@ -2847,7 +2992,7 @@ tr:last-child td{border-bottom:0}
     const k = e.key.toLowerCase();
     if (prefs.tab === 'board') {
       if (!bt.answered && /^[1-5]$/.test(k)) btAnswer(+k - 1);
-      else if (bt.answered && k === 'n') { e.preventDefault(); btNew(); }
+      else if (bt.answered && k === 'n') { e.preventDefault(); rvNext() || btNew(); }
       return;
     }
     if (prefs.tab === 'hand') {
@@ -2857,24 +3002,25 @@ tr:last-child td{border-bottom:0}
     }
     if (prefs.tab === 'opp') {
       if (!opp.answered && /^[1-4]$/.test(k)) answerOpp(+k - 1);
-      else if (opp.answered && k === 'n') { e.preventDefault(); newOpp(); }
+      else if (opp.answered && k === 'n') { e.preventDefault(); rvNext() || newOpp(); }
       return;
     }
     if (prefs.tab === 'pot') {
       if (!pot.answered && /^[1-4]$/.test(k)) answerPot(+k - 1);
-      else if (pot.answered && k === 'n') { e.preventDefault(); newQuestion(); }
+      else if (pot.answered && k === 'n') { e.preventDefault(); rvNext() || newQuestion(); }
       return;
     }
     if (!state.answered) {
       if (k === 'f') answer('fold'); else if (k === 'c') answer('call'); else if (k === 'r') answer('raise');
     } else if (k === 'n') {
-      e.preventDefault(); newHand();
+      e.preventDefault(); rvNext() || newHand();
     }
   });
 
   buildTables();
   updateBench();
   newHand();
+  renderRv();
   const fromHash = (location.hash || '').slice(1);
   setTab(Object.keys(TABS).find(k => TABS[k].hash === fromHash) || prefs.tab);
 })();

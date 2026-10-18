@@ -12,9 +12,15 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
+The **progress panel** under the title shows your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
+
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
 ### How to open it
+
+**On any device, including your phone:** go to [awsmtheo.github.io/PokerTrainer](https://awsmtheo.github.io/PokerTrainer/). The site is published from `main` with GitHub Pages, so it always has the latest drills. On a phone you can use your browser's "Add to Home Screen" to keep it one tap away. Progress is saved separately on each device and browser.
+
+**Offline, from a copy of the repo:**
 
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
@@ -24,3 +30,17 @@ That's it. An internet connection is only used to load the web fonts; the drills
 ## Strategy guide
 
 [`docs/texas-holdem-strategy.md`](docs/texas-holdem-strategy.md) is the research the drills are built on: position and opening ranges, pot odds and stack-to-pot ratio, board texture, adjusting to low-stakes opponents, and bankroll and tilt. Each claim cites its source.
+
+## Automated checks
+
+Every pull request and every push to `main` runs a browser test in GitHub Actions ([`tests/trainer.spec.js`](tests/trainer.spec.js)). It opens the page in headless Chromium at desktop and phone width, fails on any console error, checks that each tab shows only its own panel without the page scrolling sideways, and answers 40 questions in every drill.
+
+The test finds tabs, answer buttons and the "next" button from the page itself, so a new drill is covered without touching the test as long as it follows the same pattern as the others: a `role="tab"` button whose `aria-controls` names its panel, answer buttons with a `<kbd>` shortcut that are disabled once answered, and a next button with `<kbd>N</kbd>`.
+
+To run it locally (needs Node 18 or later):
+
+```
+npm install
+npx playwright install chromium
+npm test
+```
