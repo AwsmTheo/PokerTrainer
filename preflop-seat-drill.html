@@ -370,15 +370,23 @@ tr:last-child td{border-bottom:0}
 .fh-log span{color:var(--muted)}
 .fh-log li.todo{opacity:.55}
 .fh-chs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-/* Five chapter tabs need tighter tabs on phones */
+/* Six chapter tabs need tighter tabs on phones */
 @media (max-width:600px){.tabs{align-self:stretch;gap:2px}.tab{flex:1 1 auto;align-items:center;justify-content:center;text-align:center;padding:9px 4px}.tab b{font-size:14.5px}.tab span{display:none}}
 @media (max-width:400px){.tab{padding:8px 2px}.tab b{font-size:13px}}
 @media (max-width:350px){.tab b{font-size:12px;letter-spacing:-.01em}}
+@media (max-width:520px){.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.tab{padding:8px 2px}.tab b{font-size:13.5px;letter-spacing:0}}   /* six tabs: two rows of three */
+/* Bankroll drill */
+.bk-h{margin:18px 0 4px;font:800 20px/1.1 var(--font-display)}
+.bk-rules{margin:4px 0 0;display:flex;flex-direction:column}
+.bk-rules div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.bk-rules dt{color:var(--muted)}
+.bk-rules dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 
 /* Progress and review of misses */
 .rv{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .rv.on{border-color:var(--brass)}
 .rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;flex:1 1 560px;min-width:0}
+@media (min-width:900px){.rv-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}   /* one row for the six drills */
 .rv-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:9px 11px;border-radius:10px;background:var(--surface-2);border-left:3px solid var(--line);min-width:0}
 .rv-tile.has{border-left-color:var(--brass)}
 .rv-name{font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -429,6 +437,7 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-board" aria-controls="view-board" data-tab="board"><b>Board</b><span>Read the flop</span></button>
       <button type="button" role="tab" class="tab" id="tab-opp" aria-controls="view-opp" data-tab="opp"><b>Opponents</b><span>Adjust to the player</span></button>
       <button type="button" role="tab" class="tab" id="tab-hand" aria-controls="view-hand" data-tab="hand"><b>Full hand</b><span>Play it to the river</span></button>
+      <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Money and mindset</span></button>
     </nav>
     <div class="brand">
       <p class="eyebrow" id="app-eyebrow">Chapter · Your seat decides how many hands you can play</p>
@@ -515,6 +524,14 @@ tr:last-child td{border-bottom:0}
         <div class="ctl">
           <span class="ctl-label">Practise</span>
           <div class="cats" id="pcats"></div>
+        </div>
+        <div class="ctl">
+          <span class="ctl-label" id="lbl-cur-pot">Currency</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-cur-pot">
+            <button type="button" role="radio" data-cur="NOK">NOK</button>
+            <button type="button" role="radio" data-cur="USD">USD</button>
+            <button type="button" role="radio" data-cur="EUR">EUR</button>
+          </div>
         </div>
       </div>
 
@@ -609,14 +626,15 @@ tr:last-child td{border-bottom:0}
             <li>Reverse implied odds: if you won't be sure to have the best hand when you hit, count fewer outs and expect to win less.</li>
             <li>EV(call) = equity × the pot you win − (1 − equity) × your call. EV(bluff) = fold% × pot − call% × bet.</li>
             <li>MDF is a sanity check. Against players who rarely bluff, fold more.</li>
+            <li>Short stacks kill speculative hands: at 25bb, set mining is pointless, and high-card hands like K7s gain. In tournaments, play all-in or fold at about 10–15bb or less, mix shoves with small raises up to about 20bb, and min-raise above that.</li>
             <li>SPR = effective stack ÷ pot on the flop. About 17.7 after a called button open, about 4 in a called 3-bet pot, about 1.6 in a called 4-bet pot.</li>
           </ul>
         </div>
       </section>
 
       <footer class="sources">
-        <p>Questions and tables follow the guide's chapter <i>Pot size sets the price of every call and every commitment</i>. Numbers are generated fresh for each question; worked examples from the chapter come up as they appear there.</p>
-        <p>Sources: <a href="https://www.pokerskill.com/charts/odds/" target="_blank" rel="noopener">Poker Skill, odds charts</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/reverse-implied-odds/" target="_blank" rel="noopener">Upswing, reverse implied odds</a> · <a href="https://blog.gtowizard.com/mdf-alpha/" target="_blank" rel="noopener">GTO Wizard, MDF and alpha</a> · <a href="https://pokercoaching.com/blog/mdf-poker/" target="_blank" rel="noopener">PokerCoaching, MDF</a> · <a href="https://www.pokerology.com/poker/strategy/spr/" target="_blank" rel="noopener">Pokerology, SPR</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a></p>
+        <p>Questions and tables follow the guide's chapter <i>Pot size sets the price of every call and every commitment</i>; the short-stack questions follow <i>Short stacks kill speculative hands, and tournaments get there fast</i> from the seat chapter. Numbers are generated fresh for each question; worked examples from the chapter come up as they appear there. Amounts are example sizes, so the currency switch changes only the sign.</p>
+        <p>Sources: <a href="https://www.pokerskill.com/charts/odds/" target="_blank" rel="noopener">Poker Skill, odds charts</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/reverse-implied-odds/" target="_blank" rel="noopener">Upswing, reverse implied odds</a> · <a href="https://blog.gtowizard.com/mdf-alpha/" target="_blank" rel="noopener">GTO Wizard, MDF and alpha</a> · <a href="https://pokercoaching.com/blog/mdf-poker/" target="_blank" rel="noopener">PokerCoaching, MDF</a> · <a href="https://www.pokerology.com/poker/strategy/spr/" target="_blank" rel="noopener">Pokerology, SPR</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a> · <a href="https://www.splitsuit.com/small-pocket-pair-strategy" target="_blank" rel="noopener">SplitSuit, small pairs</a> · <a href="https://upswingpoker.com/push-fold-tournament-strategy-charts/" target="_blank" rel="noopener">Upswing, push/fold</a> · <a href="https://www.888poker.com/magazine/strategy/push-fold-charts" target="_blank" rel="noopener">888poker, push/fold</a></p>
       </footer>
     </section>
 
@@ -830,6 +848,82 @@ tr:last-child td{border-bottom:0}
         <p>Sources: <a href="https://upswingpoker.com/preflop-open-strategy-rfi-explained/" target="_blank" rel="noopener">Upswing, raise first in</a> · <a href="https://upswingpoker.com/hand-reading-poker/" target="_blank" rel="noopener">Upswing, hand reading</a> · <a href="https://upswingpoker.com/implied-odds-poker-strategy/" target="_blank" rel="noopener">Upswing, implied odds</a> · <a href="https://upswingpoker.com/bet-size-strategy-tips-rules/" target="_blank" rel="noopener">Upswing, bet sizing</a> · <a href="https://upswingpoker.com/continuation-bet-c-bet-strategy-position/" target="_blank" rel="noopener">Upswing, c-bets by position</a> · <a href="https://upswingpoker.com/3-cash-game-exploits-regs-backed-by-data/" target="_blank" rel="noopener">Upswing, exploits backed by data</a> · <a href="https://www.pokernews.com/strategy/set-mining-101-do-you-have-the-right-odds-to-hit-your-set-35667.htm" target="_blank" rel="noopener">PokerNews, set mining</a> · <a href="https://blog.gtowizard.com/10-tips-multiway-pots-in-poker/" target="_blank" rel="noopener">GTO Wizard, multiway pots</a> · <a href="https://blog.gtowizard.com/picking-the-right-semi-bluffs/" target="_blank" rel="noopener">GTO Wizard, semi-bluffs</a> · <a href="https://www.pokerlistings.com/blog/how-to-identify-and-exploit-different-poker-player-types" target="_blank" rel="noopener">PokerListings, player types</a> · <a href="https://pokercoaching.com/blog/3-bet-poker-strategy/" target="_blank" rel="noopener">PokerCoaching, 3-bets</a> · <a href="https://upswingpoker.com/vs-3-bet-pre-flop-position-strategy-revealed/" target="_blank" rel="noopener">Upswing, facing a 3-bet</a> · <a href="https://upswingpoker.com/thin-value-bet-poker-strategy/" target="_blank" rel="noopener">Upswing, thin value</a> · <a href="https://redchippoker.com/what-to-open-raise-preflop/" target="_blank" rel="noopener">Red Chip, open raises</a> · <a href="https://www.pokerskill.com/charts/odds/" target="_blank" rel="noopener">Poker Skill, odds</a> · <a href="https://blog.gtowizard.com/the_3_biggest_leaks_killing_your_winrate/" target="_blank" rel="noopener">GTO Wizard, three biggest leaks</a></p>
       </footer>
     </section>
+
+    <!-- ===================== Bankroll drill ===================== -->
+    <section class="view" id="view-bank" role="tabpanel" aria-labelledby="tab-bank" hidden>
+      <div class="toolbar">
+        <div class="ctl">
+          <span class="ctl-label">Practise</span>
+          <div class="cats" id="bkcats"></div>
+        </div>
+        <div class="ctl">
+          <span class="ctl-label" id="lbl-cur-bank">Currency</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-cur-bank">
+            <button type="button" role="radio" data-cur="NOK">NOK</button>
+            <button type="button" role="radio" data-cur="USD">USD</button>
+            <button type="button" role="radio" data-cur="EUR">EUR</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="scorebar" aria-label="Your bankroll drill record">
+        <div class="stat"><b id="bkst-correct">0/0</b><span>Correct</span></div>
+        <div class="stat"><b id="bkst-acc">–</b><span>Accuracy</span></div>
+        <div class="stat"><b id="bkst-streak">0</b><span>Streak</span></div>
+        <div class="stat"><b id="bkst-best">0</b><span>Best</span></div>
+        <button type="button" class="link-btn" id="bkreset">Reset record</button>
+      </section>
+
+      <div class="pot-layout">
+        <article class="panel" aria-label="Question">
+          <p class="eyebrow" id="bk-eyebrow"></p>
+          <div id="bk-scene"></div>
+          <h2 class="q-prompt" id="bk-prompt"></h2>
+          <div class="options" id="bk-options"></div>
+          <div class="result" id="bk-result" hidden aria-live="polite"></div>
+        </article>
+
+        <aside class="panel opp-guide" aria-label="Bankroll and tilt">
+          <h3>Your bankroll</h3>
+          <p>Money set aside only for poker, counted in buy-ins of the game you play.</p>
+          <dl class="bk-rules" id="bk-rules"></dl>
+          <h3 class="bk-h">Seven kinds of tilt</h3>
+          <p>Name the tilt first. Then find its root cause in a written mental hand history.</p>
+          <ul class="opp-types" id="bk-tilts"></ul>
+        </aside>
+      </div>
+
+      <section class="reference" aria-label="Reference">
+        <div class="ref wide">
+          <h3>A staged plan</h3>
+          <p>Master one concept before moving to the next, with a learn, apply and review cycle and about 70% practice to 30% theory. The milestones are the guide's own suggestions, not a published standard.</p>
+          <div class="tbl-wrap">
+            <table class="bt-table">
+              <thead><tr><th>Stage</th><th>Focus</th><th>Milestone</th></tr></thead>
+              <tbody id="bk-stages"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ref wide">
+          <h3>Rules to remember</h3>
+          <ul class="rules">
+            <li>Keep 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and 100–200 for tournaments. Newer players at micro stakes should keep at least 40.</li>
+            <li>Move down once you fall below 20 buy-ins.</li>
+            <li>Move up only when you have both the money and a proven win rate over 30,000–50,000 hands.</li>
+            <li>For a student, the practical bankroll is a separate budget you can afford to lose entirely.</li>
+            <li>Tilt is a symptom. Stopping it after it has been triggered is too late, so find the root cause with a written mental hand history.</li>
+            <li>Judge sessions by decision quality, not by the result, and quit when tilt appears.</li>
+            <li>Improve by raising your worst play, your C-game, rather than chasing your best sessions.</li>
+            <li>Start with cash games, which have fixed blinds, deep stacks and measurable results, before tournaments and ICM.</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="sources">
+        <p>Questions follow the guide's chapter <i>A staged plan, a bankroll and a tilt routine protect the learning</i>. Example games use round buy-ins in the currency you pick. The guide's own amounts are in NOK and are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK. The guide names the seven kinds of tilt; the one-line descriptions of the first six are this drill's summaries of Tendler.</p>
+        <p>Sources: <a href="https://www.vip-grinders.com/bankroll-management/" target="_blank" rel="noopener">VIP-Grinders, bankroll management</a> · <a href="https://www.pokernews.com/strategy/9-key-beginner-mistakes-low-stakes-how-to-fix-22957.htm" target="_blank" rel="noopener">PokerNews, beginner mistakes</a> · <a href="https://www.pokernews.com/strategy/tilt-a-phenomenal-roi-killer-39932.htm" target="_blank" rel="noopener">PokerNews, Tendler on tilt</a> · <a href="https://www.uschess.org/index.php/Jennifer-s-Blog/Chess-Lessons-From-the-Mental-Game-of-Poker.html" target="_blank" rel="noopener">US Chess, the inchworm</a> · <a href="https://www.casino.org/blog/the-ultimate-poker-study-guide/" target="_blank" rel="noopener">Casino.org, study guide</a> · <a href="https://pokerology.com/lessons/cash-games-vs-tournaments/" target="_blank" rel="noopener">Pokerology, cash vs tournaments</a> · <a href="https://thepokerbank.com/articles/etiquette/live" target="_blank" rel="noopener">ThePokerBank, live etiquette</a></p>
+      </footer>
+    </section>
   </main>
 </div>
 
@@ -866,8 +960,22 @@ tr:last-child td{border-bottom:0}
   const STORE = 'preflop-seat-drill:v1';
   function loadJSON(key) { try { const v = JSON.parse(localStorage.getItem(key)); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } }
   function saveJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) { /* ignore */ } }
-  const prefs = Object.assign({fmt:'six', deal:'any', tab:'seats', potCat:'mixed'}, loadJSON(STORE + ':prefs'));
+  const prefs = Object.assign({fmt:'six', deal:'any', tab:'seats', potCat:'mixed', cur:'NOK'}, loadJSON(STORE + ':prefs'));
   const savePrefs = () => saveJSON(STORE + ':prefs', prefs);
+
+  // Money is shown in the viewer's currency. Drill amounts are example sizes, so only the sign changes;
+  // amounts the guide gives in NOK are converted at a rough general rate.
+  const CUR = {
+    NOK:{nok:1,    show:t => t + ' kr'},
+    USD:{nok:10,   show:t => '$' + t},
+    EUR:{nok:11.5, show:t => '€' + t}
+  };
+  if (!CUR[prefs.cur]) prefs.cur = 'NOK';
+  const money = (n, c = prefs.cur) => CUR[c].show(n.toLocaleString('en-US', {maximumFractionDigits:2}));
+  const nice = x => x < 10 ? Math.max(0.5, Math.round(x * 2) / 2) : x < 100 ? Math.round(x) : x < 1000 ? Math.round(x / 5) * 5 : Math.round(x / 50) * 50;
+  const fromNok = (n, c = prefs.cur) => c === 'NOK' ? n : nice(n / CUR[c].nok);
+  // Drill text writes amounts as $40; this shows them in the chosen currency.
+  const cash = t => String(t).replace(/\$(\d[\d,]*(?:\.\d+)?)/g, (m, n) => money(+n.replace(/,/g, '')));
 
   // Two-click reset, since the viewer has no confirm() dialog.
   function armReset(btn, onReset) {
@@ -1632,6 +1740,47 @@ tr:last-child td{border-bottom:0}
       rule:'At SPR 4, three bets of about 54% pot get it in. At SPR 15–18 you would need more than pot every street, which only very strong hands want.'};
   }
 
+  // Short stacks, from the seat chapter: what a stack in big blinds allows before the flop.
+  function qShortPlan() {
+    const band = pick(['shove', 'mix', 'raise']);
+    const bb = pick({shove:[5, 6, 7, 8, 9], mix:[16, 17, 18, 19], raise:[25, 30, 35, 40]}[band]);
+    const seat = pick(['cutoff', 'button', 'hijack']);
+    const work = {
+      shove:`With ${bb}bb a normal raise puts a big share of your stack in, and you can’t fold after it. At about 10–15bb or less, preflop play becomes mostly <b>all-in or fold</b>.`,
+      mix:`${bb}bb sits between about 10 and 20bb, where you <b>mix all-in shoves with small raises</b>.`,
+      raise:`Above about 20bb a <b>small raise</b> usually beats shoving: it risks less and still lets you fold to a re-raise.`}[band];
+    return {scene:{facts:[{k:'Game', v:'Tournament'}, {k:'Your stack', v:bb + 'bb'}, {k:'Seat', v:cap(seat)}]},
+      prompt:`Tournament. Everyone folds to you on the ${seat} with ${bb}bb and a hand you want to play. What kind of move fits that stack?`,
+      options:fixedOpts([['All-in or fold', band === 'shove'], ['Mix all-in shoves with small raises', band === 'mix'], ['A small raise (min-raise)', band === 'raise'], ['Limp and see a flop', false]]),
+      work:work + ' Limping is never the plan: the guide’s first preflop rule is to raise when you are first in.',
+      rule:'At about 10–15bb or less, play all-in or fold. Between about 10 and 20bb, mix shoves with small raises. Above about 20bb, a min-raise usually beats shoving.'};
+  }
+  function qShortSet() {
+    const short = rand(2) === 0;
+    const S = short ? pick([15, 20, 25, 30]) : pick([60, 80, 100, 150]);
+    const r = pick([2.5, 3]), pr = pick(['2', '3', '4', '5', '6']), x = S / r;
+    const call = x >= 15, suits = shuffle(['s', 'h', 'd', 'c']);
+    return {scene:{hero:[toCard(pr + suits[0]), toCard(pr + suits[1])], facts:[{k:'Effective stack', v:S + 'bb'}, {k:'Raise to', v:fmtBB(r) + 'bb'}]},
+      prompt:`Effective stacks are ${S}bb. A regular opens to ${fmtBB(r)}bb and you hold ${pr}${pr} on the button. Do you call to set-mine?`,
+      two:true,
+      options:fixedOpts([['Call to set-mine', call], ['Fold', !call]]),
+      work:`${S}bb is ${num(x)}× the raise. Set mining wants at least 15× in position, because you flop a set only 11.8% of the time and need to be paid when you do. ${call ? 'There is enough behind: call.' : 'A short stack can’t pay you enough: fold. SplitSuit calls set mining against a 25bb stack “pointless”.'}`,
+      rule:'Small pairs and suited connectors need deep stacks and opponents who pay you off when you hit.'};
+  }
+  function qShortHand() {
+    const HIGH = ['K7s', 'K9s', 'Q9s', 'A8o', 'KTo', 'A9s', 'QJo'], SPEC = ['43s', '54s', '65s', '76s', '22', '33', '44', '64s'];
+    const short = rand(2) === 0;
+    const right = pick(short ? HIGH : SPEC), wrongs = shuffle(short ? SPEC : HIGH).slice(0, 3);
+    return {prompt:short
+        ? 'Stacks are short, about 25bb. Which of these hands goes up in value?'
+        : 'Stacks are deep, about 150bb, and the players behind you pay off too much. Which of these hands gains most from the deep stacks?',
+      options:opts(right, wrongs),
+      work:short
+        ? `High-card hands like <b>${right}</b> win by making top pair, which is often enough at a short stack. ${wrongs.join(', ')} need deep stacks: they hit rarely and must win a big pot when they do.`
+        : `<b>${right}</b> is a speculative hand: it hits rarely but can win a big pot when it does, which needs deep stacks. Deeper stacks add hands like 43s to button opens, while ${wrongs.join(', ')} mostly win by making top pair.`,
+      rule:'Shorter stacks favour high-card hands like K7s; deeper stacks favour small pairs and suited connectors.'};
+  }
+
   const CONCEPTS = [
     {cat:'price', prompt:'The pot is 100 and your opponent bets 50. A friend says you need 50% equity to call. What went wrong?',
      options:['They compared the call with the pot before the bet. You need 25%.', 'Nothing. You need 50%.', 'They forgot implied odds. You need 33%.', 'They should divide by the bet. You need 100%.'],
@@ -1676,7 +1825,19 @@ tr:last-child td{border-bottom:0}
     {cat:'spr', prompt:'What continuation-bet size does Upswing suggest in 3-bet pots, where the SPR is low?',
      options:['Small: about 25–40% of the pot.', 'An overbet of 150% of the pot.', 'Always pot-sized.', 'Never c-bet in 3-bet pots.'],
      work:'With SPR around 4, smaller bets on each street still get the stacks in by the river, so bet small and plan your sizes across all streets.',
-     rule:'Plan bet sizes across all streets so you don’t leave an awkward tiny river bet.'}
+     rule:'Plan bet sizes across all streets so you don’t leave an awkward tiny river bet.'},
+    {cat:'short', prompt:'You are close to the prize-money places in a tournament with 10bb. How does payout pressure (ICM) change your shoving range?',
+     options:['It tightens it: you shove fewer hands.', 'It widens it: shove more to build a stack.', 'It changes nothing below 20bb.', 'You should limp instead.'],
+     work:'Near the money, busting costs more than doubling up gains. At 10bb from under the gun, Upswing’s ICM-adjusted chart shoves only 8.5% of hands, against 16.9% in PokerCoaching’s standard chart.',
+     rule:'Near the prize-money places, payout pressure tightens everything.'},
+    {cat:'short', prompt:'What do antes do to tournament ranges?',
+     options:['They add money to every pot, which widens opening and shoving ranges.', 'They tighten ranges, since every hand costs more.', 'Nothing: only the blinds matter.', 'They make limping correct.'],
+     work:'Antes are small forced bets from every player, so there is more to win before the flop. Stealing it is worth more, and ranges widen.',
+     rule:'Rising blinds and antes push tournament stacks short fast.'},
+    {cat:'short', prompt:'When does the guide say the tournament adjustments make most sense to learn?',
+     options:['After cash-game basics are solid.', 'Before anything else.', 'Only once you play for a living.', 'Never: cash rules apply unchanged.'],
+     work:'The guide’s staged plan puts push/fold and ICM last, as an optional stage after preflop, maths, postflop play, hand reading and opponent adjustments.',
+     rule:'These tournament adjustments make most sense after cash-game basics are solid.'}
   ];
 
   const PCATS = [
@@ -1687,7 +1848,8 @@ tr:last-child td{border-bottom:0}
     {id:'ev', name:'Call or fold', gen:[qEV]},
     {id:'implied', name:'Implied odds', gen:[qImplied, qSetMine]},
     {id:'bluff', name:'Bluffs & defence', gen:[qBluff]},
-    {id:'spr', name:'Stack-to-pot ratio', gen:[qSPR]}
+    {id:'spr', name:'Stack-to-pot ratio', gen:[qSPR]},
+    {id:'short', name:'Short stacks', gen:[qShortPlan, qShortSet, qShortHand]}
   ];
   const catById = id => PCATS.find(c => c.id === id);
   if (!catById(prefs.potCat)) prefs.potCat = 'mixed';
@@ -1759,19 +1921,19 @@ tr:last-child td{border-bottom:0}
     renderPotScore();
     const q = pot.q;
     $('#q-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + pot.qNo} · ${catById(q.cat).name}`;
-    $('#q-scene').innerHTML = sceneHTML(q.scene);
+    $('#q-scene').innerHTML = cash(sceneHTML(q.scene));
     $('#q-scene').hidden = !q.scene;
-    $('#q-prompt').textContent = q.prompt;
+    $('#q-prompt').textContent = cash(q.prompt);
     $('#q-options').innerHTML = q.options.map((o, i) => {
       let cls = 'opt';
       if (pot.answered && o.correct) cls += ' right';
       else if (pot.answered && i === pot.choice) cls += ' wrong';
-      return `<button type="button" class="${cls}" data-opt="${i}"${pot.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${o.label}</span></button>`;
+      return `<button type="button" class="${cls}" data-opt="${i}"${pot.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${cash(o.label)}</span></button>`;
     }).join('');
     const el = $('#q-result');
     if (!pot.answered) { el.hidden = true; el.innerHTML = ''; return; }
     const ok = q.options[pot.choice].correct;
-    const right = q.options.find(o => o.correct).label;
+    const right = cash(q.options.find(o => o.correct).label);
     el.hidden = false;
     el.innerHTML = `
       <div class="verdict ${ok ? 'ok' : 'bad'}">
@@ -1779,7 +1941,7 @@ tr:last-child td{border-bottom:0}
         <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${ok ? 'Streak: ' + potStats.streak : 'Answer: ' + right}</p></div>
         <button type="button" class="new-hand" id="nextQ">Next question <kbd>N</kbd></button>
       </div>
-      <p class="work">${q.work}</p>
+      <p class="work">${cash(q.work)}</p>
       <p class="rule"><strong>Rule from the chapter</strong>${q.rule}</p>`;
   }
 
@@ -2573,6 +2735,327 @@ tr:last-child td{border-bottom:0}
   armReset($('#oreset'), () => { oppStatsRec = freshOpp(); saveJSON(STORE + ':opp', oppStatsRec); renderOppScore(); renderOppCats(); rvClear('opp'); });
 
   /* =====================================================================
+     BANKROLL DRILL
+     ===================================================================== */
+
+  // Round buy-ins for example games in each currency. Each step is at least double the one before.
+  const BK_STAKES = {NOK:[20, 50, 100, 200, 500, 1000], USD:[2, 5, 10, 25, 50, 100], EUR:[2, 5, 10, 20, 50, 100]};
+  // The guide's 2026 cash-game guidance, in buy-ins.
+  const BK_BANDS = [
+    {min:0,  label:'Under 20 buy-ins: move down', why:'Below 20 buy-ins the guide says to move down to a smaller game.'},
+    {min:20, label:'20–29 buy-ins: aggressive', why:'20 buy-ins is the aggressive end of the guidance.'},
+    {min:30, label:'30–49 buy-ins: standard', why:'30 buy-ins is the standard bankroll.'},
+    {min:50, label:'50 or more: conservative', why:'50 buy-ins or more is the conservative bankroll.'}
+  ];
+  const bkBand = n => BK_BANDS.filter(b => n >= b.min).pop();
+  const bkHands = n => n.toLocaleString('en-US');
+
+  // Tendler's seven kinds of tilt. The guide names them and describes desperation; the other descriptions are this drill's summaries.
+  const TILTS = [
+    {k:'run', name:'Running-bad tilt', how:'Builds up over a long stretch of bad cards and lost all-ins, until good decisions stop feeling worth it.',
+     cases:[() => 'You have lost with strong hands three sessions in a row. You start playing hands you would normally fold, just to make something happen.',
+            () => 'After a month of cold cards and lost coin flips, every session starts with the feeling that nothing you do matters.']},
+    {k:'inj', name:'Injustice tilt', how:'Anger that poker is unfair: a bad beat feels like something you did not deserve.',
+     cases:[() => 'An opponent calls your all-in with 7-2 offsuit, makes two pair on the river and takes your aces. All you can think is “I didn’t deserve that.”',
+            () => 'The worst player at the table keeps getting lucky against you, and it feels deeply unfair.']},
+    {k:'hate', name:'Hate-losing tilt', how:'Hating to lose at all, even small pots you played well.',
+     cases:[() => 'You played a small pot correctly and lost it, and you are furious simply because you lost.',
+            () => 'You call a river bet you are fairly sure is value, because you can’t stand letting them take the pot.']},
+    {k:'err', name:'Mistake tilt', how:'Anger at your own errors, which then causes more errors.',
+     cases:[() => 'You misread the board and called off your stack. You keep replaying it and are angry with yourself for the next hour.',
+            () => 'You forgot a flush draw and folded the best hand. You are so annoyed with yourself that your next decisions get sloppy.']},
+    {k:'ent', name:'Entitlement tilt', how:'Believing you deserve to win because you are better or have worked harder.',
+     cases:[() => 'You are clearly the best player at the table, so losing to these players makes you angry: you should be winning.',
+            () => 'You have studied for months, so you feel you deserve to beat these recreational players every session.']},
+    {k:'rev', name:'Revenge tilt', how:'Wanting to get back at one opponent rather than make the best play.',
+     cases:[() => 'One player has re-raised you four times this hour. You decide to get back at them and re-raise their next raise with any two cards.',
+            () => 'The player who took your stack moves to another table, and you change seats just to play every pot against them.']},
+    {k:'desp', name:'Desperation tilt', how:'The urge to win losses back. It drives long sessions and jumps in stakes.',
+     cases:[c => `You are down ${money(fromNok(1500, c), c)} tonight, so you keep playing past midnight and move to a bigger game to win it back.`,
+            () => 'After a losing week you double your usual stake, hoping one good night fixes everything.']}
+  ];
+
+  // The guide's staged plan.
+  const STAGES = [
+    {name:'Preflop', focus:'Position charts, raising instead of limping, 3-bet sizes, blind play', mile:'Open, fold or 3-bet from any seat without hesitating; play about 20% of hands at 6-max'},
+    {name:'Maths', focus:'Pot odds, outs, implied odds, SPR (alongside preflop)', mile:'Work out the equity you need in a few seconds'},
+    {name:'Postflop basics', focus:'C-betting by texture, value betting, no slowplaying against passive players', mile:'State why you bet (value or bluff) on every street in reviews'},
+    {name:'Hand reading', focus:'Ranges, combinations, equity against ranges', mile:'Write down the opponent’s likely range for each reviewed hand'},
+    {name:'Opponent adjustments', focus:'Player types, notes, folding to passive aggression', mile:'Change at least one decision per session because of a read'},
+    {name:'GTO concepts', focus:'Defence frequencies, polarised vs merged ranges, solver spot-checks', mile:'Explain why a solver mixes actions and when to deviate'},
+    {name:'Tournaments (optional)', focus:'Push/fold, ICM', mile:'Use free ICM calculators for stack decisions'}
+  ];
+
+  const BK_RULE = 'Keep 20 buy-ins (aggressive), 30 (standard) or 50 (conservative) for cash games, and 100–200 for tournaments.';
+  const BK_MOVE = 'Move down below 20 buy-ins. Move up only with both the money and a proven win rate over 30,000–50,000 hands.';
+  const TILT_RULE = 'Tilt is a symptom: find its root cause with a written mental hand history, judge sessions by decisions, and quit when tilt appears.';
+
+  function qBkRate() {
+    const c = prefs.cur, Y = pick(BK_STAKES[c]), n = pick([8, 12, 15, 18, 22, 25, 27, 32, 35, 40, 45, 55, 60, 80]), B = Y * n, band = bkBand(n);
+    return {cur:c, scene:{facts:[{k:'Bankroll', v:money(B, c)}, {k:'Buy-in', v:money(Y, c)}]},
+      prompt:`Your poker bankroll is ${money(B, c)} and you play cash games with a ${money(Y, c)} buy-in. How does the guide rate that bankroll?`,
+      options:fixedOpts(BK_BANDS.map(b => [b.label, b === band])),
+      work:`${money(B, c)} ÷ ${money(Y, c)} = <b>${n} buy-ins</b>. ${band.why}${n < 40 ? ' Newer players at micro stakes are advised to keep at least 40.' : ''}`,
+      rule:BK_RULE};
+  }
+  function qBkNeed() {
+    const c = prefs.cur, Y = pick(BK_STAKES[c]);
+    const L = pick([{n:20, a:'an aggressive'}, {n:30, a:'a standard'}, {n:50, a:'a conservative'}, {n:100, t:true}]);
+    const wrongs = shuffle([10, 20, 30, 50, 100].filter(k => k !== L.n && !(L.t && k > 100))).map(k => money(Y * k, c));
+    return {cur:c, scene:{facts:[{k:L.t ? 'Tournament buy-in' : 'Cash-game buy-in', v:money(Y, c)}]},
+      prompt:L.t
+        ? `What is the smallest bankroll the guide suggests for ${money(Y, c)} tournaments?`
+        : `How big a bankroll do you need to play ${money(Y, c)} buy-in cash games with ${L.a} bankroll?`,
+      options:opts(money(Y * L.n, c), wrongs),
+      work:L.t
+        ? `Tournaments swing far more than cash games, so the guide asks for 100–200 buy-ins: at least 100 × ${money(Y, c)} = <b>${money(Y * 100, c)}</b>.`
+        : `${cap(L.a.replace(/^an? /, ''))} is ${L.n} buy-ins: ${L.n} × ${money(Y, c)} = <b>${money(Y * L.n, c)}</b>.`,
+      rule:BK_RULE};
+  }
+  function qBkMax() {
+    const c = prefs.cur, st = BK_STAKES[c], i = 1 + rand(st.length - 2), Y = st[i];
+    const B = nice(30 * Y * pick([1, 1.2, 1.5]));
+    const wrongs = [st[i + 1], st[i - 1], st[i + 2]].filter(x => x).map(x => money(x, c));
+    return {cur:c, scene:{facts:[{k:'Bankroll', v:money(B, c)}, {k:'Rule', v:'30 buy-ins'}]},
+      prompt:`Your bankroll is ${money(B, c)}. With a standard bankroll of 30 buy-ins, what is the biggest cash-game buy-in you should play?`,
+      options:opts(money(Y, c), wrongs),
+      work:`${money(B, c)} ÷ 30 = ${money(nice(B / 30), c)}, so <b>${money(Y, c)}</b> games fit. ${money(st[i + 1], c)} games would need 30 × ${money(st[i + 1], c)} = ${money(30 * st[i + 1], c)}.`,
+      rule:BK_RULE};
+  }
+  function qBkBudget() {
+    const c = prefs.cur, B = fromNok(pick([1000, 2000, 3000, 5000]), c);
+    const range = (a, b) => `About ${money(nice(B / a), c)}–${money(nice(B / b), c)}`;
+    return {cur:c, scene:{facts:[{k:'Poker budget', v:money(B, c)}]},
+      prompt:`You set aside ${money(B, c)} for poker, money you can afford to lose entirely. At the guide’s 30–50 buy-ins, which buy-ins does it support?`,
+      options:opts(range(50, 30), [range(20, 10), range(100, 50), range(10, 5)]),
+      work:`Divide the budget by 50 and by 30: ${money(B, c)} ÷ 50 = ${money(nice(B / 50), c)} and ${money(B, c)} ÷ 30 = ${money(nice(B / 30), c)}. The guide’s own example is 2,000 NOK for 40–65 NOK buy-ins.`,
+      rule:'For a student, the practical bankroll is a separate budget you can afford to lose entirely.'};
+  }
+  function qBkMove() {
+    const c = prefs.cur, st = BK_STAKES[c], i = 1 + rand(st.length - 2), Y = st[i], up = st[i + 1], down = st[i - 1];
+    const kind = pick(['down', 'up', 'hands', 'money', 'loser']);
+    const B = {down:Y * pick([10, 14, 16, 18]), up:up * pick([30, 35, 40]), hands:up * pick([30, 35, 40]), money:Y * pick([25, 30, 40]), loser:up * pick([30, 35, 40])}[kind];
+    const H = {down:pick([5000, 20000, 60000]), up:pick([50000, 60000, 80000]), hands:pick([4000, 8000, 12000, 18000]), money:pick([50000, 60000, 80000]), loser:pick([50000, 60000, 80000])}[kind];
+    const result = kind === 'loser' ? 'about break-even' : 'a steady win rate';
+    const nY = Math.round(B / Y * 10) / 10, nUp = Math.round(B / up * 10) / 10;
+    const ans = kind === 'down' ? 'down' : kind === 'up' ? 'up' : 'stay';
+    const work = {
+      down:`${money(B, c)} is only ${num(nY)} buy-ins of ${money(Y, c)}. Below 20 buy-ins the guide says to <b>move down</b>, whatever your results.`,
+      up:`You have both: ${money(B, c)} is ${num(nUp)} buy-ins of the ${money(up, c)} game, and ${bkHands(H)} hands is enough to trust a win rate. <b>Move up.</b>`,
+      hands:`The money is there (${num(nUp)} buy-ins of ${money(up, c)}), but ${bkHands(H)} hands proves nothing yet. The guide wants a win rate over 30,000–50,000 hands, so <b>stay</b>.`,
+      money:`${bkHands(H)} winning hands is a proven win rate, but ${money(B, c)} is only ${num(nUp)} buy-ins of the ${money(up, c)} game. You need the money too, so <b>stay</b>.`,
+      loser:`The money is there, but after ${bkHands(H)} hands you are only break-even, so there is no proven win rate. <b>Stay</b> and keep improving.`}[kind];
+    return {cur:c, scene:{facts:[{k:'Your game', v:money(Y, c) + ' buy-in'}, {k:'Bankroll', v:money(B, c)}, {k:'Hands played', v:bkHands(H)}]},
+      prompt:`You play ${money(Y, c)} buy-in cash games with a ${money(B, c)} bankroll. Over ${bkHands(H)} hands at this game you have ${result}. What should you do?`,
+      options:fixedOpts([[`Move down to ${money(down, c)} games`, ans === 'down'], [`Stay at ${money(Y, c)} games`, ans === 'stay'], [`Move up to ${money(up, c)} games`, ans === 'up']]),
+      work, rule:BK_MOVE};
+  }
+  function qBkTilt() {
+    const c = prefs.cur, T = pick(TILTS);
+    return {cur:c, tilt:T.k,
+      prompt:`${pick(T.cases)(c)} Which kind of tilt is this?`,
+      options:opts(T.name, shuffle(TILTS.filter(x => x !== T)).map(x => x.name)),
+      work:`<b>${T.name}.</b> ${T.how}`,
+      rule:TILT_RULE};
+  }
+  function qBkStage() {
+    const kind = pick(['next', 'mile', 'focus']);
+    const i = kind === 'next' ? rand(STAGES.length - 1) : rand(STAGES.length);
+    const S = kind === 'next' ? STAGES[i + 1] : STAGES[i];
+    const prompt = {
+      next:`In the guide’s staged plan, which stage comes right after “${STAGES[i].name}”?`,
+      mile:`Which stage of the plan has this milestone: “${S.mile}”?`,
+      focus:`Which stage of the plan focuses on: ${S.focus.charAt(0).toLowerCase() + S.focus.slice(1)}?`}[kind];
+    return {prompt, options:opts(S.name, shuffle(STAGES.filter(x => x !== S && x !== STAGES[i])).map(x => x.name)),
+      work:`<b>${S.name}</b> focuses on ${S.focus.charAt(0).toLowerCase() + S.focus.slice(1)}. Milestone: ${S.mile.charAt(0).toLowerCase() + S.mile.slice(1)}.`,
+      rule:'Learn in order: preflop charts, then pot maths, then postflop play and hand reading, then adjusting to opponents. Master one concept before the next.'};
+  }
+
+  const BK_CONCEPTS = [
+    {cat:'rate', prompt:'Why keep a bankroll at all?',
+     options:['So normal losing streaks don’t force you out of the game or onto tilt.', 'So you can move up faster.', 'Because a bigger bankroll wins more pots.', 'So you can afford to call more.'],
+     work:'Even a winning player has long losing streaks. Money set aside only for poker lets you ride them out at the right stake.',
+     rule:'A bankroll keeps normal losing streaks from forcing you out of the game or onto tilt.'},
+    {cat:'rate', prompt:'An older live-game guide from 2016 suggests 10–20 buy-ins. How does that compare with 2026 advice?',
+     options:['It is looser: current advice is 20, 30 or 50 buy-ins.', 'It matches current advice.', 'It is stricter than current advice.', 'Live games need no bankroll.'],
+     work:'Current guidance is 20 buy-ins (aggressive), 30 (standard) or 50 (conservative), and at least 40 for newer players at micro stakes.',
+     rule:BK_RULE},
+    {cat:'move', prompt:'Your results look great after 5,000 hands. Is that a proven win rate?',
+     options:['No: the guide wants 30,000–50,000 hands before you trust it.', 'Yes: 5,000 hands is plenty.', 'Yes, if you won most sessions.', 'Only if you won a big pot.'],
+     work:'Short samples swing wildly. The guide asks for a win rate over 30,000–50,000 hands before moving up.',
+     rule:BK_MOVE},
+    {cat:'tilt', prompt:'What does Tendler say about controlling tilt once it has started?',
+     options:['Control is a bandaid: stopping tilt after it has been triggered is too late.', 'Take a deep breath and play on.', 'Play bigger to win it back quickly.', 'Tilt is luck, not a skill.'],
+     work:'Tendler treats tilt as a symptom of underlying flaws. He recommends finding the root cause with a written mental hand history.',
+     rule:TILT_RULE},
+    {cat:'tilt', prompt:'How should you judge a poker session?',
+     options:['By the quality of your decisions, not the result.', 'By how much money you won.', 'By how many pots you won.', 'By how long you played.'],
+     work:'Results swing with luck in the short run. Decisions are what you control.',
+     rule:'Judge sessions by decision quality, not by the result.'},
+    {cat:'tilt', prompt:'What does Tendler’s “inchworm” model say is the fastest way to improve?',
+     options:['Raise your worst play, your C-game.', 'Chase your best sessions.', 'Play more hours.', 'Move up in stakes.'],
+     work:'Pulling up the back end of the inchworm, your worst play, moves your average more than chasing peak performances.',
+     rule:'Improve by raising your C-game.'},
+    {cat:'tilt', prompt:'You notice tilt in the middle of a session. What does the guide say to do?',
+     options:['Quit the session.', 'Keep playing until you are even.', 'Move to a bigger game.', 'Play more hands to shake it off.'],
+     work:'Playing on while tilted turns one bad hand into a bad night.',
+     rule:'Quit when tilt appears.'},
+    {cat:'plan', prompt:'Roughly how should study time split between practice and theory?',
+     options:['About 70% practice, 30% theory.', 'About 70% theory, 30% practice.', 'All theory until you know it.', 'Half and half.'],
+     work:'Tricia Cardner recommends a learn–apply–review cycle with one or two goals per session and about 70% practice to 30% theory.',
+     rule:'Learn, apply and review, with about 70% practice.'},
+    {cat:'plan', prompt:'Which kind of game does the guide say to start with?',
+     options:['Cash games: fixed blinds, deep stacks and measurable results.', 'Tournaments, for the big prizes.', 'Whatever has the biggest buy-in.', 'Heads-up games only.'],
+     work:'Pokerology recommends cash games first, then tournament concepts like ICM.',
+     rule:'Start with cash games before adding tournament concepts.'},
+    {cat:'plan', prompt:'At a live table you want to raise. How do you avoid a string bet?',
+     options:['Say “raise” out loud, or move all the chips in one motion.', 'Put the chips in a few at a time.', 'Splash the chips into the pot.', 'Wait to see how your opponent reacts.'],
+     work:'Live games add procedure that online software handles for you: act in turn, avoid string bets, don’t splash chips, and don’t slow-roll a winning hand.',
+     rule:'Act in turn, state your raise or move the chips in one motion, and never slow-roll.'},
+    {cat:'plan', prompt:'As of October 2026, where can you play poker legally in Norway?',
+     options:['Only in person: private home games and the Norwegian Championship.', 'On any foreign poker site.', 'Online at Norsk Tipping.', 'Nowhere at all.'],
+     work:'All legal poker in Norway is played in person. The government has proposed letting Norsk Tipping offer online poker, but no launch date has been set.',
+     rule:'Check the home-game limits against Lotteritilsynet before relying on them.'}
+  ];
+
+  const BKCATS = [
+    {id:'mixed', name:'Mixed'},
+    {id:'rate', name:'Bankroll sums', gen:[qBkRate, qBkNeed, qBkMax, qBkBudget]},
+    {id:'move', name:'Move up or down', gen:[qBkMove]},
+    {id:'tilt', name:'Name the tilt', gen:[qBkTilt]},
+    {id:'plan', name:'Study plan', gen:[qBkStage]}
+  ];
+  const bkCat = id => BKCATS.find(c => c.id === id);
+  const bkprefs = Object.assign({cat:'mixed'}, loadJSON(STORE + ':bank-prefs'));
+  if (!bkCat(bkprefs.cat)) bkprefs.cat = 'mixed';
+
+  const freshBank = () => ({total:0, correct:0, streak:0, best:0, cats:{}});
+  let bkStats = Object.assign(freshBank(), loadJSON(STORE + ':bank'));
+  const bk = {q:null, answered:false, choice:null, qNo:1, lastPrompt:''};
+
+  function makeBank() {
+    const id = bkprefs.cat === 'mixed' ? pick(BKCATS.slice(1)).id : bkprefs.cat;
+    const concepts = BK_CONCEPTS.filter(c => c.cat === id && c.prompt !== bk.lastPrompt);
+    let q;
+    if (concepts.length && rand(100) < 25) {
+      const c = pick(concepts);
+      q = {prompt:c.prompt, options:opts(c.options[0], c.options.slice(1)), work:c.work, rule:c.rule};
+    } else {
+      for (let t = 0; t < 5; t++) { q = pick(bkCat(id).gen)(); if (q.prompt !== bk.lastPrompt) break; }
+    }
+    q.cat = id;
+    bk.lastPrompt = q.prompt;
+    return q;
+  }
+  function newBank() { showBank(makeBank()); }
+  function showBank(q) {
+    if (!bkCat(q.cat)) throw new Error('bad category');
+    bk.q = q;
+    bk.answered = false;
+    bk.choice = null;
+    bk.qNo = bkStats.total + 1;
+    renderBank();
+  }
+  function answerBank(i) {
+    if (bk.answered || !bk.q.options[i]) return;
+    bk.answered = true;
+    bk.choice = i;
+    const ok = bk.q.options[i].correct, R = bkStats;
+    R.total++;
+    if (ok) { R.correct++; R.streak++; R.best = Math.max(R.best, R.streak); }
+    else R.streak = 0;
+    const c = R.cats[bk.q.cat] || (R.cats[bk.q.cat] = {n:0, c:0});
+    c.n++; if (ok) c.c++;
+    saveJSON(STORE + ':bank', R);
+    rvRecord('bank', ok, bk.q.rv, () => bk.q);
+    renderBank();
+    const nb = $('#bkNext'); if (nb) nb.focus({preventScroll:true});
+  }
+
+  function renderBankCats() {
+    $('#bkcats').innerHTML = BKCATS.map(c => {
+      const s = c.id === 'mixed' ? {n:bkStats.total, c:bkStats.correct} : (bkStats.cats[c.id] || {n:0, c:0});
+      return `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${c.id === bkprefs.cat}">${c.name}${s.n ? `<small>${s.c}/${s.n}</small>` : ''}</button>`;
+    }).join('');
+  }
+  function renderBankScore() {
+    const R = bkStats;
+    $('#bkst-correct').textContent = `${R.correct}/${R.total}`;
+    $('#bkst-acc').textContent = R.total ? Math.round(R.correct / R.total * 100) + '%' : '–';
+    $('#bkst-streak').textContent = R.streak;
+    $('#bkst-best').textContent = R.best;
+  }
+  // The side panel and the plan table, in the chosen currency.
+  function renderBankGuide() {
+    const c = prefs.cur, Y = BK_STAKES[c][2], B = fromNok(2000, c);
+    $('#bk-rules').innerHTML = [
+      ['Cash games', '20 · 30 · 50 buy-ins'],
+      ['Tournaments', '100–200 buy-ins'],
+      ['Move down', 'below 20 buy-ins'],
+      ['Move up', 'money + 30,000–50,000 hands'],
+      [`Standard for ${money(Y, c)} games`, money(Y * 30, c)],
+      [`A ${money(B, c)} budget`, `${money(nice(B / 50), c)}–${money(nice(B / 30), c)} buy-ins`]
+    ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+    const on = bk.q && bk.answered ? bk.q.tilt : null;
+    $('#bk-tilts').innerHTML = TILTS.map(T =>
+      `<li class="opp-type${T.k === on ? ' on' : ''}" style="--gc:var(--brass)"><h4>${T.name}</h4><p>${T.how}</p></li>`).join('');
+    $('#bk-stages').innerHTML = STAGES.map((S, i) => `<tr><td>${i + 1}. ${S.name}</td><td>${S.focus}</td><td>${S.mile}</td></tr>`).join('');
+  }
+  function renderBank() {
+    renderBankCats();
+    renderBankScore();
+    renderBankGuide();
+    const q = bk.q;
+    $('#bk-eyebrow').textContent = `${rvLabel(q.rv) || 'Question ' + bk.qNo} · ${bkCat(q.cat).name}`;
+    $('#bk-scene').innerHTML = q.scene ? sceneHTML(q.scene) : '';
+    $('#bk-scene').hidden = !q.scene;
+    $('#bk-prompt').textContent = q.prompt;
+    $('#bk-options').innerHTML = q.options.map((o, i) => {
+      let cls = 'opt';
+      if (bk.answered && o.correct) cls += ' right';
+      else if (bk.answered && i === bk.choice) cls += ' wrong';
+      return `<button type="button" class="${cls}" data-opt="${i}"${bk.answered ? ' disabled' : ''}><kbd>${i + 1}</kbd><span>${o.label}</span></button>`;
+    }).join('');
+    const el = $('#bk-result');
+    if (!bk.answered) { el.hidden = true; el.innerHTML = ''; return; }
+    const ok = q.options[bk.choice].correct;
+    const right = q.options.find(o => o.correct).label;
+    el.hidden = false;
+    el.innerHTML = `
+      <div class="verdict ${ok ? 'ok' : 'bad'}">
+        <span class="mark" aria-hidden="true">${ok ? '✓' : '✕'}</span>
+        <div class="v-text"><h3>${ok ? 'Correct.' : 'Not quite.'}</h3><p>${ok ? 'Streak: ' + bkStats.streak : 'Answer: ' + right}</p></div>
+        <button type="button" class="new-hand" id="bkNext">Next question <kbd>N</kbd></button>
+      </div>
+      <p class="work">${q.work}</p>
+      <p class="rule"><strong>Rule from the chapter</strong>${q.rule}</p>`;
+  }
+
+  $('#bk-options').addEventListener('click', e => { const b = e.target.closest('[data-opt]'); if (b) answerBank(+b.dataset.opt); });
+  $('#bk-result').addEventListener('click', e => { if (e.target.closest('#bkNext')) rvNext() || newBank(); });
+  $('#bkcats').addEventListener('click', e => {
+    const b = e.target.closest('[data-cat]');
+    if (!b || b.dataset.cat === bkprefs.cat) return;
+    bkprefs.cat = b.dataset.cat; saveJSON(STORE + ':bank-prefs', bkprefs); newBank();
+  });
+  armReset($('#bkreset'), () => { bkStats = freshBank(); saveJSON(STORE + ':bank', bkStats); renderBankScore(); renderBankCats(); rvClear('bank'); });
+
+  /* ---------- Currency ---------- */
+  function renderCur() {
+    document.querySelectorAll('[data-cur]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.cur === prefs.cur)));
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-cur]');
+    if (!b || b.dataset.cur === prefs.cur || !CUR[b.dataset.cur]) return;
+    prefs.cur = b.dataset.cur; savePrefs(); renderCur();
+    if (pot.q) renderPot();
+    if (bk.q) {
+      // A fresh question in the old currency is swapped for one in the new; answered and saved ones keep theirs.
+      if (!bk.answered && !bk.q.rv && bk.q.cur && bk.q.cur !== prefs.cur) newBank(); else renderBank();
+    }
+  });
+
+  /* =====================================================================
      PROGRESS AND REVIEW
      Every missed question is saved so it can be asked again. A drill hooks
      in with rvRecord() after scoring an answer, rvNext() before dealing its
@@ -2586,7 +3069,8 @@ tr:last-child td{border-bottom:0}
     pot:  {name:'Pot odds', rec:() => potStats, fresh:newQuestion, show:(q, id) => { q.rv = id; showQuestion(q); }},
     board:{name:'Board', rec:() => btStats, fresh:btNew, show:(q, id) => { q.rv = id; btShow(q); }},
     opp:  {name:'Opponents', rec:() => oppStatsRec, fresh:newOpp, show:(q, id) => { q.rv = id; showOpp(q); }},
-    hand: {name:'Full hand', rec:() => fhStats, fresh:fhNew, show:(q, id) => fhShow(q, id)}
+    hand: {name:'Full hand', rec:() => fhStats, fresh:fhNew, show:(q, id) => fhShow(q, id)},
+    bank: {name:'Bankroll', rec:() => bkStats, fresh:newBank, show:(q, id) => { q.rv = id; showBank(q); }}
   };
   const rvData = loadJSON(RV_KEY);
   rvData.items = (Array.isArray(rvData.items) ? rvData.items : []).filter(m => m && m.id && m.q && RV[m.tab]);
@@ -3526,13 +4010,15 @@ tr:last-child td{border-bottom:0}
     seats:{hash:'seats', eyebrow:'Chapter · Your seat decides how many hands you can play', title:'Preflop Seat Drill',
            tag:'You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.'},
     pot:{hash:'pot-odds', eyebrow:'Chapter · Pot size sets the price of every call and every commitment', title:'Pot Odds Drill',
-         tag:'Fresh spots on pot odds, outs, expected value, implied odds, bluffs and stack-to-pot ratio. Pick a topic or mix them, and check your maths on the workbench.'},
+         tag:'Fresh spots on pot odds, outs, expected value, implied odds, bluffs, stack-to-pot ratio and short stacks. Pick a topic or mix them, and check your maths on the workbench.'},
     board:{hash:'board-texture', eyebrow:'Chapter · The board decides what your hand is really worth', title:'Board Texture Drill',
            tag:'Random flops to read: name the texture, decide whose range it favours, pick a continuation-bet plan and sort your hand into a bucket.'},
     opp:{hash:'opponents', eyebrow:'Chapter · Low-stakes opponents call too much and bluff too little', title:'Opponent Adjustment Drill',
          tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'},
     hand:{hash:'full-hand', eyebrow:'All four chapters · One hand from the deal to the river', title:'Full Hand Drill',
-          tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'}
+          tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'},
+    bank:{hash:'bankroll', eyebrow:'Chapter · A staged plan, a bankroll and a tilt routine protect the learning', title:'Bankroll and Tilt Drill',
+          tag:'Size your bankroll in buy-ins, decide when to move up or down, name the kind of tilt, and know what to study next. Pick NOK, USD or EUR.'}
   };
   function setTab(id) {
     if (!TABS[id]) id = 'seats';
@@ -3547,6 +4033,7 @@ tr:last-child td{border-bottom:0}
     $('#view-board').hidden = id !== 'board';
     $('#view-opp').hidden = id !== 'opp';
     $('#view-hand').hidden = id !== 'hand';
+    $('#view-bank').hidden = id !== 'bank';
     const T = TABS[id];
     $('#app-eyebrow').textContent = T.eyebrow;
     $('#app-title').textContent = T.title;
@@ -3556,6 +4043,7 @@ tr:last-child td{border-bottom:0}
     if (id === 'board' && !bt.q) btNew();
     if (id === 'opp' && !opp.q) newOpp();
     if (id === 'hand' && !fh.hand) fhNew();
+    if (id === 'bank' && !bk.q) newBank();
   }
   const tabBtns = [...document.querySelectorAll('[data-tab]')];
   tabBtns.forEach((b, i) => {
@@ -3583,6 +4071,11 @@ tr:last-child td{border-bottom:0}
       else if (fh.answered && k === 'n') { e.preventDefault(); fhNext(); }   // fhNext calls rvNext() at the end of a hand
       return;
     }
+    if (prefs.tab === 'bank') {
+      if (!bk.answered && /^[1-4]$/.test(k)) answerBank(+k - 1);
+      else if (bk.answered && k === 'n') { e.preventDefault(); rvNext() || newBank(); }
+      return;
+    }
     if (prefs.tab === 'opp') {
       if (!opp.answered && /^[1-4]$/.test(k)) answerOpp(+k - 1);
       else if (opp.answered && k === 'n') { e.preventDefault(); rvNext() || newOpp(); }
@@ -3602,6 +4095,7 @@ tr:last-child td{border-bottom:0}
 
   buildTables();
   updateBench();
+  renderCur();
   newHand();
   renderRv();
   const fromHash = (location.hash || '').slice(1);

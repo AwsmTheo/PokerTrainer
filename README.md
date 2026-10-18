@@ -10,6 +10,11 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 - **Pot odds: price every call.** A quiz on the equity a call needs, how often a bluff must work, and the minimum defence frequency (MDF) for a given pot and bet. Each answer shows the working.
 - **Board: read the flop.** Random flops to classify by texture (dry, wet, low and connected, monotone, paired), decide whose range they favour, choose a continuation-bet plan in or out of position and multiway, and sort a hand into a strength bucket. Each answer explains the read and the default plan, with reference tables for c-bets and hand buckets.
 - **Full hand: play it to the river.** One scripted hand at a time, from the preflop decision to the river, with a decision on each street. There are 38 hands, including 3-bet pots, multiway pots and turn decisions. Every decision is tagged with the chapter its rule comes from (seats, pot odds, board or opponents), a wrong answer plays on along the right line, and your accuracy is tracked per chapter. Suits are relabelled at random each time.
+- **Bankroll: money and mindset.** Size a bankroll in buy-ins (20 aggressive, 30 standard, 50 conservative, 100–200 for tournaments), decide whether to move up, stay or move down, name which of the seven kinds of tilt a situation shows, and place topics in the guide's staged study plan. A side panel lists the bankroll rules and the tilt types, with the plan as a reference table.
+
+The pot odds tab includes **short stacks**: set mining at 25bb, which hands gain when stacks are short or deep, and the tournament push/fold bands.
+
+Money shows in **NOK, USD or EUR**, switched on the Pot odds or Bankroll tab (NOK by default). Drill amounts are example sizes, so only the sign changes; the guide's own NOK amounts are converted at about 1 USD = 10 NOK and 1 EUR = 11.5 NOK.
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
@@ -28,7 +33,7 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 1. Download or clone the repo: `git clone https://github.com/AwsmTheo/PokerTrainer.git`
 2. Open `preflop-seat-drill.html` in any modern browser (double-click it, or drag it onto a browser window).
 
-That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds`, `#board-texture`, `#opponents` or `#full-hand` at the end of the URL.
+That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds`, `#board-texture`, `#opponents`, `#full-hand` or `#bankroll` at the end of the URL.
 
 ### iPhone app
 
