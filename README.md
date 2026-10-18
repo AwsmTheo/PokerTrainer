@@ -24,6 +24,8 @@ The **Daily** tab is a short mixed set each day: two questions from each quiz ta
 
 Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, number keys pick an answer in the quizzes, and `N` deals the next hand or question. Progress and settings are saved in your browser's local storage, so they stay on the machine and browser you use.
 
+**Friends**, near the bottom of the page, lets you compare streaks and accuracy with friends without any account. Type your name and tap **Copy my friend code**: it copies a link holding your name, daily streak, best streak and how many you've got right on each tab. A friend opens the link, or pastes it under **Add a friend**, and you appear as a card beside their own live stats. Codes are a snapshot, so each card says when it was shared; send a new code whenever you want friends to see your latest, and it replaces the old card. A streak counts as broken once its last daily set is more than a day old. Remove takes two clicks.
+
 **Move your progress** at the bottom of the page carries it to another device or browser, or between the website and the iPhone app. **Copy code** gives a text code you can send yourself in Notes or Messages, and **Save file** saves a `.json` file (in the app it opens the share sheet). On the other device, paste the code or pick the file under **Load a save**. Loading replaces that device's progress, saved misses, streak, session log and settings after you confirm.
 
 ### How to open it

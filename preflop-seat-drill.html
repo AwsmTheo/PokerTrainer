@@ -496,6 +496,41 @@ tr:last-child td{border-bottom:0}
   .sv-body{padding:0 12px 12px}
   .sv textarea{font-size:16px}   /* below 16px, iPhones zoom in on focus */
 }
+/* Friends */
+.fr{border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.fr summary{cursor:pointer;padding:12px 16px;font:600 13.5px/1.3 var(--font-body);color:var(--muted)}
+.fr[open] summary{color:var(--ink)}
+.fr summary:focus-visible,.fr textarea:focus-visible,.fr input:focus-visible{outline:3px solid var(--call);outline-offset:2px}
+.fr-body{display:flex;flex-direction:column;gap:18px;padding:0 16px 16px}
+.fr-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;list-style:none;margin:0;padding:0}
+.fr-card{display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:12px;background:var(--surface-2);border-left:3px solid var(--line);min-width:0}
+.fr-card.me{border-left-color:var(--brass)}
+.fr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0}
+.fr-name{font:700 15px/1.2 var(--font-body);color:var(--ink);overflow-wrap:anywhere}
+.fr-when{font-size:12px;color:var(--muted);white-space:nowrap}
+.fr-nums{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.fr-num{display:inline-flex;align-items:baseline;gap:5px;font-size:12px;color:var(--muted);white-space:nowrap}
+.fr-num b{font:800 22px/1 var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.fr-num.streak b{color:var(--brass)}
+.fr-drills{margin:0;font-size:12px;line-height:1.4;color:var(--muted)}
+.fr-card .link-btn{margin-left:0;align-self:flex-start}
+.fr-card .link-btn.armed{border-color:var(--bad);color:var(--bad)}
+.fr-parts{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+@media (min-width:760px){.fr-parts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fr-part{display:flex;flex-direction:column;gap:10px;min-width:0}
+.fr h2{margin:0;font:700 10.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fr p{margin:0;font-size:13.5px;color:var(--muted)}
+.fr p b{color:var(--ink)}
+.fr p.sv-bad{color:var(--bad)}
+.fr label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.fr input{border:1px solid var(--field-line);border-radius:10px;background:var(--surface-2);color:var(--ink);padding:8px 10px;font:14px/1.3 var(--font-body);max-width:260px}
+.fr textarea{display:block;width:100%;box-sizing:border-box;border:1px solid var(--field-line);border-radius:10px;background:var(--surface-2);color:var(--ink);padding:8px 10px;font:12.5px/1.4 ui-monospace,Menlo,Consolas,monospace;word-break:break-all;resize:vertical}
+.fr textarea[hidden]{display:none}
+@media (max-width:560px){
+  .fr summary{padding:12px}
+  .fr-body{padding:0 12px 12px}
+  .fr textarea,.fr input{font-size:16px}   /* below 16px, iPhones zoom in on focus */
+}
 @media (prefers-reduced-motion: reduce){
   .seat.acting,.card,.result{animation:none}
   .act,.opt{transition:none}
@@ -1021,6 +1056,31 @@ tr:last-child td{border-bottom:0}
       </footer>
     </section>
   </main>
+
+  <!-- ===================== Friends ===================== -->
+  <details class="fr" id="fr">
+    <summary>Friends</summary>
+    <div class="fr-body">
+      <ul class="fr-cards" id="fr-cards" aria-label="You and your friends"></ul>
+      <div class="fr-parts">
+        <div class="fr-part">
+          <h2>Share your stats</h2>
+          <p>Send a friend your code. It holds your name, streak and how many you get right, nothing else. Send a new one whenever you want them to see your latest.</p>
+          <label>Your name <input type="text" id="fr-me" maxlength="24" autocomplete="nickname" placeholder="Name your friends know"></label>
+          <div class="sv-row"><button type="button" class="sv-btn" id="fr-copy">Copy my friend code</button></div>
+          <textarea id="fr-code" rows="3" readonly aria-label="Your friend code" hidden></textarea>
+          <div class="sv-msg" id="fr-out" aria-live="polite"></div>
+        </div>
+        <div class="fr-part">
+          <h2>Add a friend</h2>
+          <p>Paste a friend’s code or link. A newer code from the same friend updates their stats.</p>
+          <textarea id="fr-in" rows="3" aria-label="Friend code to add" placeholder="Paste a friend code here" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+          <div class="sv-row"><button type="button" class="sv-btn" id="fr-add">Add friend</button></div>
+          <div class="sv-msg" id="fr-msg" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <!-- ===================== Move your progress ===================== -->
   <details class="sv" id="sv">
@@ -4183,6 +4243,133 @@ tr:last-child td{border-bottom:0}
   } catch (e) { /* no storage */ }
 
   /* =====================================================================
+     FRIENDS
+     No server: each player copies a friend code (or link) holding their
+     name, streak and record at that moment, and friends paste it in. The
+     panel shows your live stats beside each friend's last shared ones.
+     Codes are PF1. plus base64url JSON. Kept under its own key, so a save
+     carries your friend list too.
+     ===================================================================== */
+  const FR_KEY = STORE + ':friends';
+  const FR_SITE = 'https://awsmtheo.github.io/PokerTrainer/';
+  const frData = loadJSON(FR_KEY);   // {id, name, list:[friend]}: a friend is what their code held
+  if (!/^[a-z0-9]{8}$/.test(frData.id || '')) frData.id = Array.from({length:8}, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[rand(36)]).join('');
+  if (typeof frData.name !== 'string') frData.name = '';
+  const frSave = () => saveJSON(FR_KEY, frData);
+  const frEsc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'})[c]);
+  const frInt = n => Number.isFinite(+n) && +n > 0 ? Math.min(Math.floor(+n), 1e7) : 0;
+  const frIsDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
+  frData.list = (Array.isArray(frData.list) ? frData.list : []).map(frClean).filter(Boolean);
+
+  // A friend's stats as their code gives them, with anything odd dropped. Returns null if it isn't one.
+  function frClean(f) {
+    if (!f || typeof f !== 'object' || !/^[a-z0-9]{8}$/.test(f.id) || typeof f.name !== 'string' || !frIsDay(f.at)) return null;
+    const name = f.name.trim().slice(0, 24);
+    if (!name) return null;
+    const recs = {};
+    Object.keys(RV).forEach(t => {
+      const r = f.recs && f.recs[t];
+      if (Array.isArray(r)) { const total = frInt(r[1]); recs[t] = [Math.min(frInt(r[0]), total), total]; }
+    });
+    return {id:f.id, name, at:f.at, streak:frInt(f.streak), best:frInt(f.best), last:frIsDay(f.last) ? f.last : '', recs};
+  }
+  // Your own stats right now, in the shape a code carries.
+  function frMine() {
+    const recs = {};
+    Object.keys(RV).forEach(t => { const R = RV[t].rec(); recs[t] = [frInt(R.correct), frInt(R.total)]; });
+    return {id:frData.id, name:frData.name.trim() || 'You', at:dyDay(), streak:dyStreak(), best:frInt(dyData.best), last:frIsDay(dyData.last) ? dyData.last : '', recs};
+  }
+  const frB64 = t => svB64(new TextEncoder().encode(t));
+  const frCode = () => 'PF1.' + frB64(JSON.stringify(Object.assign({app:SV_APP}, frMine())));
+  function frDecode(text) {
+    try {
+      const m = /PF1\.([A-Za-z0-9_-]+)/.exec(String(text));
+      if (!m) return null;
+      const f = JSON.parse(new TextDecoder().decode(svUnB64(m[1])));
+      return f && f.app === SV_APP ? frClean(f) : null;
+    } catch (e) { return null; }
+  }
+  // A shared streak only still counts if its last set was today or yesterday.
+  const frStreak = f => f.last === dyDay() || f.last === dyBefore(dyDay()) ? f.streak : 0;
+  function frWhen(day) {
+    const days = Math.round((new Date(dyDay() + 'T12:00:00') - new Date(day + 'T12:00:00')) / 864e5);
+    return days <= 0 ? 'Shared today' : days === 1 ? 'Shared yesterday' : days < 30 ? `Shared ${days} days ago`
+      : 'Shared ' + new Date(day + 'T12:00:00').toLocaleDateString(undefined, {day:'numeric', month:'short'});
+  }
+  function frCard(f, me) {
+    let right = 0, total = 0;
+    const drills = Object.keys(RV).filter(t => f.recs[t] && f.recs[t][1]).map(t => {
+      right += f.recs[t][0]; total += f.recs[t][1];
+      return `${RV[t].name} ${Math.round(f.recs[t][0] / f.recs[t][1] * 100)}%`;
+    });
+    const streak = frStreak(f);
+    return `<li class="fr-card${me ? ' me' : ''}">
+      <div class="fr-top"><span class="fr-name">${frEsc(me ? `${f.name === 'You' ? 'You' : f.name + ' (you)'}` : f.name)}</span><span class="fr-when">${me ? 'Now' : frWhen(f.at)}</span></div>
+      <div class="fr-nums">
+        <span class="fr-num streak" title="Days in a row with a finished daily set"><b>${streak}</b>day streak</span>
+        <span class="fr-num"><b>${f.best}</b>best</span>
+        <span class="fr-num"><b>${total ? Math.round(right / total * 100) + '%' : '–'}</b>right</span>
+      </div>
+      <p class="fr-drills">${total ? `${total} ${total === 1 ? 'answer' : 'answers'} · ${drills.join(' · ')}` : 'No answers yet'}</p>
+      ${me ? '' : `<button type="button" class="link-btn" data-frdel="${f.id}">Remove</button>`}
+    </li>`;
+  }
+  function renderFr() {
+    $('#fr-cards').innerHTML = frCard(frMine(), true) + frData.list.map(f => frCard(f, false)).join('');
+  }
+  function frAdd(text) {
+    const msg = $('#fr-msg'), f = frDecode(text);
+    if (!f) { svSay(msg, 'That isn’t a friend code. Check that you copied all of it.', true); return false; }
+    if (f.id === frData.id) { svSay(msg, 'That’s your own code. Send it to a friend instead.', true); return false; }
+    const i = frData.list.findIndex(x => x.id === f.id);
+    if (i >= 0 && frData.list[i].at > f.at) { svSay(msg, `You already have a newer code from ${frEsc(f.name)}.`); return false; }
+    if (i >= 0) frData.list[i] = f; else frData.list.push(f);
+    frSave(); renderFr();
+    svSay(msg, `<b>${i >= 0 ? 'Updated' : 'Added'} ${frEsc(f.name)}.</b>`);
+    return true;
+  }
+
+  $('#fr-me').value = frData.name;
+  $('#fr-me').addEventListener('input', e => { frData.name = e.target.value.slice(0, 24); frSave(); renderFr(); });
+  $('#fr-copy').addEventListener('click', async () => {
+    const out = $('#fr-out'), box = $('#fr-code');
+    if (!frData.name.trim()) { svSay(out, 'Add your name first, so your friends know who you are.', true); $('#fr-me').focus(); return; }
+    const code = frCode(), base = /^https?:$/.test(location.protocol) ? location.href.split('#')[0] : FR_SITE;
+    const text = `Add me as a friend on PokerTrainer: ${base}#friend=${code}`;
+    let copied = false;
+    try { await navigator.clipboard.writeText(text); copied = true; } catch (e) { /* show it to copy by hand */ }
+    box.value = text;
+    box.hidden = false;
+    box.select();
+    if (!copied) { try { copied = document.execCommand('copy'); } catch (e) { /* by hand */ } }
+    svSay(out, copied
+      ? '<b>Copied.</b> Send it to a friend. They can open the link, or paste it under Add a friend.'
+      : 'Your code is above. Select all of it and copy it, then send it to a friend.');
+  });
+  $('#fr-add').addEventListener('click', () => { if (frAdd($('#fr-in').value)) $('#fr-in').value = ''; });
+  // Remove takes two clicks, like the resets.
+  $('#fr-cards').addEventListener('click', e => {
+    const b = e.target.closest('[data-frdel]');
+    if (!b) return;
+    if (!b.classList.contains('armed')) {
+      b.classList.add('armed'); b.textContent = 'Click again to remove';
+      setTimeout(() => { if (b.isConnected) { b.classList.remove('armed'); b.textContent = 'Remove'; } }, 3000);
+      return;
+    }
+    frData.list = frData.list.filter(f => f.id !== b.dataset.frdel);
+    frSave(); renderFr();
+  });
+  $('#fr').addEventListener('toggle', () => { if ($('#fr').open) renderFr(); });
+  // A friend link (#friend=PF1.…) adds that friend and opens the panel.
+  function frFromHash() {
+    const h = location.hash || '';
+    if (!h.startsWith('#friend=')) return;
+    $('#fr').open = true;
+    frAdd(decodeURIComponent(h.slice(8)));
+    renderFr();
+  }
+
+  /* =====================================================================
      TABS AND KEYS
      ===================================================================== */
   const TABS = {
@@ -4280,6 +4467,8 @@ tr:last-child td{border-bottom:0}
   lgResetForm();
   lgFillSet();
   renderLog();
+  renderFr();
+  frFromHash();
   const fromHash = (location.hash || '').slice(1);
   setTab(Object.keys(TABS).find(k => TABS[k].hash === fromHash) || prefs.tab);
 })();
