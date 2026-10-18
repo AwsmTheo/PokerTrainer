@@ -443,7 +443,6 @@ tr:last-child td{border-bottom:0}
       <button type="button" role="tab" class="tab" id="tab-bank" aria-controls="view-bank" data-tab="bank"><b>Bankroll</b><span>Size your bankroll</span></button>
     </nav>
     <div class="brand">
-      <p class="eyebrow" id="app-eyebrow">Chapter · Your seat decides how many hands you can play</p>
       <h1 id="app-title">Preflop Seat Drill</h1>
       <p class="tag" id="app-tag">You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.</p>
     </div>
@@ -3910,19 +3909,19 @@ tr:last-child td{border-bottom:0}
      TABS AND KEYS
      ===================================================================== */
   const TABS = {
-    daily:{hash:'daily', eyebrow:'All five tabs · A short mixed set each day', title:'Daily Set',
+    daily:{hash:'daily', title:'Daily Set',
            tag:'Nine questions a day, played right here: two from each tab, then a full hand. Finish the set on consecutive days to build your streak.'},
-    seats:{hash:'seats', eyebrow:'Chapter · Your seat decides how many hands you can play', title:'Preflop Seat Drill',
+    seats:{hash:'seats', title:'Preflop Seat Drill',
            tag:'You get a random seat and a random hand, and everyone before you has folded. Decide how to open: raise, call or fold.'},
-    pot:{hash:'pot-odds', eyebrow:'Chapter · Pot size sets the price of every call and every commitment', title:'Pot Odds Drill',
+    pot:{hash:'pot-odds', title:'Pot Odds Drill',
          tag:'Fresh spots on pot odds, outs, expected value, implied odds, bluffs, stack-to-pot ratio and short stacks. Pick a topic or mix them, and check your maths on the workbench.'},
-    board:{hash:'board-texture', eyebrow:'Chapter · The board decides what your hand is really worth', title:'Board Texture Drill',
+    board:{hash:'board-texture', title:'Board Texture Drill',
            tag:'Random flops to read: name the texture, decide whose range it favours, pick a continuation-bet plan and sort your hand into a bucket.'},
-    opp:{hash:'opponents', eyebrow:'Chapter · Low-stakes opponents call too much and bluff too little', title:'Opponent Adjustment Drill',
+    opp:{hash:'opponents', title:'Opponent Adjustment Drill',
          tag:'Label the player in front of you, then pick the adjustment that beats them: when to value bet thin, when to bluff, and when to believe a big bet.'},
-    hand:{hash:'full-hand', eyebrow:'All four chapters · One hand from the deal to the river', title:'Full Hand Drill',
+    hand:{hash:'full-hand', title:'Full Hand Drill',
           tag:'Play a whole hand one decision at a time: open or defend, read the flop, price each call and adjust to the player. Every decision is checked against the guide.'},
-    bank:{hash:'bankroll', eyebrow:'Chapter · A staged plan, a bankroll and a tilt routine protect the learning', title:'Bankroll Drill',
+    bank:{hash:'bankroll', title:'Bankroll Drill',
           tag:'Size your bankroll in buy-ins, work out what a game needs, and decide when to move up or down. Pick NOK, USD or EUR.'}
   };
   function setTab(id) {
@@ -3942,7 +3941,6 @@ tr:last-child td{border-bottom:0}
     $('#view-hand').hidden = id !== 'hand';
     $('#view-bank').hidden = id !== 'bank';
     const T = TABS[id];
-    $('#app-eyebrow').textContent = T.eyebrow;
     $('#app-title').textContent = T.title;
     $('#app-tag').textContent = T.tag;
     try { history.replaceState(null, '', '#' + T.hash); } catch (e) { /* sandboxed */ }
