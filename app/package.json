@@ -1,0 +1,18 @@
+{
+  "name": "pokertrainer-app",
+  "private": true,
+  "description": "The iPhone app: the trainer page wrapped with Capacitor. See README.md.",
+  "scripts": {
+    "build": "node build-web.js",
+    "sync": "npm run build && cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.5.3",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.5.3",
+    "@capacitor/local-notifications": "8.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3"
+  }
+}

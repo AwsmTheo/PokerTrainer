@@ -30,6 +30,10 @@ Keyboard shortcuts: `F`, `C` and `R` fold, call or raise in the seat drill, numb
 
 That's it. An internet connection is only used to load the web fonts; the drills work offline with fallback fonts. You can link straight to a drill with `#seats`, `#pot-odds`, `#board-texture`, `#opponents` or `#full-hand` at the end of the URL.
 
+### iPhone app
+
+[`app/`](app/) wraps the same page as an iPhone app, with practice reminders and haptics on top. See [app/README.md](app/README.md) for how it's built and the one-time setup to publish it on the App Store.
+
 ## Strategy guide
 
 [`docs/texas-holdem-strategy.md`](docs/texas-holdem-strategy.md) is the research the drills are built on: position and opening ranges, pot odds and stack-to-pot ratio, board texture, adjusting to low-stakes opponents, and bankroll and tilt. Each claim cites its source.
