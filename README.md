@@ -19,7 +19,7 @@ Money shows in **NOK, USD or EUR**, switched on the Pot odds, Bankroll or Sessio
 
 The pot odds tab also has a **Workbench** where you plug in your own numbers: the price of a call, its expected value, outs to equity, and stack-to-pot ratio, plus a reference table for common bet sizes.
 
-The **progress panel** under the title shows your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
+The **Review misses** button under the title opens a dropdown with your accuracy on every tab. Each question you miss is saved, and **Review all misses** (or the review button on one tab) asks them again, moving between tabs as needed. A miss you get right on review is cleared; one you miss again stays saved. Resetting a tab's record also clears its saved misses.
 
 The **Daily** tab is a short mixed set each day: two questions from each quiz tab in a shuffled order, then one full hand, all played inside the tab. If you leave it, it carries on where you were when you come back the same day. Finishing a set on consecutive days builds a streak, shown in the tab; a full hand counts as right only if every decision in it was. After the set, extra mixed questions keep coming but don't count. The set and streak are saved under their own key, apart from each tab's record.
 
