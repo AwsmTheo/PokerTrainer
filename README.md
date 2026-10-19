@@ -4,7 +4,7 @@ Drills for getting past beginner-level Texas hold'em: which hands to open from e
 
 ## The trainer
 
-[`preflop-seat-drill.html`](preflop-seat-drill.html) is a single self-contained page with no build step and no install. Its drills:
+[`preflop-seat-drill.html`](preflop-seat-drill.html) is a single page (its scripts are in [`js/`](js/)) with no build step and no install. Its drills:
 
 - **Seats: which hands to open.** You get a random seat and hand with everyone before you folded, and choose fold, call or raise. Switch between 6-max and 9-handed tables, and between any hand or close calls only. Your record is tracked by seat.
 - **Pot odds: price every call.** A quiz on the equity a call needs, how often a bluff must work, and the minimum defence frequency (MDF) for a given pot and bet. Each answer shows the working.
