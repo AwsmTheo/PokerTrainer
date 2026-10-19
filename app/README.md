@@ -1,6 +1,6 @@
 # PokerTrainer for iPhone
 
-The iPhone app is the trainer page ([`preflop-seat-drill.html`](../preflop-seat-drill.html)) wrapped with [Capacitor](https://capacitorjs.com/). The page is copied into the app unchanged, so every drill added to the website is in the next app build too. The app works offline.
+The iPhone app is the trainer page ([`preflop-seat-drill.html`](../preflop-seat-drill.html)) wrapped with [Capacitor](https://capacitorjs.com/). The page and its `js/` folder are copied into the app unchanged, so every drill added to the website is in the next app build too. The app works offline.
 
 The app adds two things the website can't do, in [`native.js`](native.js):
 
@@ -13,7 +13,7 @@ Progress is saved inside the app, separately from the website in Safari.
 
 | Path | What it is |
 | --- | --- |
-| `build-web.js` | Builds `www/`: the trainer page plus a `<script>` tag for `native.js`. |
+| `build-web.js` | Builds `www/`: the trainer page and its `js/` folder, plus a `<script>` tag for `native.js`. |
 | `native.js` | The reminders and haptics. Does nothing outside the app. |
 | `capacitor.config.json` | App id (`com.awsmtheo.pokertrainer`) and name. |
 | `ios/` | The Xcode project. App icon and launch screen are in `ios/App/App/Assets.xcassets`. |
@@ -23,7 +23,7 @@ Progress is saved inside the app, separately from the website in Safari.
 
 The [iPhone app workflow](../.github/workflows/ios.yml) runs on a Mac in GitHub Actions:
 
-- **Every pull request** that touches the app or the trainer page gets a simulator build. It needs no Apple account and checks the app still compiles.
+- **Every pull request** that touches the app, the trainer page or `js/` gets a simulator build. It needs no Apple account and checks the app still compiles.
 - **Run workflow** on the Actions tab (with "upload" ticked) builds a signed copy and uploads it to TestFlight. That needs the setup below.
 
 ## One-time setup to publish

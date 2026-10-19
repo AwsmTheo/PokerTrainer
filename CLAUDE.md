@@ -1,17 +1,18 @@
 # CLAUDE.md
 
-Notes for Claude sessions working in this repo. Read this first; it is meant to save you from reading the whole trainer page.
+Notes for Claude sessions working in this repo. Read this first; it is meant to save you from reading the whole trainer.
 
 ## What's here
 
 | Path | What it is |
 | --- | --- |
-| `preflop-seat-drill.html` | The whole trainer: one self-contained page (~350 KB, ~4,500 lines) holding every tab's HTML, CSS and JS. No build step. |
+| `preflop-seat-drill.html` | The trainer page (~75 KB, ~1,060 lines): every tab's HTML and CSS, then one `<script src>` tag per file in `js/`. No build step. |
+| `js/` | The trainer's JavaScript, one plain script per section (~250 KB in all), loaded in order by the page. |
 | `index.html` | Site root; forwards to the trainer, keeping any `#tab` hash. |
 | `docs/texas-holdem-strategy.md` | The strategy guide the drills are built on (~50 KB). Read it only for poker content, not for code work. |
 | `tests/trainer.spec.js` | Playwright browser test, run on every PR. |
 | `app/` | iPhone app (Capacitor 8, SPM). Wraps the same page; see `app/README.md`. |
-| `.github/workflows/` | `browser-tests.yml` (every PR and push to main) and `ios.yml` (simulator build when `app/**` or the page changes). |
+| `.github/workflows/` | `browser-tests.yml` (every PR and push to main) and `ios.yml` (simulator build when `app/**`, `js/**` or the page changes). |
 
 Live site: https://awsmtheo.github.io/PokerTrainer/ (GitHub Pages from `main`). The repo is public: never commit secrets.
 
@@ -19,19 +20,36 @@ Older copies of the page and the guide sit in the project's shared folder (`/mnt
 
 ## Reading the trainer page
 
-Don't read the file top to bottom. Print its section map, then read only the ranges you need with `sed -n 'START,ENDp'` or Read with an offset:
+Don't read the files top to bottom. Print the section map, then read only the ranges you need with `sed -n 'START,ENDp'` or Read with an offset:
 
 ```
-grep -n -E '^/\* |<!-- =====|^  /\* =====|^  /\* -{5,}' preflop-seat-drill.html
+grep -n -E '^/\* |<!-- =====' preflop-seat-drill.html
+grep -n -E '^/\* -{5,}' js/*.js
 ```
 
-That lists every CSS section (`/* Pot odds drill */`), every HTML section (`<!-- ===== Pot odds drill ===== -->`) and every JS section (`/* ===== POT ODDS DRILL ===== */`, sub-sections as `/* ---------- Workbench ---------- */`). Line numbers move with every PR, so trust the grep, not remembered numbers.
+The first lists every CSS section (`/* Pot odds drill */`) and every HTML section (`<!-- ===== Pot odds drill ===== -->`); the second lists the sub-sections inside each JS file (`/* ---------- Workbench ---------- */`). Line numbers move with every PR, so trust the grep, not remembered numbers.
 
-The file has three blocks in this order:
+The page has three blocks in this order:
 
 1. **`<style>`**: tokens on `:root` (dark mode in `@media (prefers-color-scheme: dark)`), shared layout, then one section per drill in tab order, then the phone tab bar, Session log, Progress and review (which also holds the Daily `.dy` styles), Move your progress.
 2. **HTML** inside `<div class="app">`: `<header class="top">` with the tab bar (`nav.tabs`), title (`#app-title`, `#app-tag`) and the Review misses dropdown (`details#rv`); then `<main>` with one `<section class="view" id="view-…" role="tabpanel">` per tab; then `details#sv` (Move your progress) at the bottom.
-3. **One `<script>`**, a single IIFE. Order: shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset`; then SEAT DRILL, POT ODDS DRILL (with Workbench), BOARD TEXTURE DRILL, OPPONENT DRILL, SESSION LOG (with the bankroll bands `BK_BANDS` at its start and the Currency switch at its end), PROGRESS AND REVIEW, DAILY SET, FULL HAND DRILL, MOVE YOUR PROGRESS, and last TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler, and the init calls).
+3. **`<script src="js/….js">` tags**, one per file, in this order:
+
+| File | Section |
+| --- | --- |
+| `js/core.js` | Shared helpers (`$`, cards, `rand`/`pick`/`shuffle`), storage (`STORE`, `loadJSON`, `saveJSON`, `prefs`), currency (`CUR`, `money`, `cash`), `armReset` |
+| `js/seats.js` | SEAT DRILL |
+| `js/pot-odds.js` | POT ODDS DRILL (with Workbench) |
+| `js/board.js` | BOARD TEXTURE DRILL |
+| `js/opponents.js` | OPPONENT DRILL |
+| `js/sessions.js` | SESSION LOG (bankroll bands `BK_BANDS` at its start, the Currency switch at its end) |
+| `js/review.js` | PROGRESS AND REVIEW |
+| `js/daily.js` | DAILY SET |
+| `js/full-hand.js` | FULL HAND DRILL |
+| `js/save.js` | MOVE YOUR PROGRESS |
+| `js/tabs.js` | TABS AND KEYS (`TABS`, `setTab`, arrow keys, the keyboard handler), and last the init calls |
+
+The files are plain classic scripts (not modules, which `file://` blocks) that share one global scope: each starts with `'use strict'`, and a top-level `const`, `let` or `function` in one file is visible to all the others. So a name must be unique across all of `js/`, and code that runs while a file loads (not inside a function or handler) may only use names from that file or an earlier one; init calls belong at the end of `tabs.js`. Never name a top-level binding `top`, `window`, `document` or `location` (the browser throws).
 
 ## The tabs
 
@@ -60,11 +78,11 @@ Each quiz drill follows the same shape: `makeX()` builds a question, `showX(q)` 
 
 ## Conventions
 
-- **Keep it one page.** The website and the app both load `preflop-seat-drill.html` as is (`app/build-web.js` copies it and appends `<script src="native.js">`). Don't split it into files or add a build step.
-- **Keep each drill self-contained**: its own CSS section, HTML section, JS section, id prefix and storage key.
+- **No build step.** The website and the app both load `preflop-seat-drill.html` and `js/` as they are (`app/build-web.js` copies both and appends `<script src="native.js">`). A new JS file needs a `<script src>` tag in the page, in load order; `build-web.js` copies the whole `js/` folder, so it reaches the app on its own.
+- **Keep each drill self-contained**: its own CSS section, HTML section, JS file, id prefix and storage key.
 - **The test and the app read the page's conventions**, so keep them: a tab is a `role="tab"` button whose `aria-controls` names its `role="tabpanel"`; answer buttons carry a `<kbd>` shortcut and are disabled once answered; the next button carries `<kbd>N</kbd>`; the score bar has an element whose id ends in `st-correct` showing `right/total`. `app/native.js` buzzes on any button with a `<kbd>` and reads `…st-correct` to pick the buzz. To hide a key hint, hide the `<kbd>` with CSS; never remove it. On touch devices (no hover, coarse pointer) key hints are hidden this way (PR #20: `kbd:not(.count)`), so new buttons get it for free; a `<kbd>` used as a number badge that must stay visible needs `class="count"`.
 - **Contrast**: new text, borders and colour tokens must meet WCAG AA in both light and dark mode (set both in `:root` and the dark-mode block).
-- **Adding a drill** touches: a tab button in `nav.tabs`, its CSS/HTML/JS sections, `TABS`, a `hidden` line and a lazy deal in `setTab`, a keyboard branch, an `RV` entry plus the four hooks, `dyAnswered` (and `DY_PLAN`/`DY_EXTRA` if it joins Daily), the `.rv-grid` column count, the phone tab bar (below 600px it is a 4-column grid; 7 tabs today, room for 8), and the hash list in README.md. Check it at 320px wide.
+- **Adding a drill** touches: a tab button in `nav.tabs`, its CSS and HTML sections, its `js/` file and `<script src>` tag, `TABS`, a `hidden` line and a lazy deal in `setTab`, a keyboard branch, an `RV` entry plus the four hooks, `dyAnswered` (and `DY_PLAN`/`DY_EXTRA` if it joins Daily), the `.rv-grid` column count, the phone tab bar (below 600px it is a 4-column grid; 7 tabs today, room for 8), and the hash list in README.md. Check it at 320px wide.
 - **Layout limits**: CI fails on any horizontal scroll at 360px wide or any console error. iOS zooms inputs under 16px font, so inputs use 16px on phones.
 - **Theo's preferences**: a clean screen. New controls start collapsed; no chapter line above drill titles; the review panel stays in its dropdown. Don't re-add a Bankroll tab or the tilt and study plan topics (Theo removed them; old `:bank` and `:bank-prefs` keys may still sit in storage, harmlessly).
 - **Git**: branch from `main`, target `main`, merge `main` in when it moves (no rebase or force-push on shared branches). Never stack a PR on another PR's branch. Theo merges PRs himself.

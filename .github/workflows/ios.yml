@@ -6,10 +6,10 @@ name: iPhone app
 # that needs the secrets listed in app/README.md.
 on:
   pull_request:
-    paths: ['app/**', 'preflop-seat-drill.html', '.github/workflows/ios.yml']
+    paths: ['app/**', 'preflop-seat-drill.html', 'js/**', '.github/workflows/ios.yml']
   push:
     branches: [main]
-    paths: ['app/**', 'preflop-seat-drill.html', '.github/workflows/ios.yml']
+    paths: ['app/**', 'preflop-seat-drill.html', 'js/**', '.github/workflows/ios.yml']
   workflow_dispatch:
     inputs:
       upload:
